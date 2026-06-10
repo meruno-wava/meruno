@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel Viewer — Dairy Meruno</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito+Sans:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0d6e7a;--teal-dark:#094e58;--teal-light:#1a8fa0;--orange:#e8821e;--orange-light:#f4a44a;--green:#1f9068;--green-light:#27b880;--cream:#f5f0e8;--cream-dark:#ede5d8;--dark:#122830;--dark-2:#1e3d47;--gray:#6b8a92;--gray-light:#b8cdd2;--white:#fff;--radius:14px;--shadow-md:0 8px 32px rgba(13,110,122,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito Sans',sans-serif;background:var(--cream);color:var(--dark)}
+
+/* TOPBAR */
+.topbar{background:var(--teal-dark);padding:0 5%;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Playfair Display',serif;font-size:18px;color:white;text-decoration:none;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--green-light),var(--teal-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.nav{display:flex;gap:24px;align-items:center}
+.nav a{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:600;transition:.2s}
+.nav a:hover{color:white}
+.nav a.active{color:var(--orange-light)}
+.nav-btn{background:var(--orange);color:white!important;padding:7px 18px;border-radius:50px;font-weight:700!important}
+.nav-btn:hover{background:var(--orange-light)!important}
+
+/* HERO */
+.page-hero{background:linear-gradient(135deg,var(--teal-dark),var(--dark-2));padding:48px 5%;border-bottom:1px solid rgba(255,255,255,.06)}
+.page-hero-inner{max-width:1200px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange-light);margin-bottom:16px}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--green-light);border-radius:50%;animation:blink .8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,36px);color:white;margin-bottom:8px}
+.page-hero p{color:rgba(255,255,255,.6);font-size:14px}
+.hero-meta{display:flex;gap:20px;margin-top:20px;flex-wrap:wrap}
+.meta-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 14px;font-size:13px;color:rgba(255,255,255,.8)}
+.meta-chip .icon{font-size:15px}
+
+/* EMPTY STATE */
+.empty-state{max-width:520px;margin:80px auto;text-align:center;padding:0 20px}
+.empty-icon{font-size:64px;margin-bottom:24px;display:block}
+.empty-state h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);margin-bottom:12px}
+.empty-state p{font-size:15px;color:var(--gray);line-height:1.7;margin-bottom:28px}
+.empty-btn{display:inline-flex;align-items:center;gap:10px;background:var(--teal);color:white;text-decoration:none;padding:13px 28px;border-radius:50px;font-weight:700;font-size:15px;transition:.2s;border:none;cursor:pointer}
+.empty-btn:hover{background:var(--teal-dark);transform:translateY(-1px)}
+
+/* MAIN LAYOUT */
+.main{max-width:1200px;margin:0 auto;padding:40px 5% 80px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
+.stat-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);padding:20px 24px;transition:.2s}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.sc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray);margin-bottom:6px}
+.sc-value{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--teal);line-height:1}
+.sc-value.green{color:var(--green)}.sc-value.orange{color:var(--orange)}
+.sc-sub{font-size:12px;color:var(--gray);margin-top:4px}
+
+/* AI SUMMARY */
+.ai-card{background:linear-gradient(135deg,var(--teal-dark),var(--dark-2));border-radius:var(--radius);padding:28px 32px;margin-bottom:28px;color:white}
+.ai-card-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.ai-card-header h3{font-family:'Playfair Display',serif;font-size:18px}
+.ai-badge{font-size:10px;font-weight:700;background:rgba(232,130,30,.3);color:var(--orange-light);padding:3px 10px;border-radius:20px;border:1px solid rgba(232,130,30,.3)}
+.ai-text{font-size:14px;line-height:1.8;color:rgba(255,255,255,.75);white-space:pre-wrap}
+.keyword-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.kw{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;color:rgba(255,255,255,.75)}
+
+/* SHEET TABS */
+.sheet-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--cream-dark);padding-bottom:0}
+.tab{padding:10px 20px;border-radius:10px 10px 0 0;font-size:13px;font-weight:700;color:var(--gray);cursor:pointer;transition:.2s;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab:hover{color:var(--teal);background:var(--cream)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);background:var(--white)}
+
+/* TABLE SECTION */
+.table-section{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);overflow:hidden;margin-bottom:28px}
+.table-toolbar{padding:16px 20px;border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:8px;padding:8px 14px;flex:1;min-width:200px;max-width:360px;transition:.2s}
+.search-box:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,110,122,.08)}
+.search-box input{border:none;background:none;outline:none;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--dark);width:100%}
+.search-box input::placeholder{color:var(--gray)}
+.table-info{font-size:13px;color:var(--gray);margin-left:auto}
+.table-wrap{overflow-x:auto;max-height:480px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--teal);color:white;padding:10px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;position:sticky;top:0;z-index:1;white-space:nowrap}
+tbody td{padding:9px 14px;border-bottom:1px solid var(--cream-dark);color:var(--dark-2);max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tbody tr:hover td{background:rgba(13,110,122,.04)}
+tbody tr:nth-child(even) td{background:var(--cream)}
+tbody tr:nth-child(even):hover td{background:rgba(13,110,122,.06)}
+.no-results{padding:32px;text-align:center;color:var(--gray);font-size:14px}
+
+/* NUMERIC STATS */
+.num-stats{margin-bottom:28px}
+.num-stats h3{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray);margin-bottom:16px}
+.num-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.num-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);padding:16px 20px}
+.num-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.num-card-title{font-size:12px;font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.num-card-count{font-size:11px;color:var(--gray);background:var(--cream);padding:2px 8px;border-radius:20px}
+.num-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--cream-dark)}
+.num-row:last-child{border-bottom:none}
+.num-row .key{color:var(--gray)}.num-row .val{font-family:'Space Mono',monospace;color:var(--dark);font-weight:700;font-size:11px}
+
+/* PAGINATION */
+.pagination{display:flex;gap:6px;align-items:center;justify-content:center;padding:16px}
+.page-btn{width:34px;height:34px;border:1.5px solid var(--cream-dark);background:var(--white);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;color:var(--dark);transition:.2s}
+.page-btn:hover{border-color:var(--teal);color:var(--teal)}
+.page-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-info{font-size:13px;color:var(--gray);padding:0 8px}
+
+/* EXPORT BAR */
+.export-bar{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.export-bar span{font-size:14px;color:var(--gray)}
+.export-btns{display:flex;gap:10px}
+.exp-btn{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:.2s;text-decoration:none}
+.exp-btn.teal{background:var(--teal);color:white}.exp-btn.teal:hover{background:var(--teal-dark)}
+.exp-btn.outline{background:var(--white);color:var(--teal);border:2px solid var(--cream-dark)}.exp-btn.outline:hover{background:var(--cream-dark)}
+
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
+.spinner{width:40px;height:40px;border:3px solid var(--cream-dark);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:14px;color:var(--gray)}
+
+/* ARCHIVE PANEL */
+.archive-panel{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);margin-bottom:28px;overflow:hidden}
+.archive-header{padding:13px 20px;background:var(--cream);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.archive-header-left{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--dark)}
+.arc-count{font-size:12px;color:var(--gray);background:var(--cream-dark);padding:2px 10px;border-radius:20px;font-weight:600}
+.arc-toggle{font-size:14px;color:var(--gray);transition:.2s}
+.archive-panel.open .arc-toggle{transform:rotate(180deg)}
+.archive-body{display:none;max-height:300px;overflow-y:auto}
+.archive-panel.open .archive-body{display:block}
+.arc-item{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--cream-dark);transition:.15s}
+.arc-item:last-child{border-bottom:none}
+.arc-item:hover{background:var(--cream)}
+.arc-item.arc-current{background:rgba(13,110,122,.05);border-left:3px solid var(--teal)}
+.arc-info{flex:1;min-width:0}
+.arc-name{font-size:13px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arc-meta{font-size:11px;color:var(--gray);margin-top:2px}
+.arc-actions{display:flex;gap:6px;flex-shrink:0}
+.arc-btn{padding:5px 13px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:700;transition:.2s}
+.arc-btn.view{background:var(--teal);color:white}.arc-btn.view:hover{background:var(--teal-dark)}
+.arc-btn.del{background:var(--cream);color:#c53030;border:1.5px solid #feb2b2}.arc-btn.del:hover{background:#fff5f5}
+.arc-empty{padding:24px;text-align:center;color:var(--gray);font-size:13px}
+
+@media(max-width:768px){.nav{display:none}.stats-row{grid-template-columns:1fr 1fr}.ai-card{padding:20px}.arc-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="logo"><div class="logo-icon">🗂️</div>Dairy Meruno</a>
+  <nav class="nav">
+    <a href="/">Beranda</a>
+    <a href="/excel.html" class="active">📊 Excel</a>
+    <a href="/pdf.html">📄 PDF</a>
+    <a href="/changelog.html">Changelog</a>
+    <a href="/checklist.html">Checklist</a>
+    <a href="/" class="nav-btn">+ Upload</a>
+  </nav>
+</div>
+
+<div id="appRoot"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+let DATA = null, ARCHIVE = [], currentSheet = 0, currentPage = 1;
+const ROWS_PER_PAGE = 50;
+let filteredRows = [];
+
+async function init() {
+  document.getElementById('appRoot').innerHTML = `
+    <div class="loading"><div class="spinner"></div><p>Memuat data Excel...</p></div>`;
+  try {
+    const [archRes, dataRes] = await Promise.all([
+      fetch('/api/archive?type=excel'),
+      fetch('/api/data/excel')
+    ]);
+    ARCHIVE = await archRes.json();
+    DATA = await dataRes.json();
+    render();
+  } catch(e) {
+    document.getElementById('appRoot').innerHTML = renderEmpty();
+  }
+}
+
+function renderArchivePanel() {
+  if (!ARCHIVE.length) return '';
+  const items = ARCHIVE.map(doc => {
+    const isCurrent = DATA && DATA.id && DATA.id === doc.id;
+    const date = doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric'}) : '-';
+    return `<div class="arc-item ${isCurrent ? 'arc-current' : ''}">
+      <div class="arc-info">
+        <div class="arc-name">📊 ${escHtml(doc.filename)}</div>
+        <div class="arc-meta">${escHtml(doc.doc_type)} · ${escHtml(doc.info || '')} · ${date}</div>
+      </div>
+      <div class="arc-actions">
+        <button class="arc-btn view" onclick="loadDoc('${doc.id || ''}')">Lihat</button>
+        <button class="arc-btn del" onclick="deleteDoc('${doc.id || ''}', '${escHtml(doc.filename)}')">🗑 Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="archive-panel open" id="archivePanel">
+    <div class="archive-header" onclick="toggleArchive()">
+      <div class="archive-header-left">📁 Daftar Dokumen Excel <span class="arc-count">${ARCHIVE.length}</span></div>
+      <span class="arc-toggle">▾</span>
+    </div>
+    <div class="archive-body">${items}</div>
+  </div>`;
+}
+
+function toggleArchive() {
+  document.getElementById('archivePanel')?.classList.toggle('open');
+}
+
+async function loadDoc(docId) {
+  if (!docId) return;
+  const res = await fetch(`/api/data/excel?id=${docId}`);
+  DATA = await res.json();
+  currentSheet = 0;
+  render();
+}
+
+async function deleteDoc(docId, filename) {
+  if (!docId) { alert('ID dokumen tidak tersedia'); return; }
+  if (!confirm(`Hapus dokumen "${filename}"?\nData tidak bisa dikembalikan.`)) return;
+  const res = await fetch(`/api/delete/excel/${docId}`, {method: 'DELETE'});
+  if (res.ok) {
+    const [archRes, dataRes] = await Promise.all([
+      fetch('/api/archive?type=excel'),
+      fetch('/api/data/excel')
+    ]);
+    ARCHIVE = await archRes.json();
+    DATA = await dataRes.json();
+    currentSheet = 0;
+    render();
+  } else {
+    alert('Gagal menghapus dokumen.');
+  }
+}
+
+function renderEmpty() {
+  return `<div class="empty-state">
+    <span class="empty-icon">📊</span>
+    <h2>Belum Ada Data Excel</h2>
+    <p>Upload file .xlsx atau .xls dari halaman beranda untuk membaca dan menganalisis data.</p>
+    <a href="/" class="empty-btn">← Kembali & Upload File</a>
+  </div>`;
+}
+
+function render() {
+  if (!DATA) { document.getElementById('appRoot').innerHTML = renderEmpty(); return; }
+
+  const sheet = DATA.sheets[currentSheet];
+  filteredRows = [...sheet.rows];
+
+  document.getElementById('appRoot').innerHTML = `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="hero-badge">📊 Excel Viewer</div>
+        <h1>${escHtml(DATA.filename)}</h1>
+        <p>Tipe: ${escHtml(DATA.doc_type)}</p>
+        <div class="hero-meta">
+          <div class="meta-chip"><span class="icon">📁</span> ${DATA.sheets.length} sheet</div>
+          <div class="meta-chip"><span class="icon">📅</span> ${DATA.uploaded_at}</div>
+          <div class="meta-chip"><span class="icon">📋</span> ${DATA.sheets.reduce((a,s)=>a+s.row_count,0)} baris total</div>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      ${renderArchivePanel()}
+      ${renderStats(sheet)}
+      ${DATA.ai_summary || DATA.keywords?.length ? renderAI() : ''}
+      ${Object.keys(sheet.col_stats || {}).length ? renderNumStats(sheet) : ''}
+      ${DATA.sheets.length > 1 ? renderTabs() : ''}
+      ${renderTable(sheet)}
+      <div class="export-bar">
+        <span>📁 ${escHtml(DATA.filename)} — ${sheet.row_count} baris ditampilkan</span>
+        <div class="export-btns">
+          <button class="exp-btn outline" onclick="exportCSV()">⬇ Export CSV</button>
+          <button class="exp-btn teal" onclick="copyTable()">📋 Salin Tabel</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderStats(sheet) {
+  const totalRows = DATA.sheets.reduce((a,s) => a+s.row_count, 0);
+  return `<div class="stats-row">
+    <div class="stat-card"><div class="sc-label">Total Baris</div><div class="sc-value">${totalRows.toLocaleString()}</div><div class="sc-sub">semua sheet</div></div>
+    <div class="stat-card"><div class="sc-label">Kolom</div><div class="sc-value green">${sheet.col_count}</div><div class="sc-sub">sheet ini</div></div>
+    <div class="stat-card"><div class="sc-label">Sheet</div><div class="sc-value orange">${DATA.sheets.length}</div><div class="sc-sub">dalam file</div></div>
+    <div class="stat-card"><div class="sc-label">Kolom Numerik</div><div class="sc-value">${(sheet.numeric_cols||[]).length}</div><div class="sc-sub">terdeteksi</div></div>
+  </div>`;
+}
+
+function renderAI() {
+  const kws = (DATA.keywords || []).map(k => `<span class="kw">${escHtml(k)}</span>`).join('');
+  return `<div class="ai-card">
+    <div class="ai-card-header">
+      <span style="font-size:20px">🤖</span>
+      <h3>Analisis Dokumen</h3>
+      <span class="ai-badge">AUTO</span>
+    </div>
+    ${DATA.ai_summary ? `<div class="ai-text">${escHtml(DATA.ai_summary)}</div>` : ''}
+    ${kws ? `<div class="keyword-list">${kws}</div>` : ''}
+  </div>`;
+}
+
+function renderNumStats(sheet) {
+  const cols = Object.entries(sheet.col_stats || {});
+  if (!cols.length) return '';
+  const cards = cols.map(([col, s]) => `
+    <div class="num-card">
+      <div class="num-card-header">
+        <div class="num-card-title" title="${escHtml(col)}">${escHtml(col)}</div>
+        <span class="num-card-count">${s.count} nilai</span>
+      </div>
+      <div class="num-row"><span class="key">Jumlah</span><span class="val">${s.sum.toLocaleString()}</span></div>
+      <div class="num-row"><span class="key">Rata-rata</span><span class="val">${s.avg.toLocaleString()}</span></div>
+      <div class="num-row"><span class="key">Min</span><span class="val">${s.min.toLocaleString()}</span></div>
+      <div class="num-row"><span class="key">Maks</span><span class="val">${s.max.toLocaleString()}</span></div>
+    </div>`).join('');
+  return `<div class="num-stats"><h3>Statistik Numerik</h3><div class="num-grid">${cards}</div></div>`;
+}
+
+function renderTabs() {
+  return `<div class="sheet-tabs">${DATA.sheets.map((s,i) =>
+    `<button class="tab ${i===currentSheet?'active':''}" onclick="switchSheet(${i})">
+      📋 ${escHtml(s.name)} <span style="font-size:11px;opacity:.6">(${s.row_count})</span>
+    </button>`).join('')}</div>`;
+}
+
+function renderTable(sheet) {
+  currentPage = 1;
+  filteredRows = [...sheet.rows];
+
+  const headers = sheet.headers.map(h => `<th>${escHtml(h)}</th>`).join('');
+  return `<div class="table-section">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Cari data..." id="tblSearch" oninput="filterTable(this.value)">
+      </div>
+      <span class="table-info" id="tblInfo">${sheet.row_count} baris</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr>${headers}</tr></thead>
+      <tbody id="tblBody"></tbody>
+    </table></div>
+    <div class="pagination" id="pagination"></div>
+  </div>`;
+  // render rows after DOM update
+  setTimeout(() => renderRows(), 0);
+}
+
+function renderRows() {
+  const start = (currentPage-1)*ROWS_PER_PAGE;
+  const pageRows = filteredRows.slice(start, start+ROWS_PER_PAGE);
+  const tbody = document.getElementById('tblBody');
+  if (!tbody) return;
+
+  if (!pageRows.length) {
+    tbody.innerHTML = `<tr><td colspan="99" class="no-results">Tidak ada hasil ditemukan</td></tr>`;
+  } else {
+    tbody.innerHTML = pageRows.map(row =>
+      `<tr>${row.map(c => `<td title="${escHtml(c)}">${escHtml(c)}</td>`).join('')}</tr>`
+    ).join('');
+  }
+
+  const info = document.getElementById('tblInfo');
+  if (info) info.textContent = `${filteredRows.length} baris${filteredRows.length < DATA.sheets[currentSheet].row_count ? ` (filter dari ${DATA.sheets[currentSheet].row_count})` : ''}`;
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
+  const pg = document.getElementById('pagination');
+  if (!pg || totalPages <= 1) { if(pg) pg.innerHTML=''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i=1; i<=totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentPage-2 && i <= currentPage+2)) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (i === currentPage-3 || i === currentPage+3) {
+      html += `<span class="page-info">…</span>`;
+    }
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  html += `<span class="page-info">Hal ${currentPage}/${totalPages}</span>`;
+  pg.innerHTML = html;
+}
+
+function filterTable(q) {
+  const sheet = DATA.sheets[currentSheet];
+  const ql = q.toLowerCase().trim();
+  filteredRows = ql ? sheet.rows.filter(row => row.some(c => c.toLowerCase().includes(ql))) : [...sheet.rows];
+  currentPage = 1;
+  renderRows();
+}
+
+function switchSheet(i) {
+  currentSheet = i;
+  render();
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderRows();
+  document.querySelector('.table-section')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function exportCSV() {
+  if (!DATA) return;
+  const sheet = DATA.sheets[currentSheet];
+  const rows = [sheet.headers, ...filteredRows];
+  const csv = rows.map(r => r.map(c => `"${c.replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${DATA.filename.replace(/\.[^.]+$/,'')}_${sheet.name}.csv`;
+  a.click();
+}
+
+function copyTable() {
+  if (!DATA) return;
+  const sheet = DATA.sheets[currentSheet];
+  const rows = [sheet.headers, ...filteredRows.slice(0,200)];
+  const text = rows.map(r => r.join('\t')).join('\n');
+  navigator.clipboard.writeText(text).then(() => alert('Tabel disalin ke clipboard!'));
+}
+
+function escHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>

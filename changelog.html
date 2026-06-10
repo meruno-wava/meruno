@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog — Dairy Meruno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito+Sans:wght@300;400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0d6e7a; --teal-dark: #094e58; --orange: #e8821e;
+    --green: #1f9068; --green-light: #27b880;
+    --cream: #f5f0e8; --cream-dark: #ede5d8;
+    --dark: #122830; --gray: #6b8a92; --white: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito Sans', sans-serif; background: var(--cream); color: var(--dark); }
+
+  .topbar {
+    background: var(--teal-dark); padding: 14px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar a { color: rgba(255,255,255,.7); text-decoration: none; font-size: 13px; }
+  .topbar a:hover { color: white; }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; color: white; font-weight: 700;
+    text-decoration: none !important;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--teal-dark), #1a3d47);
+    padding: 60px 5% 50px; text-align: center;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15); border-radius: 50px;
+    padding: 5px 16px; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--orange);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px); color: white; margin-bottom: 10px;
+  }
+  .hero p { color: rgba(255,255,255,.6); font-size: 15px; }
+
+  .content { max-width: 820px; margin: 0 auto; padding: 48px 5% 80px; }
+
+  .version-block {
+    background: var(--white); border-radius: 14px;
+    border: 1.5px solid var(--cream-dark);
+    margin-bottom: 24px; overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .version-block:hover { box-shadow: 0 8px 32px rgba(13,110,122,.12); }
+
+  .version-header {
+    padding: 20px 28px; display: flex; align-items: center;
+    gap: 14px; border-bottom: 1px solid var(--cream-dark);
+    background: var(--cream);
+  }
+  .version-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px; font-weight: 700; color: var(--teal);
+  }
+  .version-date {
+    font-size: 13px; color: var(--gray);
+    background: var(--cream-dark); padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .version-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; margin-left: auto;
+  }
+  .version-badge.released { background: rgba(31,144,104,.15); color: var(--green); }
+  .version-badge.unreleased { background: rgba(232,130,30,.15); color: var(--orange); }
+
+  .version-body { padding: 24px 28px; }
+
+  .change-group { margin-bottom: 20px; }
+  .change-group:last-child { margin-bottom: 0; }
+  .change-group h4 {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--gray); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .change-group h4::after {
+    content: ''; flex: 1; height: 1px; background: var(--cream-dark);
+  }
+  .change-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .change-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 14px; line-height: 1.6; color: var(--dark);
+  }
+  .change-list li::before {
+    content: '→'; color: var(--teal); font-weight: 700;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .change-list.added li::before { color: var(--green); content: '+'; }
+  .change-list.planned li::before { color: var(--orange); content: '◦'; }
+  .change-list.note li::before { content: '!'; color: var(--orange); }
+
+  code {
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    background: var(--cream); padding: 1px 6px; border-radius: 4px;
+    color: var(--teal);
+  }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--teal); color: white; text-decoration: none;
+    padding: 10px 22px; border-radius: 50px; font-weight: 700;
+    font-size: 14px; margin-bottom: 32px; transition: .2s;
+  }
+  .back-btn:hover { background: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="topbar-logo">🗂️ Dairy Meruno</a>
+  <a href="index.html">← Kembali ke Beranda</a>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Riwayat Perubahan</div>
+  <h1>Changelog</h1>
+  <p>Sistem Informasi Arsip Pribadi — Rumah Sakit</p>
+</div>
+
+<div class="content">
+  <a href="index.html" class="back-btn">← Kembali ke Beranda</a>
+
+  <!-- v0.1.0 -->
+  <div class="version-block">
+    <div class="version-header">
+      <span class="version-num">v0.1.0</span>
+      <span class="version-date">10 Juni 2026</span>
+      <span class="version-badge released">✓ Rilis</span>
+    </div>
+    <div class="version-body">
+      <div class="change-group">
+        <h4>Ditambahkan</h4>
+        <ul class="change-list added">
+          <li><code>index.html</code> — Landing page utama lengkap dengan navbar, hero, fitur, upload, search, stats, CTA, footer</li>
+          <li>Navbar sticky dengan logo, nav links, dan tombol CTA orange</li>
+          <li>Hero section: search bar, dashboard mockup interaktif, animasi counter</li>
+          <li>3 Feature Card: Baca Excel, Baca PDF, Database Search</li>
+          <li>Upload zone drag & drop dengan progress bar dan preview tabel hasil</li>
+          <li>Search demo real-time dengan 5 filter (Semua, Excel, PDF, 2026, Kesehatan)</li>
+          <li>Section Changelog & Checklist terintegrasi di halaman utama</li>
+          <li><code>jalankan-server.bat</code> — script start localhost:8080 via Python</li>
+          <li><code>changelog.md</code> dan <code>changelog.html</code></li>
+          <li><code>checklist.md</code> dan <code>checklist.html</code></li>
+        </ul>
+      </div>
+      <div class="change-group">
+        <h4>Keputusan Desain</h4>
+        <ul class="change-list">
+          <li>Palet warna teal <code>#0d6e7a</code> + orange <code>#e8821e</code>, terinspirasi wavahusada.com</li>
+          <li>Font: Playfair Display (heading) + Nunito Sans (body) + Space Mono (data)</li>
+          <li>Single HTML file — portabel, tidak perlu build tool atau server khusus</li>
+          <li>Vanilla JS — ringan, cocok untuk prototype awal</li>
+        </ul>
+      </div>
+      <div class="change-group">
+        <h4>Catatan</h4>
+        <ul class="change-list note">
+          <li>Fitur upload dan search masih simulasi — backend belum diintegrasikan</li>
+          <li>Data sampel menggunakan konten dummy arsip rumah sakit</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unreleased -->
+  <div class="version-block">
+    <div class="version-header">
+      <span class="version-num">Belum Rilis</span>
+      <span class="version-date">Direncanakan</span>
+      <span class="version-badge unreleased">⏳ Dalam Proses</span>
+    </div>
+    <div class="version-body">
+      <div class="change-group">
+        <h4>Direncanakan</h4>
+        <ul class="change-list planned">
+          <li>Integrasi SheetJS — parsing file Excel nyata di browser</li>
+          <li>Integrasi PDF.js — membaca dan mengekstrak teks dari PDF</li>
+          <li>Penyimpanan lokal IndexedDB — tanpa perlu server</li>
+          <li>Halaman Dashboard — statistik arsip dan aktivitas terbaru</li>
+          <li>Halaman Manajemen Arsip — daftar, hapus, rename file</li>
+          <li>Autentikasi sederhana (PIN 4–6 digit)</li>
+          <li>Fitur export hasil pencarian ke Excel / PDF</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

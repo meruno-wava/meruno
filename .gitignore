@@ -1,0 +1,22 @@
+# Internal / dokumentasi pribadi
+CLAUDE.md
+
+# Data upload & hasil parsing (lokal saja)
+data/
+uploads/
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

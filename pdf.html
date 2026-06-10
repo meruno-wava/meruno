@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Viewer — Dairy Meruno</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito+Sans:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0d6e7a;--teal-dark:#094e58;--teal-light:#1a8fa0;--orange:#e8821e;--orange-light:#f4a44a;--green:#1f9068;--green-light:#27b880;--cream:#f5f0e8;--cream-dark:#ede5d8;--dark:#122830;--dark-2:#1e3d47;--gray:#6b8a92;--gray-light:#b8cdd2;--white:#fff;--radius:14px;--shadow-md:0 8px 32px rgba(13,110,122,.15)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Nunito Sans',sans-serif;background:var(--cream);color:var(--dark)}
+
+.topbar{background:var(--teal-dark);padding:0 5%;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Playfair Display',serif;font-size:18px;color:white;text-decoration:none;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--orange),var(--orange-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.nav{display:flex;gap:24px;align-items:center}
+.nav a{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:600;transition:.2s}
+.nav a:hover{color:white}.nav a.active{color:var(--orange-light)}
+.nav-btn{background:var(--orange);color:white!important;padding:7px 18px;border-radius:50px;font-weight:700!important}
+.nav-btn:hover{background:var(--orange-light)!important}
+
+.page-hero{background:linear-gradient(135deg,#1a2a35,var(--dark-2));padding:48px 5%;border-bottom:1px solid rgba(255,255,255,.06)}
+.page-hero-inner{max-width:1200px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange-light);margin-bottom:16px}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--orange-light);border-radius:50%;animation:blink .8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,34px);color:white;margin-bottom:8px}
+.page-hero p{color:rgba(255,255,255,.6);font-size:14px}
+.hero-meta{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap}
+.meta-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 14px;font-size:13px;color:rgba(255,255,255,.8)}
+
+.empty-state{max-width:520px;margin:80px auto;text-align:center;padding:0 20px}
+.empty-icon{font-size:64px;margin-bottom:24px;display:block}
+.empty-state h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);margin-bottom:12px}
+.empty-state p{font-size:15px;color:var(--gray);line-height:1.7;margin-bottom:28px}
+.empty-btn{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:white;text-decoration:none;padding:13px 28px;border-radius:50px;font-weight:700;font-size:15px;transition:.2s;border:none;cursor:pointer}
+.empty-btn:hover{background:var(--orange-light);transform:translateY(-1px)}
+
+.main{max-width:1200px;margin:0 auto;padding:40px 5% 80px}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
+
+/* AI SUMMARY */
+.ai-panel{background:linear-gradient(135deg,var(--teal-dark),var(--dark-2));border-radius:var(--radius);padding:28px;color:white;margin-bottom:24px}
+.ai-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.ai-panel-header h3{font-family:'Playfair Display',serif;font-size:18px}
+.ai-badge{font-size:10px;font-weight:700;background:rgba(232,130,30,.3);color:var(--orange-light);padding:3px 10px;border-radius:20px}
+.ai-text{font-size:14px;line-height:1.8;color:rgba(255,255,255,.75);white-space:pre-wrap}
+
+/* SIDEBAR */
+.sidebar{}
+.side-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);margin-bottom:16px;overflow:hidden}
+.side-card-header{padding:14px 18px;background:var(--cream);border-bottom:1px solid var(--cream-dark);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray)}
+.side-card-body{padding:16px 18px}
+.kw-list{display:flex;flex-wrap:wrap;gap:8px}
+.kw{background:var(--cream);border:1px solid var(--cream-dark);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--teal);font-weight:700}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream-dark);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-row .key{color:var(--gray)}
+.info-row .val{font-family:'Space Mono',monospace;font-size:12px;color:var(--dark);font-weight:700}
+.date-item,.id-item{font-family:'Space Mono',monospace;font-size:12px;color:var(--dark);background:var(--cream);padding:5px 10px;border-radius:6px;margin-bottom:6px;border:1px solid var(--cream-dark)}
+
+/* SEARCH BAR */
+.search-bar{display:flex;gap:10px;margin-bottom:20px}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--cream-dark);border-radius:10px;padding:10px 16px;flex:1;transition:.2s}
+.search-wrap:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,110,122,.08)}
+.search-wrap input{border:none;background:none;outline:none;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--dark);width:100%}
+.search-wrap input::placeholder{color:var(--gray)}
+#searchCount{font-size:13px;color:var(--gray);white-space:nowrap;padding:10px 0}
+
+/* PAGES */
+.pages-list{}
+.page-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);margin-bottom:16px;overflow:hidden;transition:.2s}
+.page-card:hover{border-color:var(--gray-light);box-shadow:var(--shadow-md)}
+.page-card.highlighted{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,130,30,.1)}
+.page-header{padding:12px 20px;background:var(--cream);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.page-header:hover{background:var(--cream-dark)}
+.page-num{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--teal)}
+.page-chars{font-size:11px;color:var(--gray)}
+.page-toggle{font-size:16px;color:var(--gray);transition:.2s}
+.page-card.open .page-toggle{transform:rotate(180deg)}
+.page-body{display:none;padding:20px}
+.page-card.open .page-body{display:block}
+.page-text{font-size:13px;line-height:1.8;color:var(--dark-2);white-space:pre-wrap;font-family:'Nunito Sans',sans-serif;max-height:400px;overflow-y:auto}
+.page-text .hl{background:rgba(232,130,30,.2);color:var(--orange);border-radius:3px;padding:0 2px;font-weight:700}
+.no-text{font-size:13px;color:var(--gray);font-style:italic;text-align:center;padding:16px 0}
+
+/* TABLES IN PDF */
+.pdf-table-wrap{margin-top:16px;overflow-x:auto}
+.pdf-table-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);margin-bottom:8px}
+.pdf-table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid var(--cream-dark)}
+.pdf-table th{background:var(--teal);color:white;padding:7px 10px;text-align:left;font-weight:700;font-size:11px}
+.pdf-table td{padding:6px 10px;border-bottom:1px solid var(--cream-dark)}
+.pdf-table tr:hover td{background:rgba(13,110,122,.04)}
+
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
+.spinner{width:40px;height:40px;border:3px solid var(--cream-dark);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:14px;color:var(--gray)}
+
+/* ARCHIVE PANEL */
+.archive-panel{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);margin-bottom:28px;overflow:hidden}
+.archive-header{padding:13px 18px;background:var(--cream);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.archive-header-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--dark)}
+.arc-count{font-size:11px;color:var(--gray);background:var(--cream-dark);padding:2px 10px;border-radius:20px;font-weight:600}
+.arc-toggle{font-size:14px;color:var(--gray);transition:.2s}
+.archive-panel.open .arc-toggle{transform:rotate(180deg)}
+.archive-body{display:none;max-height:280px;overflow-y:auto}
+.archive-panel.open .archive-body{display:block}
+.arc-item{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--cream-dark);transition:.15s}
+.arc-item:last-child{border-bottom:none}
+.arc-item:hover{background:var(--cream)}
+.arc-item.arc-current{background:rgba(232,130,30,.05);border-left:3px solid var(--orange)}
+.arc-info{flex:1;min-width:0}
+.arc-name{font-size:13px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arc-meta{font-size:11px;color:var(--gray);margin-top:2px}
+.arc-actions{display:flex;gap:6px;flex-shrink:0}
+.arc-btn{padding:5px 12px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:700;transition:.2s}
+.arc-btn.view{background:var(--orange);color:white}.arc-btn.view:hover{background:var(--orange-light)}
+.arc-btn.del{background:var(--cream);color:#c53030;border:1.5px solid #feb2b2}.arc-btn.del:hover{background:#fff5f5}
+
+@media(max-width:1024px){.layout{grid-template-columns:1fr}.sidebar{order:-1}}
+@media(max-width:768px){.nav{display:none}.arc-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="logo"><div class="logo-icon">🗂️</div>Dairy Meruno</a>
+  <nav class="nav">
+    <a href="/">Beranda</a>
+    <a href="/excel.html">📊 Excel</a>
+    <a href="/pdf.html" class="active">📄 PDF</a>
+    <a href="/changelog.html">Changelog</a>
+    <a href="/checklist.html">Checklist</a>
+    <a href="/" class="nav-btn">+ Upload</a>
+  </nav>
+</div>
+
+<div id="appRoot"></div>
+
+<script>
+let DATA = null, ARCHIVE = [];
+
+async function init() {
+  document.getElementById('appRoot').innerHTML =
+    `<div class="loading"><div class="spinner"></div><p>Memuat data PDF...</p></div>`;
+  try {
+    const [archRes, dataRes] = await Promise.all([
+      fetch('/api/archive?type=pdf'),
+      fetch('/api/data/pdf')
+    ]);
+    ARCHIVE = await archRes.json();
+    DATA = await dataRes.json();
+    render();
+  } catch(e) {
+    document.getElementById('appRoot').innerHTML = renderEmpty();
+  }
+}
+
+function renderArchivePanel() {
+  if (!ARCHIVE.length) return '';
+  const items = ARCHIVE.map(doc => {
+    const isCurrent = DATA && DATA.id && DATA.id === doc.id;
+    const date = doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric'}) : '-';
+    return `<div class="arc-item ${isCurrent ? 'arc-current' : ''}">
+      <div class="arc-info">
+        <div class="arc-name">📄 ${esc(doc.filename)}</div>
+        <div class="arc-meta">${esc(doc.doc_type)} · ${esc(doc.info || '')} · ${date}</div>
+      </div>
+      <div class="arc-actions">
+        <button class="arc-btn view" onclick="loadDoc('${doc.id || ''}')">Lihat</button>
+        <button class="arc-btn del" onclick="deleteDoc('${doc.id || ''}', '${esc(doc.filename)}')">🗑 Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="archive-panel open" id="archivePanel">
+    <div class="archive-header" onclick="toggleArchive()">
+      <div class="archive-header-left">📁 Daftar Dokumen PDF <span class="arc-count">${ARCHIVE.length}</span></div>
+      <span class="arc-toggle">▾</span>
+    </div>
+    <div class="archive-body">${items}</div>
+  </div>`;
+}
+
+function toggleArchive() {
+  document.getElementById('archivePanel')?.classList.toggle('open');
+}
+
+async function loadDoc(docId) {
+  if (!docId) return;
+  const res = await fetch(`/api/data/pdf?id=${docId}`);
+  DATA = await res.json();
+  render();
+}
+
+async function deleteDoc(docId, filename) {
+  if (!docId) { alert('ID dokumen tidak tersedia'); return; }
+  if (!confirm(`Hapus dokumen "${filename}"?\nData tidak bisa dikembalikan.`)) return;
+  const res = await fetch(`/api/delete/pdf/${docId}`, {method: 'DELETE'});
+  if (res.ok) {
+    const [archRes, dataRes] = await Promise.all([
+      fetch('/api/archive?type=pdf'),
+      fetch('/api/data/pdf')
+    ]);
+    ARCHIVE = await archRes.json();
+    DATA = await dataRes.json();
+    render();
+  } else {
+    alert('Gagal menghapus dokumen.');
+  }
+}
+
+function renderEmpty() {
+  return `<div class="empty-state">
+    <span class="empty-icon">📄</span>
+    <h2>Belum Ada Data PDF</h2>
+    <p>Upload file .pdf dari halaman beranda. Python akan mengekstrak teks dan menganalisis dokumen secara otomatis.</p>
+    <a href="/" class="empty-btn">← Kembali & Upload File</a>
+  </div>`;
+}
+
+function render() {
+  if (!DATA) { document.getElementById('appRoot').innerHTML = renderEmpty(); return; }
+
+  const kwHtml = (DATA.keywords || []).map(k => `<span class="kw">${esc(k)}</span>`).join('');
+  const datesHtml = (DATA.dates || []).map(d => `<div class="date-item">📅 ${esc(d)}</div>`).join('') || '<p style="font-size:13px;color:var(--gray)">Tidak ditemukan</p>';
+  const idsHtml = (DATA.identifiers || []).map(i => `<div class="id-item">🔑 ${esc(i)}</div>`).join('') || '<p style="font-size:13px;color:var(--gray)">Tidak ditemukan</p>';
+
+  document.getElementById('appRoot').innerHTML = `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="hero-badge">📄 PDF Viewer</div>
+        <h1>${esc(DATA.filename)}</h1>
+        <p>Jenis: ${esc(DATA.doc_type)}</p>
+        <div class="hero-meta">
+          <div class="meta-chip"><span>📋</span> ${DATA.page_count} halaman</div>
+          <div class="meta-chip"><span>📅</span> ${DATA.uploaded_at}</div>
+          <div class="meta-chip"><span>🔤</span> ${DATA.pages.reduce((a,p)=>a+p.char_count,0).toLocaleString()} karakter</div>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      ${renderArchivePanel()}
+      ${DATA.ai_summary ? `
+      <div class="ai-panel">
+        <div class="ai-panel-header">
+          <span style="font-size:20px">🤖</span>
+          <h3>Analisis Dokumen</h3>
+          <span class="ai-badge">AUTO</span>
+        </div>
+        <div class="ai-text">${esc(DATA.ai_summary)}</div>
+      </div>` : ''}
+      <div class="layout">
+        <div class="content-area">
+          <div class="search-bar">
+            <div class="search-wrap">
+              <span>🔍</span>
+              <input type="text" placeholder="Cari kata di seluruh dokumen..." id="pdfSearch" oninput="searchPdf(this.value)">
+            </div>
+            <span id="searchCount"></span>
+          </div>
+          <div id="pagesList"></div>
+        </div>
+        <div class="sidebar">
+          ${kwHtml ? `<div class="side-card">
+            <div class="side-card-header">Kata Kunci</div>
+            <div class="side-card-body"><div class="kw-list">${kwHtml}</div></div>
+          </div>` : ''}
+          <div class="side-card">
+            <div class="side-card-header">Info Dokumen</div>
+            <div class="side-card-body">
+              <div class="info-row"><span class="key">Halaman</span><span class="val">${DATA.page_count}</span></div>
+              <div class="info-row"><span class="key">Jenis</span><span class="val">${esc(DATA.doc_type)}</span></div>
+              <div class="info-row"><span class="key">Diunggah</span><span class="val">${DATA.uploaded_at}</span></div>
+            </div>
+          </div>
+          ${DATA.dates?.length ? `<div class="side-card">
+            <div class="side-card-header">Tanggal Ditemukan</div>
+            <div class="side-card-body">${datesHtml}</div>
+          </div>` : ''}
+          ${DATA.identifiers?.length ? `<div class="side-card">
+            <div class="side-card-header">Nomor/Identifikasi</div>
+            <div class="side-card-body">${idsHtml}</div>
+          </div>` : ''}
+        </div>
+      </div>
+    </div>`;
+
+  renderPages('');
+}
+
+function renderPages(query) {
+  const ql = query.toLowerCase().trim();
+  const container = document.getElementById('pagesList');
+  if (!container) return;
+
+  let matchCount = 0;
+  const html = DATA.pages.map(pg => {
+    const hasText = pg.text && pg.text.trim();
+    let displayText = pg.text || '';
+    let matches = 0;
+
+    if (ql && hasText) {
+      // Highlight and count matches
+      const regex = new RegExp(ql.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      const found = displayText.match(regex);
+      matches = found ? found.length : 0;
+      matchCount += matches;
+      if (matches > 0) {
+        displayText = displayText.replace(regex, m => `<span class="hl">${esc(m)}</span>`);
+      } else {
+        displayText = esc(displayText);
+      }
+    } else {
+      displayText = esc(displayText);
+    }
+
+    const isOpen = !ql || matches > 0;
+    const isHighlighted = ql && matches > 0;
+
+    // Tables
+    let tablesHtml = '';
+    for (const tbl of (pg.tables || [])) {
+      if (!tbl || !tbl.length) continue;
+      const tHead = tbl[0].map(c=>`<th>${esc(c)}</th>`).join('');
+      const tBody = tbl.slice(1).map(row=>`<tr>${row.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('');
+      tablesHtml += `<div class="pdf-table-wrap">
+        <div class="pdf-table-title">Tabel Terdeteksi</div>
+        <table class="pdf-table"><thead><tr>${tHead}</tr></thead><tbody>${tBody}</tbody></table>
+      </div>`;
+    }
+
+    return `<div class="page-card ${isOpen?'open':''} ${isHighlighted?'highlighted':''}">
+      <div class="page-header" onclick="togglePage(this)">
+        <div>
+          <span class="page-num">Halaman ${pg.page_num}</span>
+          ${matches ? `<span style="font-size:11px;color:var(--orange);margin-left:10px;font-weight:700">${matches} hasil</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="page-chars">${pg.char_count.toLocaleString()} karakter</span>
+          <span class="page-toggle">▾</span>
+        </div>
+      </div>
+      <div class="page-body">
+        ${hasText
+          ? `<div class="page-text">${displayText}</div>`
+          : `<p class="no-text">📷 Halaman ini tidak memiliki teks (mungkin gambar/scan)</p>`}
+        ${tablesHtml}
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = html || `<p style="text-align:center;color:var(--gray);padding:40px">Tidak ada halaman</p>`;
+
+  const cnt = document.getElementById('searchCount');
+  if (cnt) {
+    cnt.textContent = ql ? `${matchCount} hasil ditemukan` : '';
+  }
+}
+
+function searchPdf(q) {
+  renderPages(q);
+}
+
+function togglePage(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>

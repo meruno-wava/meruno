@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dairy Meruno — Sistem Informasi Arsip Pribadi Rumah Sakit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito+Sans:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal:        #0d6e7a;
+    --teal-dark:   #094e58;
+    --teal-light:  #1a8fa0;
+    --green:       #1f9068;
+    --green-light: #27b880;
+    --orange:      #e8821e;
+    --orange-light:#f4a44a;
+    --cream:       #f5f0e8;
+    --cream-dark:  #ede5d8;
+    --white:       #ffffff;
+    --dark:        #122830;
+    --dark-2:      #1e3d47;
+    --gray:        #6b8a92;
+    --gray-light:  #b8cdd2;
+    --shadow-sm:   0 2px 12px rgba(13,110,122,.12);
+    --shadow-md:   0 8px 32px rgba(13,110,122,.18);
+    --shadow-lg:   0 20px 60px rgba(13,110,122,.22);
+    --radius: 14px; --radius-sm: 8px;
+    --transition: .3s cubic-bezier(.4,0,.2,1);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Nunito Sans', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 72px;
+    background: rgba(9,78,88,.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { height: 64px; box-shadow: var(--shadow-md); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--green-light), var(--teal-light));
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .nav-logo-text span:first-child { display: block; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .nav-logo-text span:last-child  { display: block; font-size: 10px; color: var(--gray-light); text-transform: uppercase; letter-spacing: 2px; }
+  .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: .5px; transition: var(--transition); position: relative; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--orange); transition:var(--transition); }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta { background: var(--orange) !important; color: var(--white) !important; padding: 9px 22px; border-radius: 50px; font-weight: 700 !important; box-shadow: 0 4px 14px rgba(232,130,30,.35); }
+  .nav-cta:hover { background: var(--orange-light) !important; transform: translateY(-1px); }
+  .nav-cta::after { display: none !important; }
+
+  /* ── HERO ── */
+  .hero { min-height: 100vh; background: var(--teal-dark); position: relative; display: flex; align-items: center; overflow: hidden; padding-top: 72px; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(26,143,160,.25) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 70% at 10% 80%, rgba(31,144,104,.2) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 90% 90%, rgba(232,130,30,.15) 0%, transparent 55%);
+    animation: bgPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse { 0%{opacity:.7;transform:scale(1)} 100%{opacity:1;transform:scale(1.05)} }
+  .hero-circles { position:absolute; inset:0; pointer-events:none; }
+  .hero-circles span { position:absolute; border-radius:50%; background:rgba(255,255,255,.04); animation:floatCircle var(--d,12s) ease-in-out infinite alternate; }
+  .hero-circles span:nth-child(1){width:500px;height:500px;top:-100px;right:-100px;--d:14s}
+  .hero-circles span:nth-child(2){width:300px;height:300px;bottom:50px;left:5%;--d:10s;background:rgba(31,144,104,.06)}
+  .hero-circles span:nth-child(3){width:200px;height:200px;top:30%;right:25%;--d:16s;background:rgba(232,130,30,.06)}
+  .hero-circles span:nth-child(4){width:150px;height:150px;bottom:20%;right:10%;--d:11s}
+  @keyframes floatCircle { 0%{transform:translateY(0) scale(1)} 100%{transform:translateY(-30px) scale(1.08)} }
+  .hero-dots { position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px); background-size:40px 40px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%); }
+  .hero-content { position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:80px 5% 100px; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; width:100%; }
+  .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 16px; font-size:12px; font-weight:700; color:var(--orange-light); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; animation:fadeInUp .6s ease both; }
+  .hero-badge::before { content:''; width:8px; height:8px; background:var(--orange-light); border-radius:50%; animation:blinkDot 1.5s ease-in-out infinite; }
+  @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(36px,4.5vw,58px); font-weight:800; line-height:1.12; color:var(--white); margin-bottom:20px; animation:fadeInUp .7s .1s ease both; }
+  .hero-title .accent { color:var(--orange-light); }
+  .hero-title .green-accent { color:#6de0b5; }
+  .hero-desc { font-size:16px; line-height:1.7; color:rgba(255,255,255,.7); max-width:480px; margin-bottom:36px; animation:fadeInUp .7s .2s ease both; }
+  .hero-search { display:flex; background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.15); border-radius:60px; overflow:hidden; max-width:500px; margin-bottom:40px; animation:fadeInUp .7s .3s ease both; transition:var(--transition); }
+  .hero-search:focus-within { border-color:var(--orange-light); background:rgba(255,255,255,.12); box-shadow:0 0 0 4px rgba(232,130,30,.15); }
+  .hero-search input { flex:1; padding:14px 20px; background:none; border:none; outline:none; color:var(--white); font-family:'Nunito Sans',sans-serif; font-size:15px; }
+  .hero-search input::placeholder { color:rgba(255,255,255,.45); }
+  .hero-search button { background:var(--orange); border:none; cursor:pointer; padding:12px 24px; color:var(--white); font-family:'Nunito Sans',sans-serif; font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; transition:var(--transition); margin:4px; border-radius:50px; }
+  .hero-search button:hover { background:var(--orange-light); }
+  .hero-stats { display:flex; gap:32px; animation:fadeInUp .7s .4s ease both; }
+  .hero-stat .num { font-family:'Space Mono',monospace; font-size:26px; font-weight:700; color:var(--white); line-height:1; }
+  .hero-stat .num span { color:var(--orange-light); }
+  .hero-stat .label { font-size:11px; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1.5px; margin-top:4px; }
+  .hero-stat-divider { width:1px; background:rgba(255,255,255,.12); }
+  .hero-right { position:relative; animation:fadeInRight .8s .3s ease both; }
+  .dashboard-card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:20px; overflow:hidden; backdrop-filter:blur(20px); box-shadow:var(--shadow-lg); }
+  .dash-header { background:rgba(255,255,255,.06); padding:14px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(255,255,255,.08); }
+  .dash-dots { display:flex; gap:6px; }
+  .dash-dots span { width:10px; height:10px; border-radius:50%; }
+  .dash-dots span:nth-child(1){background:#ff5f56} .dash-dots span:nth-child(2){background:#ffbd2e} .dash-dots span:nth-child(3){background:#27c93f}
+  .dash-title { font-family:'Space Mono',monospace; font-size:12px; color:rgba(255,255,255,.5); margin-left:6px; }
+  .dash-body { padding:20px; }
+  .dash-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .dash-widget { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:14px; }
+  .dash-widget.span-2 { grid-column:1/-1; }
+  .dw-label { font-size:10px; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
+  .dw-value { font-family:'Space Mono',monospace; font-size:22px; font-weight:700; color:var(--white); line-height:1; }
+  .dw-value.green { color:var(--green-light); } .dw-value.orange { color:var(--orange-light); }
+  .dw-bar { height:6px; background:rgba(255,255,255,.1); border-radius:3px; margin-top:8px; overflow:hidden; }
+  .dw-bar-fill { height:100%; border-radius:3px; animation:barGrow 1.5s .8s ease both; }
+  @keyframes barGrow { from{width:0} }
+  .dw-bar-fill.teal { background:linear-gradient(90deg,var(--teal-light),var(--green-light)); width:68%; }
+  .dw-bar-fill.orange { background:linear-gradient(90deg,var(--orange),var(--orange-light)); width:54%; }
+  .dw-file-list { display:flex; flex-direction:column; gap:8px; }
+  .dw-file { display:flex; align-items:center; gap:10px; padding:8px 10px; background:rgba(255,255,255,.04); border-radius:8px; border:1px solid rgba(255,255,255,.06); }
+  .dw-file-icon { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+  .dw-file-icon.excel{background:rgba(31,144,104,.3);color:var(--green-light)} .dw-file-icon.pdf{background:rgba(232,130,30,.3);color:var(--orange-light)}
+  .dw-file-name { font-size:11px; color:rgba(255,255,255,.7); flex:1; }
+  .dw-file-status { font-size:10px; font-weight:700; color:var(--green-light); background:rgba(39,184,128,.15); padding:2px 8px; border-radius:20px; }
+  .dw-search-demo { display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px 12px; }
+  .dw-search-demo span:first-child { font-size:14px; }
+  .dw-search-demo span:last-child { font-family:'Space Mono',monospace; font-size:11px; color:rgba(255,255,255,.5); }
+  .dw-search-cursor { display:inline-block; width:2px; height:12px; background:var(--orange-light); margin-left:2px; animation:blink .8s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
+  /* ── WAVE ── */
+  .wave-divider { display:block; line-height:0; }
+  .wave-divider svg { display:block; width:100%; }
+
+  /* ── SECTION BASE ── */
+  section { position:relative; }
+  .section-inner { max-width:1200px; margin:0 auto; padding:0 5%; }
+  .section-label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); margin-bottom:12px; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,42px); font-weight:700; line-height:1.2; color:var(--dark); margin-bottom:16px; }
+  .section-title.light { color:var(--white); }
+  .section-desc { font-size:16px; line-height:1.7; color:var(--gray); max-width:560px; }
+  .section-desc.light { color:rgba(255,255,255,.65); }
+
+  /* ── FEATURES ── */
+  .features { padding:100px 0; background:var(--cream); }
+  .features-header { text-align:center; margin-bottom:64px; }
+  .features-header .section-desc { margin:0 auto; }
+  .features-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .feature-card { background:var(--white); border-radius:var(--radius); padding:36px 32px; border:1.5px solid var(--cream-dark); transition:var(--transition); position:relative; overflow:hidden; }
+  .feature-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient,linear-gradient(90deg,var(--teal),var(--green))); transform:scaleX(0); transform-origin:left; transition:var(--transition); }
+  .feature-card:hover { border-color:transparent; transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+  .feature-card:hover::before { transform:scaleX(1); }
+  .feature-card:nth-child(1){--gradient:linear-gradient(90deg,var(--teal),var(--green-light))}
+  .feature-card:nth-child(2){--gradient:linear-gradient(90deg,var(--orange),var(--orange-light))}
+  .feature-card:nth-child(3){--gradient:linear-gradient(90deg,var(--green),var(--teal-light))}
+  .fc-icon { width:60px; height:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:24px; }
+  .fc-icon.teal{background:rgba(13,110,122,.1)} .fc-icon.orange{background:rgba(232,130,30,.1)} .fc-icon.green{background:rgba(31,144,104,.1)}
+  .fc-title { font-family:'Playfair Display',serif; font-size:21px; font-weight:700; color:var(--dark); margin-bottom:12px; }
+  .fc-desc { font-size:14px; line-height:1.7; color:var(--gray); margin-bottom:24px; }
+  .fc-tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .fc-tag { font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; background:var(--cream); color:var(--teal); border:1px solid var(--cream-dark); }
+
+  /* ── UPLOAD ── */
+  .upload-section { padding:100px 0; background:var(--white); }
+  .upload-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+  .upload-zone { border:2.5px dashed var(--gray-light); border-radius:var(--radius); padding:48px 32px; text-align:center; background:var(--cream); transition:var(--transition); cursor:pointer; position:relative; overflow:hidden; margin-top:32px; }
+  .upload-zone:hover { border-color:var(--teal); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+  .upload-zone.drag-over { border-color:var(--orange); background:rgba(232,130,30,.04); transform:scale(1.01); }
+  .upload-icon { font-size:48px; margin-bottom:16px; }
+  .upload-zone h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--dark); margin-bottom:8px; }
+  .upload-zone p { font-size:14px; color:var(--gray); margin-bottom:20px; }
+  .upload-types { display:flex; justify-content:center; gap:12px; }
+  .upload-type { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:700; padding:6px 14px; border-radius:20px; cursor:pointer; transition:var(--transition); }
+  .upload-type.excel { background:rgba(31,144,104,.12); color:var(--green); border:1px solid rgba(31,144,104,.25); }
+  .upload-type.pdf   { background:rgba(232,130,30,.12); color:var(--orange); border:1px solid rgba(232,130,30,.25); }
+  .upload-type:hover { transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+  .upload-features { display:flex; flex-direction:column; gap:24px; }
+  .uf-item { display:flex; gap:20px; align-items:flex-start; padding:24px; border-radius:var(--radius); border:1.5px solid var(--cream-dark); background:var(--cream); transition:var(--transition); }
+  .uf-item:hover { border-color:var(--teal-light); box-shadow:var(--shadow-sm); }
+  .uf-num { width:40px; height:40px; border-radius:10px; background:var(--teal); color:var(--white); font-family:'Space Mono',monospace; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .uf-num.orange{background:var(--orange)} .uf-num.green{background:var(--green)}
+  .uf-content h4 { font-size:16px; font-weight:700; color:var(--dark); margin-bottom:4px; }
+  .uf-content p { font-size:13px; color:var(--gray); line-height:1.6; }
+
+  /* ── SEARCH DEMO ── */
+  .search-section { padding:100px 0; background:linear-gradient(135deg,var(--teal-dark) 0%,var(--dark-2) 100%); overflow:hidden; }
+  .search-bg-pattern { position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,.05) 1px,transparent 1px); background-size:32px 32px; pointer-events:none; }
+  .search-layout { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; z-index:1; }
+  .search-demo-box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:20px; overflow:hidden; box-shadow:var(--shadow-lg); }
+  .sdb-header { background:rgba(255,255,255,.05); padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px; }
+  .sdb-header h4 { font-family:'Space Mono',monospace; font-size:13px; color:rgba(255,255,255,.7); font-weight:400; }
+  .sdb-search-bar { padding:16px 20px; display:flex; background:rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06); gap:10px; align-items:center; }
+  .sdb-search-bar input { flex:1; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:10px 14px; color:var(--white); font-family:'Nunito Sans',sans-serif; font-size:14px; outline:none; }
+  .sdb-search-bar input::placeholder { color:rgba(255,255,255,.35); }
+  .sdb-search-bar button { background:var(--orange); border:none; border-radius:8px; padding:10px 18px; color:var(--white); font-weight:700; cursor:pointer; transition:var(--transition); font-size:13px; }
+  .sdb-search-bar button:hover { background:var(--orange-light); }
+  .sdb-filters { padding:12px 20px; display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,.06); }
+  .sdb-filter { font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.1); cursor:pointer; transition:var(--transition); }
+  .sdb-filter.active,.sdb-filter:hover { background:var(--teal); color:var(--white); border-color:var(--teal); }
+  .sdb-results { padding:12px 20px 20px; }
+  .sdb-result-item { display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.06); margin-bottom:8px; background:rgba(255,255,255,.03); transition:var(--transition); }
+  .sdb-result-item:hover { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.12); }
+  .sri-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .sri-icon.excel{background:rgba(31,144,104,.25)} .sri-icon.pdf{background:rgba(232,130,30,.25)}
+  .sri-info { flex:1; }
+  .sri-name { font-size:13px; font-weight:700; color:rgba(255,255,255,.85); }
+  .sri-meta { font-size:11px; color:rgba(255,255,255,.4); margin-top:2px; }
+  .sri-meta .highlight { color:var(--orange-light); }
+  .sri-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; background:rgba(31,144,104,.2); color:var(--green-light); }
+  .search-points { display:flex; flex-direction:column; gap:20px; margin-top:32px; }
+  .sp-item { display:flex; gap:16px; align-items:flex-start; }
+  .sp-icon { width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .sp-text h4 { font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .sp-text p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.6; }
+
+  /* ── STATS ── */
+  .stats-section { padding:80px 0; background:var(--cream); }
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--cream-dark); border-radius:var(--radius); overflow:hidden; border:1.5px solid var(--cream-dark); }
+  .stat-item { background:var(--white); padding:40px 32px; text-align:center; transition:var(--transition); }
+  .stat-item:hover { background:var(--teal); }
+  .stat-item:hover .stat-num,.stat-item:hover .stat-unit { color:var(--white); }
+  .stat-item:hover .stat-label { color:rgba(255,255,255,.7); }
+  .stat-num { font-family:'Space Mono',monospace; font-size:40px; font-weight:700; color:var(--teal); line-height:1; transition:var(--transition); }
+  .stat-unit { font-size:20px; color:var(--orange); transition:var(--transition); }
+  .stat-label { font-size:13px; color:var(--gray); text-transform:uppercase; letter-spacing:1.5px; margin-top:8px; transition:var(--transition); }
+
+  /* ── CHANGELOG & CHECKLIST ── */
+  .devlog-section { padding:100px 0; background:var(--white); }
+  .devlog-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:56px; }
+
+  /* changelog */
+  .changelog-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; }
+  .cl-header { background:var(--teal-dark); padding:20px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .cl-header h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); }
+  .cl-header a { font-size:12px; color:rgba(255,255,255,.6); text-decoration:none; font-weight:700; background:rgba(255,255,255,.1); padding:4px 12px; border-radius:20px; transition:var(--transition); }
+  .cl-header a:hover { background:rgba(255,255,255,.2); color:white; }
+  .cl-body { padding:0; }
+  .cl-version { border-bottom:1px solid var(--cream-dark); }
+  .cl-version:last-child { border-bottom:none; }
+  .cl-version-head { padding:16px 24px; display:flex; align-items:center; gap:12px; background:var(--cream); border-bottom:1px solid var(--cream-dark); }
+  .cl-v-num { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--teal); }
+  .cl-v-date { font-size:12px; color:var(--gray); }
+  .cl-v-badge { margin-left:auto; font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; }
+  .cl-v-badge.released { background:rgba(31,144,104,.15); color:var(--green); }
+  .cl-v-badge.planned  { background:rgba(232,130,30,.15); color:var(--orange); }
+  .cl-items { padding:16px 24px; display:flex; flex-direction:column; gap:8px; }
+  .cl-item { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.5; color:var(--dark); }
+  .cl-item::before { content:'+'; color:var(--green); font-weight:700; flex-shrink:0; }
+  .cl-item.plan::before { content:'◦'; color:var(--orange); }
+
+  /* checklist */
+  .checklist-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; }
+  .chk-header { background:var(--dark-2); padding:20px 28px; }
+  .chk-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .chk-header-top h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); }
+  .chk-header a { font-size:12px; color:rgba(255,255,255,.6); text-decoration:none; font-weight:700; background:rgba(255,255,255,.1); padding:4px 12px; border-radius:20px; transition:var(--transition); }
+  .chk-header a:hover { background:rgba(255,255,255,.2); color:white; }
+  .chk-progress-track { height:6px; background:rgba(255,255,255,.15); border-radius:3px; overflow:hidden; }
+  .chk-progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--green-light),var(--teal-light)); transition:width .5s ease; }
+  .chk-progress-label { font-size:11px; color:rgba(255,255,255,.5); margin-top:6px; }
+  .chk-body { padding:20px 24px; display:flex; flex-direction:column; gap:6px; max-height:380px; overflow-y:auto; }
+  .chk-group-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--gray); margin-top:12px; margin-bottom:4px; }
+  .chk-group-label:first-child { margin-top:0; }
+  .chk-item { display:flex; align-items:flex-start; gap:10px; padding:8px 10px; border-radius:8px; transition:var(--transition); }
+  .chk-item:hover { background:var(--cream); }
+  .chk-box { width:18px; height:18px; border-radius:5px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px; }
+  .chk-box.done    { background:var(--green);  color:white; }
+  .chk-box.active  { background:var(--orange); color:white; }
+  .chk-box.pending { border:2px solid var(--gray-light); }
+  .chk-label { font-size:13px; line-height:1.4; color:var(--dark); }
+  .chk-item.is-done .chk-label { text-decoration:line-through; color:var(--gray); }
+  .chk-tag { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; margin-left:auto; flex-shrink:0; white-space:nowrap; }
+  .chk-tag.t-done   { background:rgba(31,144,104,.12); color:var(--green); }
+  .chk-tag.t-active { background:rgba(232,130,30,.12); color:var(--orange); }
+  .chk-tag.t-high   { background:rgba(220,50,50,.1);   color:#c03030; }
+  .chk-tag.t-med    { background:rgba(232,130,30,.1);  color:var(--orange); }
+
+  /* ── CTA ── */
+  .cta-section { padding:100px 0; background:var(--cream); text-align:center; }
+  .cta-box { max-width:700px; margin:0 auto; }
+  .cta-btns { display:flex; gap:16px; justify-content:center; margin-top:36px; flex-wrap:wrap; }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 32px; border-radius:50px; font-family:'Nunito Sans',sans-serif; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:none; transition:var(--transition); }
+  .btn-primary { background:var(--teal); color:var(--white); box-shadow:0 6px 20px rgba(13,110,122,.3); }
+  .btn-primary:hover { background:var(--teal-dark); transform:translateY(-2px); }
+  .btn-secondary { background:var(--white); color:var(--teal); border:2px solid var(--cream-dark); }
+  .btn-secondary:hover { background:var(--cream-dark); transform:translateY(-2px); }
+  .btn-orange { background:var(--orange); color:var(--white); box-shadow:0 6px 20px rgba(232,130,30,.3); }
+  .btn-orange:hover { background:var(--orange-light); transform:translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer { background:var(--dark); color:rgba(255,255,255,.6); padding:64px 5% 32px; }
+  .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
+  .footer-brand p { font-size:13px; line-height:1.7; color:rgba(255,255,255,.45); max-width:280px; margin-top:16px; }
+  .footer-col h5 { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,.8); margin-bottom:16px; }
+  .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-col ul li a { font-size:14px; color:rgba(255,255,255,.45); text-decoration:none; transition:var(--transition); }
+  .footer-col ul li a:hover { color:var(--white); padding-left:4px; }
+  .footer-bottom { padding-top:24px; border-top:1px solid rgba(255,255,255,.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-bottom span { font-size:13px; }
+  .footer-badge { display:flex; gap:8px; }
+  .footer-badge span { font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; background:rgba(255,255,255,.06); color:rgba(255,255,255,.5); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .6s ease,transform .6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-delay-1{transition-delay:.1s} .reveal-delay-2{transition-delay:.2s} .reveal-delay-3{transition-delay:.3s}
+
+  /* ── RESULT PANEL ── */
+  .result-panel { background:var(--cream); border:1.5px solid var(--cream-dark); border-radius:var(--radius); padding:20px; margin-top:16px; display:none; }
+  .result-panel.show { display:block; }
+  .result-panel h4 { font-size:14px; font-weight:700; color:var(--dark); margin-bottom:12px; }
+  .result-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .result-table th { background:var(--teal); color:var(--white); padding:8px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+  .result-table td { padding:8px 12px; border-bottom:1px solid var(--cream-dark); color:var(--dark-2); }
+  .result-table tr:hover td { background:rgba(13,110,122,.04); }
+  .upload-progress { display:none; margin-top:12px; }
+  .upload-progress.show { display:block; }
+  .progress-bar-wrap { height:6px; background:var(--cream-dark); border-radius:3px; overflow:hidden; }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--teal),var(--green-light)); border-radius:3px; width:0; transition:width .4s ease; }
+  .progress-label { font-size:12px; color:var(--gray); margin-top:6px; text-align:right; }
+
+  /* ── HAMBURGER MOBILE ── */
+  .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
+  .nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.8);border-radius:2px;transition:var(--transition)}
+  .nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+  .nav-hamburger.open span:nth-child(2){opacity:0}
+  .nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+  .nav-mobile{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--teal-dark);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px;animation:fadeInUp .25s ease}
+  .nav-mobile.open{display:flex}
+  .nav-mobile a{color:rgba(255,255,255,.85);text-decoration:none;font-size:22px;font-weight:700;font-family:'Playfair Display',serif;transition:var(--transition)}
+  .nav-mobile a:hover{color:var(--orange-light)}
+  .nav-mobile .nav-cta{color:var(--white)!important;background:var(--orange);padding:14px 36px;border-radius:50px;font-size:18px}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:1024px){
+    .hero-content,.search-layout,.upload-layout,.devlog-layout{grid-template-columns:1fr;gap:40px}
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .hero-right{display:none}
+  }
+  @media(max-width:768px){
+    .nav-links{display:none}
+    .nav-hamburger{display:flex}
+    .hero-content{padding:60px 5% 80px}
+    .hero-title{font-size:32px}
+    .hero-desc{font-size:15px}
+    .hero-search{max-width:100%}
+    .hero-stats{gap:20px}
+    .hero-stat .num{font-size:20px}
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .search-layout{grid-template-columns:1fr}
+    .upload-layout{grid-template-columns:1fr}
+    .devlog-layout{grid-template-columns:1fr}
+    .section-inner{padding:0 4%}
+    .upload-section,.search-section,.stats-section,.devlog-section{padding:64px 0}
+    .hero-right,.hero-stat-divider{display:none}
+    .dashboard-card{display:none}
+    .devlog-layout .changelog-card,.devlog-layout .checklist-card{border-radius:10px}
+    .cl-header,.chk-header{padding:16px 18px}
+    .cl-items,.chk-body{padding:12px 16px}
+  }
+  @media(max-width:480px){
+    .hero-title{font-size:26px}
+    .stats-grid{grid-template-columns:1fr}
+    .stat-item{padding:28px 20px}
+    .stat-num{font-size:32px}
+    .hero-stats{flex-direction:column;gap:12px;align-items:flex-start}
+    .hero-stat-divider{display:none}
+    .sdb-filters{gap:6px}
+    .sdb-filter{font-size:10px;padding:3px 8px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">🗂️</div>
+    <div class="nav-logo-text">
+      <span>Dairy Meruno</span>
+      <span>Arsip Pribadi Rumah Sakit</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#upload">Unggah</a></li>
+    <li><a href="#search">Pencarian</a></li>
+    <li><a href="#devlog">Changelog</a></li>
+    <li><a href="#upload" class="nav-cta">Mulai Sekarang →</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="nav-mobile" id="mobileNav">
+  <a href="#upload" onclick="toggleMenu()">Unggah Arsip</a>
+  <a href="#search" onclick="toggleMenu()">Pencarian</a>
+  <a href="#devlog" onclick="toggleMenu()">Changelog</a>
+  <a href="/excel.html" onclick="toggleMenu()">Excel Viewer</a>
+  <a href="/pdf.html" onclick="toggleMenu()">PDF Viewer</a>
+  <a href="#upload" class="nav-cta" onclick="toggleMenu()">Mulai Sekarang →</a>
+</div>
+
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-circles"><span></span><span></span><span></span><span></span></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">🏥 Arsip Digital Rumah Sakit</div>
+      <h1 class="hero-title">
+        Arsip <span class="accent">Terorganisir</span>,<br>
+        Dokumen <span class="green-accent">Mudah Dicari</span>
+      </h1>
+      <p class="hero-desc">
+        Dairy Meruno adalah sistem informasi arsip pribadi rumah sakit — membaca
+        file Excel, dokumen PDF, dan menyimpannya sebagai database yang dapat
+        dicari kapan saja.
+      </p>
+      <div class="hero-search">
+        <input type="text" placeholder="Cari arsip, rekam medis, laporan, dokumen..." id="heroSearch">
+        <button onclick="doSearch()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Cari
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num" id="counter1">0<span>+</span></div>
+          <div class="label">Format Didukung</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="num" id="counter2">0<span>K</span></div>
+          <div class="label">Dokumen Dapat Diindeks</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <div class="num" id="counter3">0<span>%</span></div>
+          <div class="label">Data Lokal & Aman</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <div class="dash-dots"><span></span><span></span><span></span></div>
+          <span class="dash-title">dairy-meruno / arsip.app</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-row">
+            <div class="dash-widget">
+              <div class="dw-label">Total Arsip</div>
+              <div class="dw-value">143</div>
+              <div class="dw-bar"><div class="dw-bar-fill teal"></div></div>
+            </div>
+            <div class="dash-widget">
+              <div class="dw-label">Dokumen Baru</div>
+              <div class="dw-value orange">12</div>
+              <div class="dw-bar"><div class="dw-bar-fill orange"></div></div>
+            </div>
+          </div>
+          <div class="dash-row">
+            <div class="dash-widget span-2">
+              <div class="dw-label">File Terbaru</div>
+              <div class="dw-file-list">
+                <div class="dw-file">
+                  <div class="dw-file-icon excel">📊</div>
+                  <span class="dw-file-name">rekap_pasien_juni2026.xlsx</span>
+                  <span class="dw-file-status">✓ Terbaca</span>
+                </div>
+                <div class="dw-file">
+                  <div class="dw-file-icon pdf">📄</div>
+                  <span class="dw-file-name">surat_rujukan_RS_042.pdf</span>
+                  <span class="dw-file-status">✓ Terbaca</span>
+                </div>
+                <div class="dw-file">
+                  <div class="dw-file-icon excel">📊</div>
+                  <span class="dw-file-name">laporan_administrasi_q2.xlsx</span>
+                  <span class="dw-file-status">✓ Terbaca</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-row">
+            <div class="dash-widget span-2">
+              <div class="dw-label">Pencarian Cepat</div>
+              <div class="dw-search-demo">
+                <span>🔍</span>
+                <span id="typeDemo">Mencari "rekam medis 2026"<span class="dw-search-cursor"></span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- UPLOAD -->
+<section class="upload-section" id="upload">
+  <div class="section-inner">
+    <div class="upload-layout">
+      <div class="upload-left">
+        <div class="section-label">Upload & Proses</div>
+        <h2 class="section-title reveal">Unggah Arsip Anda</h2>
+        <p class="section-desc reveal reveal-delay-1">Drag & drop file Excel atau PDF, sistem langsung membaca dan mengindeks dokumen ke database arsip Anda.</p>
+        <div class="upload-zone reveal reveal-delay-2" id="uploadZone"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDrop(event)"
+             onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📁</div>
+          <h3>Seret File ke Sini</h3>
+          <p>atau klik untuk memilih file</p>
+          <div class="upload-types">
+            <button class="upload-type excel" onclick="event.stopPropagation()">📊 Excel (.xlsx)</button>
+            <button class="upload-type pdf" onclick="event.stopPropagation()">📄 PDF (.pdf)</button>
+          </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" accept=".xlsx,.xls,.pdf" onchange="handleFileSelect(this)">
+        <div class="upload-progress" id="uploadProgress">
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
+          <div class="progress-label" id="progressLabel">Memproses...</div>
+        </div>
+        <div class="result-panel" id="resultPanel">
+          <h4 id="resultTitle">✅ File Berhasil Dibaca</h4>
+          <table class="result-table"><thead><tr id="resultHead"></tr></thead><tbody id="resultBody"></tbody></table>
+        </div>
+      </div>
+      <div class="upload-right">
+        <div class="upload-features">
+          <div class="uf-item reveal">
+            <div class="uf-num">01</div>
+            <div class="uf-content"><h4>Unggah Dokumen</h4><p>Pilih file Excel atau PDF dari arsip Anda. Mendukung rekap data, laporan, surat, hingga rekam medis scan.</p></div>
+          </div>
+          <div class="uf-item reveal reveal-delay-1">
+            <div class="uf-num orange">02</div>
+            <div class="uf-content"><h4>Proses Otomatis</h4><p>Sistem membaca struktur file, mengekstrak teks dan tabel, lalu mengindeks seluruh konten untuk pencarian instan.</p></div>
+          </div>
+          <div class="uf-item reveal reveal-delay-2">
+            <div class="uf-num green">03</div>
+            <div class="uf-content"><h4>Cari & Ekspor</h4><p>Dokumen langsung masuk database. Cari, filter, dan ekspor kembali ke format yang Anda butuhkan.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SEARCH DEMO -->
+<section class="search-section" id="search">
+  <div class="search-bg-pattern"></div>
+  <div class="section-inner">
+    <div class="search-layout">
+      <div class="search-demo-box reveal">
+        <div class="sdb-header">
+          <span style="font-size:18px">🗄️</span>
+          <h4>dairy-meruno / database-arsip</h4>
+        </div>
+        <div class="sdb-search-bar">
+          <input type="text" placeholder="Cari arsip, rekam medis, surat, laporan..." id="dbSearch">
+          <button onclick="doDbSearch()">Cari</button>
+        </div>
+        <div class="sdb-filters">
+          <div class="sdb-filter active" onclick="setFilter(this,'Semua')">Semua</div>
+          <div class="sdb-filter" onclick="setFilter(this,'Excel')">📊 Excel</div>
+          <div class="sdb-filter" onclick="setFilter(this,'PDF')">📄 PDF</div>
+          <div class="sdb-filter" onclick="setFilter(this,'2026')">📅 2026</div>
+          <div class="sdb-filter" onclick="setFilter(this,'Administrasi')">🏥 Administrasi</div>
+        </div>
+        <div class="sdb-results" id="sdbResults"></div>
+      </div>
+      <div class="search-right">
+        <div class="section-label">Pencarian Canggih</div>
+        <h2 class="section-title light reveal">Temukan Arsip dalam Hitungan Detik</h2>
+        <p class="section-desc light reveal reveal-delay-1">Database terintegrasi yang mengindeks semua file — Excel maupun PDF — dalam satu antarmuka pencarian.</p>
+        <div class="search-points">
+          <div class="sp-item reveal"><div class="sp-icon">⚡</div><div class="sp-text"><h4>Pencarian Real-time</h4><p>Hasil muncul saat Anda mengetik, tanpa tombol Enter.</p></div></div>
+          <div class="sp-item reveal reveal-delay-1"><div class="sp-icon">🎯</div><div class="sp-text"><h4>Filter Cerdas</h4><p>Saring berdasarkan jenis file, tanggal, atau kategori arsip.</p></div></div>
+          <div class="sp-item reveal reveal-delay-2"><div class="sp-icon">📤</div><div class="sp-text"><h4>Export Fleksibel</h4><p>Ekspor hasil pencarian ke Excel, PDF, atau CSV.</p></div></div>
+          <div class="sp-item reveal reveal-delay-3"><div class="sp-icon">🔒</div><div class="sp-text"><h4>Data Lokal & Aman</h4><p>Semua arsip tersimpan lokal — tidak dikirim ke server manapun.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="section-inner">
+    <div class="stats-grid">
+      <div class="stat-item reveal"><div class="stat-num"><span class="count-num" data-target="10">0</span><span class="stat-unit">+</span></div><div class="stat-label">Format File</div></div>
+      <div class="stat-item reveal reveal-delay-1"><div class="stat-num"><span class="count-num" data-target="50">0</span><span class="stat-unit">K</span></div><div class="stat-label">Baris per File</div></div>
+      <div class="stat-item reveal reveal-delay-2"><div class="stat-num"><span class="count-num" data-target="99">0</span><span class="stat-unit">%</span></div><div class="stat-label">Akurasi Ekstraksi</div></div>
+      <div class="stat-item reveal reveal-delay-3"><div class="stat-num"><span class="count-num" data-target="100">0</span><span class="stat-unit">%</span></div><div class="stat-label">Data Lokal & Privat</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHANGELOG & CHECKLIST -->
+<section class="devlog-section" id="devlog">
+  <div class="section-inner">
+    <div style="text-align:center">
+      <div class="section-label">Transparansi Pengembangan</div>
+      <h2 class="section-title reveal">Changelog & Checklist</h2>
+      <p class="section-desc reveal reveal-delay-1" style="margin:0 auto">Riwayat perubahan dan progres pengembangan fitur Dairy Meruno.</p>
+    </div>
+
+    <div class="devlog-layout">
+      <!-- CHANGELOG -->
+      <div class="changelog-card reveal">
+        <div class="cl-header">
+          <h3>📋 Changelog</h3>
+          <a href="changelog.html">Lihat Semua →</a>
+        </div>
+        <div class="cl-body">
+          <div class="cl-version">
+            <div class="cl-version-head">
+              <span class="cl-v-num">v0.1.0</span>
+              <span class="cl-v-date">10 Juni 2026</span>
+              <span class="cl-v-badge released">✓ Rilis</span>
+            </div>
+            <div class="cl-items">
+              <div class="cl-item">Landing page utama dengan desain teal + orange</div>
+              <div class="cl-item">Hero: search bar, dashboard mockup interaktif</div>
+              <div class="cl-item">Upload zone drag & drop + preview hasil parsing</div>
+              <div class="cl-item">Search demo real-time dengan 5 filter</div>
+              <div class="cl-item">Section Changelog & Checklist di beranda</div>
+              <div class="cl-item">Script <code style="font-family:monospace;background:var(--cream);padding:1px 5px;border-radius:3px;font-size:11px">jalankan-server.bat</code> untuk localhost:8080</div>
+            </div>
+          </div>
+          <div class="cl-version">
+            <div class="cl-version-head">
+              <span class="cl-v-num">Belum Rilis</span>
+              <span class="cl-v-date">Direncanakan</span>
+              <span class="cl-v-badge planned">⏳ Direncanakan</span>
+            </div>
+            <div class="cl-items">
+              <div class="cl-item plan">Integrasi SheetJS — parsing Excel nyata</div>
+              <div class="cl-item plan">Integrasi PDF.js — baca PDF di browser</div>
+              <div class="cl-item plan">Penyimpanan IndexedDB lokal</div>
+              <div class="cl-item plan">Halaman Dashboard & Manajemen Arsip</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="checklist-card reveal reveal-delay-1">
+        <div class="chk-header">
+          <div class="chk-header-top">
+            <h3>✅ Checklist</h3>
+            <a href="checklist.html">Lihat Semua →</a>
+          </div>
+          <div class="chk-progress-track">
+            <div class="chk-progress-fill" id="chkFill"></div>
+          </div>
+          <div class="chk-progress-label" id="chkLabel">Menghitung...</div>
+        </div>
+        <div class="chk-body">
+          <div class="chk-group-label">✅ Selesai</div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Landing page index.html</div><span class="chk-tag t-done">Selesai</span></div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Upload zone + preview hasil</div><span class="chk-tag t-done">Selesai</span></div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Search demo real-time</div><span class="chk-tag t-done">Selesai</span></div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">jalankan-server.bat</div><span class="chk-tag t-done">Selesai</span></div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Changelog & Checklist di beranda</div><span class="chk-tag t-done">Selesai</span></div>
+          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Memory & dokumentasi sesi</div><span class="chk-tag t-done">Selesai</span></div>
+
+          <div class="chk-group-label">🔄 Sedang</div>
+          <div class="chk-item"><div class="chk-box active">⏳</div><div class="chk-label">Update konten → arsip RS</div><span class="chk-tag t-active">Aktif</span></div>
+
+          <div class="chk-group-label">📋 Antrian</div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Integrasi SheetJS (Excel nyata)</div><span class="chk-tag t-high">Tinggi</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Integrasi PDF.js</div><span class="chk-tag t-high">Tinggi</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Simpan ke IndexedDB lokal</div><span class="chk-tag t-high">Tinggi</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Halaman Dashboard</div><span class="chk-tag t-high">Tinggi</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Manajemen Arsip</div><span class="chk-tag t-high">Tinggi</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Autentikasi PIN</div><span class="chk-tag t-med">Menengah</span></div>
+          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Export hasil pencarian</div><span class="chk-tag t-med">Menengah</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<script>
+// NAVBAR
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>50));
+function toggleMenu(){
+  const h=document.getElementById('hamburger'),m=document.getElementById('mobileNav');
+  h.classList.toggle('open'); m.classList.toggle('open');
+  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+}
+
+// REVEAL
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// COUNTERS
+function animCount(el,target){
+  let c=0,step=Math.ceil(target/40);
+  const iv=setInterval(()=>{c=Math.min(c+step,target);el.textContent=c;if(c>=target)clearInterval(iv)},28);
+}
+new IntersectionObserver(e=>{if(e[0].isIntersecting){
+  setTimeout(()=>animCount(document.getElementById('counter1'),10),100);
+  setTimeout(()=>animCount(document.getElementById('counter2'),50),300);
+  setTimeout(()=>animCount(document.getElementById('counter3'),100),500);
+  e[0].target.__io?.disconnect();
+}}).observe(document.querySelector('.hero-stats'));
+
+new IntersectionObserver(e=>{if(e[0].isIntersecting){
+  document.querySelectorAll('.count-num').forEach((el,i)=>{
+    const t=+el.dataset.target;
+    setTimeout(()=>{let c=0;const iv=setInterval(()=>{c=Math.min(c+Math.ceil(t/50),t);el.textContent=c;if(c>=t)clearInterval(iv)},22)},i*100);
+  });
+}}).observe(document.querySelector('.stats-grid'));
+
+// TYPEWRITER
+const phrases=['Mencari "rekam medis 2026"','Mencari "surat rujukan BPJS"','Mencari "laporan administrasi Q2"','Mencari "hasil lab pasien Juni"'];
+let pi=0,ci=0,del=false;
+const te=document.getElementById('typeDemo');
+function tw(){
+  const cur=phrases[pi];
+  del?ci--:ci++;
+  if(!del&&ci>cur.length){del=true;setTimeout(tw,2000);return}
+  if(del&&ci===0){del=false;pi=(pi+1)%phrases.length}
+  te.innerHTML=cur.substring(0,ci)+'<span class="dw-search-cursor"></span>';
+  setTimeout(tw,del?40:80);
+}
+tw();
+
+// SEARCH DATA
+const sampleData=[
+  {type:'excel',icon:'📊',name:'rekap_pasien_juni2026.xlsx',   meta:'Sheet: Pasien | 312 baris',       match:'No. RM, Nama, Diagnosa, Kamar'},
+  {type:'pdf',  icon:'📄',name:'surat_rujukan_RS_042.pdf',     meta:'Halaman 1 | Dokumen rujukan',     match:'Pasien, Poli Tujuan, Tanggal'},
+  {type:'excel',icon:'📊',name:'laporan_administrasi_q2.xlsx', meta:'Sheet: Rekap | 89 baris',         match:'Biaya, Tindakan, Asuransi, BPJS'},
+  {type:'pdf',  icon:'📄',name:'rekam_medis_scan_240610.pdf',  meta:'Halaman 3 | Scan dokumen',        match:'Anamnesis, Diagnosa, Resep'},
+  {type:'excel',icon:'📊',name:'inventaris_obat_2026.xlsx',    meta:'Sheet: Stok | 540 baris',         match:'Nama Obat, Stok, Expired, Harga'},
+];
+
+function renderResults(data){
+  document.getElementById('sdbResults').innerHTML=data.length?data.map(d=>`
+    <div class="sdb-result-item">
+      <div class="sri-icon ${d.type}">${d.icon}</div>
+      <div class="sri-info">
+        <div class="sri-name">${d.name}</div>
+        <div class="sri-meta">${d.meta} · <span class="highlight">${d.match}</span></div>
+      </div>
+      <span class="sri-badge">Ditemukan</span>
+    </div>`).join('')
+    :`<div class="sdb-result-item"><div class="sri-icon pdf">🔍</div><div class="sri-info"><div class="sri-name">Tidak ada hasil</div><div class="sri-meta">Coba kata kunci lain</div></div></div>`;
+}
+renderResults(sampleData);
+
+function doDbSearch(){
+  const q=document.getElementById('dbSearch').value.toLowerCase().trim();
+  renderResults(q?sampleData.filter(d=>d.name.toLowerCase().includes(q)||d.match.toLowerCase().includes(q)||d.meta.toLowerCase().includes(q)):sampleData);
+}
+document.getElementById('dbSearch').addEventListener('input',doDbSearch);
+document.getElementById('dbSearch').addEventListener('keydown',e=>{if(e.key==='Enter')doDbSearch()});
+
+function setFilter(el,f){
+  document.querySelectorAll('.sdb-filter').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  renderResults(f==='Semua'?sampleData:f==='Excel'?sampleData.filter(d=>d.type==='excel'):f==='PDF'?sampleData.filter(d=>d.type==='pdf'):f==='2026'?sampleData.filter(d=>d.name.includes('2026')):sampleData.filter(d=>d.name.toLowerCase().includes('administrasi')||d.match.toLowerCase().includes('bpjs')));
+}
+
+// HERO SEARCH
+function doSearch(){
+  const q=document.getElementById('heroSearch').value.trim();
+  if(q){document.getElementById('dbSearch').value=q;document.getElementById('search').scrollIntoView({behavior:'smooth'});setTimeout(doDbSearch,600);}
+}
+document.getElementById('heroSearch').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+
+// UPLOAD — kirim ke Flask backend
+function handleFileSelect(i){if(i.files&&i.files[0])processFile(i.files[0]);}
+function handleDrop(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('drag-over');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0]);}
+
+async function processFile(file){
+  const pr=document.getElementById('uploadProgress'),fill=document.getElementById('progressFill'),
+        lbl=document.getElementById('progressLabel'),panel=document.getElementById('resultPanel');
+  pr.classList.add('show'); panel.classList.remove('show');
+  fill.style.width='0%'; fill.style.background='linear-gradient(90deg,var(--teal),var(--green-light))';
+
+  // Animasi progress saat upload
+  let pct=0;
+  lbl.textContent='Mengunggah file ke server...';
+  const iv=setInterval(()=>{if(pct<80){pct+=Math.random()*6+2;fill.style.width=Math.min(pct,80)+'%';}},150);
+
+  try {
+    const fd=new FormData(); fd.append('file',file);
+    const res=await fetch('/api/upload',{method:'POST',body:fd});
+    clearInterval(iv); fill.style.width='100%';
+
+    if(res.redirected){
+      lbl.textContent='✅ Berhasil diproses! Mengarahkan...';
+      sampleData.unshift({type:file.name.match(/\.xlsx?$/i)?'excel':'pdf',
+        icon:file.name.match(/\.xlsx?$/i)?'📊':'📄',name:file.name,
+        meta:`Baru · ${(file.size/1024).toFixed(0)} KB`,match:'Arsip RS'});
+      renderResults(sampleData.slice(0,5));
+      setTimeout(()=>window.location.href=res.url,700);
+    } else {
+      const err=await res.json().catch(()=>({error:'Upload gagal'}));
+      lbl.textContent='❌ '+(err.error||'Upload gagal');
+      fill.style.background='#e53e3e';
+    }
+  } catch(e){
+    clearInterval(iv); fill.style.width='100%';
+    fill.style.background='var(--orange)';
+    lbl.textContent='⚠ Server belum aktif — jalankan jalankan-server.bat terlebih dahulu';
+  }
+}
+
+// CHECKLIST PROGRESS
+const done=document.querySelectorAll('.chk-item.is-done').length;
+const total=document.querySelectorAll('.chk-item').length;
+const pct=Math.round(done/total*100);
+document.getElementById('chkFill').style.width=pct+'%';
+document.getElementById('chkLabel').textContent=`${done} dari ${total} tugas selesai (${pct}%)`;
+</script>
+</body>
+</html>
