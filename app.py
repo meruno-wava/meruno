@@ -525,6 +525,7 @@ def casemix_section(section):
 def casemix_files(section):
     if section not in CASEMIX_SECTIONS:
         return jsonify({"files": [], "error": "Section tidak valid"}), 400
+    CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
     meta_file = CASEMIX_DATA_DIR / f"{section}.json"
     if meta_file.exists():
         with open(meta_file, encoding="utf-8") as fp:
@@ -536,6 +537,7 @@ def casemix_files(section):
 
 @app.route("/casemix/api/news")
 def casemix_news():
+    CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
     news_file = CASEMIX_DATA_DIR / "news.json"
     if news_file.exists():
         with open(news_file, encoding="utf-8") as fp:
@@ -846,7 +848,7 @@ def casemix_delete(section, doc_id):
     return jsonify({"ok": True, "deleted": deleted_entry is not None})
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ── Main ──────────────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     import webbrowser, threading

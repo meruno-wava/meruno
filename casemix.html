@@ -635,11 +635,14 @@ function toggleMenu() {
 }
 
 // REVEAL
+const revealEls = document.querySelectorAll('.reveal');
 const revealObs = new IntersectionObserver(
   es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-  { threshold: 0.1 }
+  { threshold: 0.1, rootMargin: '0px 0px 50px 0px' }
 );
-document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+revealEls.forEach(el => revealObs.observe(el));
+// Fallback: ensure all cards are visible after 800ms in case observer never fires
+setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 800);
 
 // TOAST
 function showToast(msg, type = 'info') {
@@ -718,13 +721,4 @@ async function loadStats() {
           document.getElementById('dotNews').classList.add('active');
           const preview = document.getElementById('newsPreview');
           preview.innerHTML = items.slice(0, 3).map(n => `
-            <div class="news-preview-item">
-              <span>${n.title || 'Pengumuman'}</span>
-            </div>`).join('');
-        }
-      }
-    } catch(_) {}
-
-  } catch(err) {
-    // Backend belum aktif — tampilkan placeholder saja
- 
+            <div clas
