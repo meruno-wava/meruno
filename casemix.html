@@ -368,15 +368,11 @@ body { font-family: 'Nunito Sans', sans-serif; background: var(--cream); color: 
 }
 @media (max-width: 480px) {
   .stats-bar-inner { grid-template-columns: 1fr 1fr; }
-  .cards-grid-5, .cards-grid-4 { grid-template-columns: 1fr 1fr; }
+  .cards-grid-5, .cards-grid-4 { grid-template-columns: 1fr; }
   .page-title { font-size: 22px; }
   .page-badge { font-size: 10px; }
   .stat-cell { padding: 12px; gap: 10px; }
   .stat-cell-icon { width: 36px; height: 36px; font-size: 16px; }
-}
-@media (max-width: 380px) {
-  .cards-grid-5, .cards-grid-4 { grid-template-columns: 1fr; }
-  .stats-bar-inner { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -600,7 +596,7 @@ body { font-family: 'Nunito Sans', sans-serif; background: var(--cream); color: 
       </a>
 
       <!-- 9. Hot News -->
-      <a href="/casemix/hotnews" class="section-card card-hotnews reveal d3" style="grid-column: span 3;">
+      <a href="/casemix/hotnews" class="section-card card-hotnews reveal d3" style="grid-column: 1 / -1;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
           <div style="font-size:24px">📢</div>
           <div>
