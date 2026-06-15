@@ -315,62 +315,104 @@
   /* ── Hot News Preview ── */
   .hotnews-preview {
     background: var(--cream, #faf8f5);
-    padding: 80px 0;
+    padding: 44px 0 48px;
   }
   .hn-inner {
-    max-width: 1100px;
+    max-width: 1380px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 0 32px;
   }
   .hn-header {
-    text-align: center;
-    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
   }
+  .hn-header-text {}
+  .hn-header-text .section-label { display: block; margin-bottom: 4px; }
+  .hn-header-text .section-title { margin-bottom: 2px; }
+  .hn-header-text .section-subtitle { margin: 0; }
+  .hn-rs-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 14px;
+    padding: 12px 18px;
+    box-shadow: 0 2px 10px rgba(9,78,88,.08);
+    flex-shrink: 0;
+  }
+  .hn-rs-logo {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .hn-rs-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700; color: var(--dark);
+  }
+  .hn-rs-addr { font-size: 11px; color: var(--gray); margin-top: 2px; }
   .hn-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
   }
   .hn-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    box-shadow: 0 1px 8px rgba(0,0,0,.08);
+    border: 1px solid rgba(0,0,0,.05);
     transition: transform .2s, box-shadow .2s;
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
   }
-  .hn-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+  .hn-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(9,78,88,.14); }
   .hn-card-img {
     width: 100%;
-    height: 180px;
+    height: 108px;
     object-fit: cover;
     background: var(--teal-dark, #094e58);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
+    font-size: 26px;
+    flex-shrink: 0;
   }
-  .hn-card-body { padding: 20px; flex: 1; }
-  .hn-card-date { font-size: 12px; color: #888; margin-bottom: 8px; }
-  .hn-card-title { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; color: var(--teal-dark, #094e58); }
-  .hn-card-excerpt { font-size: 13px; color: #666; line-height: 1.6; }
+  .hn-card-body { padding: 10px 12px 13px; flex: 1; }
+  .hn-card-date { font-size: 10px; color: #999; margin-bottom: 5px; letter-spacing: .2px; }
+  .hn-card-title {
+    font-size: 13px; font-weight: 700; line-height: 1.45; color: var(--dark);
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
   .hn-footer { text-align: center; }
   .btn-lihat-semua {
     display: inline-block;
-    padding: 12px 32px;
+    padding: 10px 28px;
     border: 2px solid var(--teal, #1a7f8f);
     color: var(--teal, #1a7f8f);
     border-radius: 8px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13px;
     transition: all .2s;
   }
   .btn-lihat-semua:hover { background: var(--teal, #1a7f8f); color: #fff; }
-  .hn-empty { text-align: center; color: #999; padding: 40px; grid-column: 1/-1; }
+  .hn-empty { text-align: center; color: #999; padding: 32px; grid-column: 1/-1; }
+  @media(max-width:1100px){ .hn-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media(max-width:768px){
+    .hn-grid { grid-template-columns: repeat(2, 1fr); }
+    .hn-inner { padding: 0 20px; }
+    .hn-header { flex-direction: column; align-items: flex-start; }
+  }
+  @media(max-width:480px){ .hn-grid { grid-template-columns: 1fr; } }
 
   /* ── REVEAL ── */
   .reveal { opacity:0; transform:translateY(30px); transition:opacity .6s ease,transform .6s ease; }
@@ -560,9 +602,18 @@
 <section class="hotnews-preview" id="hotnews-preview">
   <div class="hn-inner">
     <div class="hn-header">
-      <span class="section-label">📰 HOT NEWS</span>
-      <h2 class="section-title">Berita <span class="accent">Terkini</span></h2>
-      <p class="section-subtitle">Update terbaru dari RS. Wava Husada</p>
+      <div class="hn-header-text">
+        <span class="section-label">📰 HOT NEWS</span>
+        <h2 class="section-title">Berita <span class="accent">Terkini</span></h2>
+        <p class="section-subtitle">Update terbaru dari RS. Wava Husada</p>
+      </div>
+      <div class="hn-rs-badge">
+        <div class="hn-rs-logo">🏥</div>
+        <div>
+          <div class="hn-rs-name">RS. Wava Husada</div>
+          <div class="hn-rs-addr">Jl. Panglima Sudirman 99A<br>Kepanjen, Malang</div>
+        </div>
+      </div>
     </div>
     <div class="hn-grid" id="hn-grid">
       <!-- diisi JS -->
@@ -774,8 +825,8 @@ async function loadAllCasemixDocs() {
       });
     } catch {}
   }
-  // Tampilkan semua saat pertama load
-  renderSearchResults(allCasemixDocs);
+  // Tampilkan 5 terbaru saat pertama load
+  renderSearchResults(allCasemixDocs, true);
 }
 
 function getFileIcon(ext) {
@@ -794,14 +845,15 @@ function getFileTypeBadge(ext) {
   return '<span class="file-badge">Dokumen</span>';
 }
 
-function renderSearchResults(docs) {
+function renderSearchResults(docs, isDefault) {
   const container = document.getElementById('sdbResults');
   if (!container) return;
-  if (docs.length === 0) {
+  const shown = isDefault ? docs.slice(0, 5) : docs;
+  if (shown.length === 0) {
     container.innerHTML = '<div class="search-empty">Tidak ada dokumen ditemukan.</div>';
     return;
   }
-  container.innerHTML = docs.map(doc => `
+  container.innerHTML = shown.map(doc => `
     <div class="sdb-result-item casemix-result" onclick="window.location='${doc.url}'" style="cursor:pointer">
       <div class="sri-icon" style="background:rgba(13,110,122,.25);font-size:18px">${getFileIcon(doc.ext)}</div>
       <div class="sri-body">
@@ -812,7 +864,10 @@ function renderSearchResults(docs) {
         </div>
       </div>
       <span class="sri-badge">Casemix</span>
-    </div>`).join('');
+    </div>`).join('') +
+    (isDefault && docs.length > 5
+      ? `<div style="text-align:center;padding:10px 0;font-size:12px;color:rgba(255,255,255,.4)">Menampilkan 5 dari ${docs.length} dokumen — ketik untuk mencari semua</div>`
+      : '');
 }
 
 function filterSearch() {
@@ -866,7 +921,7 @@ async function loadHotNewsPreview() {
     const res = await fetch('/casemix/api/news');
     if (!res.ok) throw new Error();
     const data = await res.json();
-    const items = (data.news || []).slice(0, 3);
+    const items = (data.news || []).slice(0, 5);
     if (!items.length) {
       grid.innerHTML = '<div class="hn-empty">Belum ada berita.</div>';
       return;
@@ -881,7 +936,6 @@ async function loadHotNewsPreview() {
         <div class="hn-card-body">
           <div class="hn-card-date">${n.published_at_display || ''}</div>
           <div class="hn-card-title">${n.title}</div>
-          <div class="hn-card-excerpt">${n.content ? n.content.slice(0, 100) + '…' : ''}</div>
         </div>
       </a>`;
     }).join('');
