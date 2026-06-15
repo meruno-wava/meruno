@@ -1,6 +1,7 @@
 # Internal / dokumentasi pribadi
 CLAUDE.md
 *.md
+*.bat
 
 # Data upload & hasil parsing (lokal saja)
 data/
