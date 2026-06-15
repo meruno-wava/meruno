@@ -2,5 +2,9 @@ flask>=3.0
 openpyxl>=3.1
 pandas>=2.0
 pdfplumber>=0.10
+supabase>=2.0
+pikepdf>=8.0
+Pillow>=10.0
+python-pptx>=0.6
 # Optional: aktifkan AI summary dengan set ANTHROPIC_API_KEY
 # anthropic>=0.25

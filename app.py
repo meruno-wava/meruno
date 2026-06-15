@@ -44,6 +44,132 @@ CASEMIX_ACCEPT = {
     'hotnews':          [],
 }
 
+# ── Supabase Storage ──────────────────────────────────────────────────────────
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+_sb = None
+
+def get_supabase():
+    global _sb
+    if _sb is None and SUPABASE_URL and SUPABASE_KEY:
+        from supabase import create_client
+        _sb = create_client(SUPABASE_URL, SUPABASE_KEY)
+    return _sb
+
+def sb_upload(bucket: str, path: str, data: bytes, content_type: str = "application/octet-stream"):
+    """Upload file ke Supabase Storage. Return public URL atau None kalau gagal."""
+    sb = get_supabase()
+    if not sb:
+        return None
+    try:
+        sb.storage.from_(bucket).upload(path, data, {"content-type": content_type, "upsert": "true"})
+        return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{path}"
+    except Exception as e:
+        print(f"[Supabase upload error] {e}")
+        return None
+
+def sb_delete(bucket: str, path: str) -> bool:
+    """Hapus file dari Supabase Storage."""
+    sb = get_supabase()
+    if not sb:
+        return False
+    try:
+        sb.storage.from_(bucket).remove([path])
+        return True
+    except Exception as e:
+        print(f"[Supabase delete error] {e}")
+        return False
+
+def sb_read_json(bucket: str, path: str):
+    """Baca JSON file dari Supabase Storage."""
+    sb = get_supabase()
+    if not sb:
+        return None
+    try:
+        data = sb.storage.from_(bucket).download(path)
+        return json.loads(data.decode())
+    except Exception:
+        return None
+
+def sb_write_json(bucket: str, path: str, obj: dict) -> bool:
+    """Simpan JSON file ke Supabase Storage."""
+    data = json.dumps(obj, ensure_ascii=False, indent=2).encode()
+    url = sb_upload(bucket, path, data, "application/json")
+    return url is not None
+
+# ── File Compression ──────────────────────────────────────────────────────────
+
+def compress_pdf(data: bytes) -> bytes:
+    """Kompres PDF dengan pikepdf. Return compressed bytes atau original kalau gagal."""
+    try:
+        import pikepdf
+        with pikepdf.open(BytesIO(data)) as pdf:
+            out = BytesIO()
+            pdf.save(out, compress_streams=True, object_stream_mode=pikepdf.ObjectStreamMode.generate)
+            compressed = out.getvalue()
+            # Hanya pakai kalau lebih kecil
+            return compressed if len(compressed) < len(data) else data
+    except Exception as e:
+        print(f"[compress_pdf] {e}")
+        return data
+
+def compress_image(data: bytes, max_width: int = 1920, quality: int = 82) -> bytes:
+    """Kompres gambar dengan Pillow. Return compressed bytes atau original kalau gagal."""
+    try:
+        from PIL import Image
+        img = Image.open(BytesIO(data))
+        fmt = img.format or "JPEG"
+        # Resize kalau lebih besar dari max_width
+        if img.width > max_width:
+            ratio = max_width / img.width
+            img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
+        # Convert RGBA → RGB kalau format JPEG
+        if fmt == "JPEG" and img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+        out = BytesIO()
+        if fmt == "PNG":
+            img.save(out, format="PNG", optimize=True)
+        else:
+            img.save(out, format="JPEG", quality=quality, optimize=True)
+        compressed = out.getvalue()
+        return compressed if len(compressed) < len(data) else data
+    except Exception as e:
+        print(f"[compress_image] {e}")
+        return data
+
+def compress_pptx(data: bytes, img_quality: int = 75) -> bytes:
+    """Kompres gambar di dalam PPTX dengan python-pptx + Pillow. Return compressed bytes."""
+    try:
+        from pptx import Presentation
+        from PIL import Image
+        prs = Presentation(BytesIO(data))
+        for slide in prs.slides:
+            for shape in slide.shapes:
+                if shape.shape_type == 13:  # MSO_SHAPE_TYPE.PICTURE
+                    img_part = shape.image
+                    img_data = img_part.blob
+                    try:
+                        img = Image.open(BytesIO(img_data))
+                        # Resize kalau lebih dari 1920px
+                        if img.width > 1920:
+                            ratio = 1920 / img.width
+                            img = img.resize((1920, int(img.height * ratio)), Image.LANCZOS)
+                        out = BytesIO()
+                        if img.mode in ("RGBA", "P"):
+                            img = img.convert("RGB")
+                        img.save(out, format="JPEG", quality=img_quality, optimize=True)
+                        # Ganti image blob
+                        img_part._blob = out.getvalue()
+                    except Exception:
+                        continue
+        out = BytesIO()
+        prs.save(out)
+        compressed = out.getvalue()
+        return compressed if len(compressed) < len(data) else data
+    except Exception as e:
+        print(f"[compress_pptx] {e}")
+        return data
+
 # ── Konfigurasi AI (opsional) ────────────────────────────────────────────────
 # Set environment variable ANTHROPIC_API_KEY untuk mengaktifkan AI summary
 CLAUDE_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -115,20 +241,28 @@ def simple_analysis(text, filename):
         "char_count":  len(text),
     }
 
-def save_archive(ftype, filename, doc_type, info="", doc_id=""):
-    archive = []
-    if ARCHIVE_FILE.exists():
+def save_archive(ftype, filename, doc_type, info="", doc_id="", sb_url=""):
+    # Coba baca arsip dari Supabase dulu, fallback ke local
+    archive = sb_read_json("uploads", "meta/archive.json") or []
+    if not archive and ARCHIVE_FILE.exists():
         with open(ARCHIVE_FILE, encoding="utf-8") as f:
             try: archive = json.load(f)
             except: pass
-    archive.insert(0, {
+    entry = {
         "id": doc_id,
         "type": ftype, "filename": filename,
         "doc_type": doc_type, "info": info,
         "uploaded_at": datetime.datetime.now().isoformat(),
-    })
+    }
+    if sb_url:
+        entry["sb_url"] = sb_url
+    archive.insert(0, entry)
+    archive = archive[:200]
+    # Simpan ke local
     with open(ARCHIVE_FILE, "w", encoding="utf-8") as f:
-        json.dump(archive[:200], f, ensure_ascii=False, indent=2)
+        json.dump(archive, f, ensure_ascii=False, indent=2)
+    # Simpan ke Supabase
+    sb_write_json("uploads", "meta/archive.json", archive)
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -245,13 +379,18 @@ def process_excel(file):
             "sheets":      sheets,
             "ai_summary":  ai,
         }
+        # Upload file ke Supabase Storage
+        sb_url = sb_upload("uploads", f"archive/{doc_id}_{file.filename}", fb,
+                           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         id_file = DATA_DIR / f"excel_{doc_id}.json"
         with open(id_file, "w", encoding="utf-8") as f2:
             json.dump(data, f2, ensure_ascii=False, indent=2)
         with open(EXCEL_DATA_FILE, "w", encoding="utf-8") as f2:
             json.dump(data, f2, ensure_ascii=False, indent=2)
+        # Simpan JSON data ke Supabase
+        sb_write_json("uploads", f"meta/excel_{doc_id}.json", data)
         save_archive("excel", file.filename, ana["doc_type"],
-                     f"{sum(s['row_count'] for s in sheets)} baris", doc_id)
+                     f"{sum(s['row_count'] for s in sheets)} baris", doc_id, sb_url or "")
         return redirect("/excel.html")
     except Exception as e:
         import traceback
@@ -265,6 +404,7 @@ def process_pdf(file):
         return jsonify({"error": "Jalankan: pip install pdfplumber"}), 500
     try:
         fb = file.read()
+        fb = compress_pdf(fb)
         pages, full_text = [], ""
 
         with pdfplumber.open(BytesIO(fb)) as pdf:
@@ -301,12 +441,16 @@ def process_pdf(file):
             "ai_summary":  ai,
             "pages":       pages,
         }
+        # Upload file ke Supabase Storage
+        sb_url = sb_upload("uploads", f"archive/{doc_id}_{file.filename}", fb, "application/pdf")
         id_file = DATA_DIR / f"pdf_{doc_id}.json"
         with open(id_file, "w", encoding="utf-8") as f2:
             json.dump(data, f2, ensure_ascii=False, indent=2)
         with open(PDF_DATA_FILE, "w", encoding="utf-8") as f2:
             json.dump(data, f2, ensure_ascii=False, indent=2)
-        save_archive("pdf", file.filename, ana["doc_type"], f"{len(pages)} halaman", doc_id)
+        # Simpan JSON data ke Supabase
+        sb_write_json("uploads", f"meta/pdf_{doc_id}.json", data)
+        save_archive("pdf", file.filename, ana["doc_type"], f"{len(pages)} halaman", doc_id, sb_url or "")
         return redirect("/pdf.html")
     except Exception as e:
         import traceback
@@ -336,15 +480,18 @@ def get_pdf():
 @app.route("/api/archive")
 def get_archive():
     ftype = request.args.get("type", "")
-    if ARCHIVE_FILE.exists():
+    # Coba Supabase dulu
+    data = sb_read_json("uploads", "meta/archive.json")
+    # Fallback ke local file
+    if data is None and ARCHIVE_FILE.exists():
         with open(ARCHIVE_FILE, encoding="utf-8") as f:
-            try:
-                data = json.load(f)
-                if ftype:
-                    data = [d for d in data if d.get("type") == ftype]
-                return jsonify(data)
-            except: pass
-    return jsonify([])
+            try: data = json.load(f)
+            except: data = None
+    if data is None:
+        data = []
+    if ftype:
+        data = [d for d in data if d.get("type") == ftype]
+    return jsonify(data)
 
 @app.route("/api/delete/<ftype>/<doc_id>", methods=["DELETE"])
 def delete_doc(ftype, doc_id):
@@ -526,6 +673,11 @@ def casemix_files(section):
     if section not in CASEMIX_SECTIONS:
         return jsonify({"files": [], "error": "Section tidak valid"}), 400
     CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    # Coba Supabase dulu
+    sb_data = sb_read_json("casemix", f"meta/{section}.json")
+    if sb_data is not None:
+        return jsonify(sb_data)
+    # Fallback ke local file
     meta_file = CASEMIX_DATA_DIR / f"{section}.json"
     if meta_file.exists():
         with open(meta_file, encoding="utf-8") as fp:
@@ -538,6 +690,11 @@ def casemix_files(section):
 @app.route("/casemix/api/news")
 def casemix_news():
     CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    # Coba Supabase dulu
+    sb_data = sb_read_json("casemix", "meta/news.json")
+    if sb_data is not None:
+        return jsonify(sb_data)
+    # Fallback ke local file
     news_file = CASEMIX_DATA_DIR / "news.json"
     if news_file.exists():
         with open(news_file, encoding="utf-8") as fp:
@@ -560,7 +717,10 @@ def casemix_sync_news():
         return jsonify({"error": f"Gagal mengambil data: {e}"}), 502
 
     news_file = CASEMIX_DATA_DIR / "news.json"
-    existing = json.loads(news_file.read_text(encoding="utf-8")) if news_file.exists() else {"news": [], "count": 0}
+    # Coba baca dari Supabase dulu, fallback ke local
+    existing = sb_read_json("casemix", "meta/news.json")
+    if existing is None:
+        existing = json.loads(news_file.read_text(encoding="utf-8")) if news_file.exists() else {"news": [], "count": 0}
     existing_ids = {n["id"] for n in existing["news"]}
 
     def strip_html(s):
@@ -599,7 +759,10 @@ def casemix_sync_news():
         added += 1
 
     existing["count"] = len(existing["news"])
+    # Simpan ke local
     news_file.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Simpan ke Supabase
+    sb_write_json("casemix", "meta/news.json", existing)
     return jsonify({"added": added, "total": existing["count"]})
 
 @app.route("/casemix/api/section-info")
@@ -615,6 +778,12 @@ def casemix_section_info():
 
 @app.route("/casemix/files/<section>/<filename>")
 def casemix_file_serve(section, filename):
+    # Kalau Supabase tersedia, redirect ke public URL
+    if get_supabase() and SUPABASE_URL:
+        sb_path = f"{section}/{filename}"
+        sb_public_url = f"{SUPABASE_URL}/storage/v1/object/public/casemix/{sb_path}"
+        return redirect(sb_public_url)
+    # Fallback ke local file
     section_dir = CASEMIX_DIR / section
     fp = section_dir / filename
     if not fp.exists():
@@ -649,9 +818,22 @@ def casemix_save_doc(file, section):
     doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
-    file.save(str(section_dir / stored_name))
+    fb = file.read()
+    ext = Path(file.filename).suffix.lower()
+    if ext == ".pdf":
+        fb = compress_pdf(fb)
+    elif ext in (".pptx", ".ppt"):
+        fb = compress_pptx(fb)
     title = request.form.get("title", file.filename)
     desc  = request.form.get("description", "")
+    # Upload ke Supabase
+    import mimetypes
+    ct = mimetypes.guess_type(file.filename)[0] or "application/octet-stream"
+    sb_url = sb_upload("casemix", f"{section}/{stored_name}", fb, ct)
+    # Fallback ke local storage kalau Supabase tidak tersedia
+    if not sb_url:
+        with open(str(section_dir / stored_name), "wb") as lf:
+            lf.write(fb)
     entry = {
         "id":               doc_id,
         "title":            title,
@@ -660,19 +842,25 @@ def casemix_save_doc(file, section):
         "description":      desc,
         "uploaded_at":      datetime.datetime.now().isoformat(),
         "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
-        "file_url":         f"/casemix/files/{section}/{stored_name}",
+        "file_url":         sb_url if sb_url else f"/casemix/files/{section}/{stored_name}",
         "section":          section,
     }
-    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
-    meta = {"files": [], "count": 0}
-    if meta_file.exists():
-        with open(meta_file, encoding="utf-8") as fp:
-            try: meta = json.load(fp)
-            except: pass
+    # Baca metadata: coba Supabase dulu, fallback ke local
+    meta = sb_read_json("casemix", f"meta/{section}.json")
+    if meta is None:
+        meta_file = CASEMIX_DATA_DIR / f"{section}.json"
+        meta = {"files": [], "count": 0}
+        if meta_file.exists():
+            with open(meta_file, encoding="utf-8") as fp:
+                try: meta = json.load(fp)
+                except: pass
     meta["files"].insert(0, entry)
     meta["count"] = len(meta["files"])
+    # Simpan metadata ke local dan Supabase
+    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
     with open(meta_file, "w", encoding="utf-8") as fp:
         json.dump(meta, fp, ensure_ascii=False, indent=2)
+    sb_write_json("casemix", f"meta/{section}.json", meta)
     return jsonify({"ok": True, "id": doc_id, "entry": entry})
 
 def casemix_save_galeri(file):
@@ -681,8 +869,17 @@ def casemix_save_galeri(file):
     doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
-    file.save(str(section_dir / stored_name))
+    fb = file.read()
+    fb = compress_image(fb)
     caption = request.form.get("caption", "")
+    # Upload ke Supabase
+    import mimetypes
+    ct = mimetypes.guess_type(file.filename)[0] or "image/jpeg"
+    sb_url = sb_upload("casemix", f"galeri/{stored_name}", fb, ct)
+    # Fallback ke local storage kalau Supabase tidak tersedia
+    if not sb_url:
+        with open(str(section_dir / stored_name), "wb") as lf:
+            lf.write(fb)
     entry = {
         "id":               doc_id,
         "caption":          caption,
@@ -690,18 +887,24 @@ def casemix_save_galeri(file):
         "original_name":    file.filename,
         "uploaded_at":      datetime.datetime.now().isoformat(),
         "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
-        "img_url":          f"/casemix/files/galeri/{stored_name}",
+        "img_url":          sb_url if sb_url else f"/casemix/files/galeri/{stored_name}",
     }
-    meta_file = CASEMIX_DATA_DIR / "galeri.json"
-    meta = {"files": [], "count": 0}
-    if meta_file.exists():
-        with open(meta_file, encoding="utf-8") as fp:
-            try: meta = json.load(fp)
-            except: pass
+    # Baca metadata: coba Supabase dulu, fallback ke local
+    meta = sb_read_json("casemix", "meta/galeri.json")
+    if meta is None:
+        meta_file = CASEMIX_DATA_DIR / "galeri.json"
+        meta = {"files": [], "count": 0}
+        if meta_file.exists():
+            with open(meta_file, encoding="utf-8") as fp:
+                try: meta = json.load(fp)
+                except: pass
     meta["files"].insert(0, entry)
     meta["count"] = len(meta["files"])
+    # Simpan ke local dan Supabase
+    meta_file = CASEMIX_DATA_DIR / "galeri.json"
     with open(meta_file, "w", encoding="utf-8") as fp:
         json.dump(meta, fp, ensure_ascii=False, indent=2)
+    sb_write_json("casemix", "meta/galeri.json", meta)
     return jsonify({"ok": True, "id": doc_id, "entry": entry})
 
 def casemix_process_klaim(file):
@@ -765,16 +968,22 @@ def casemix_process_klaim(file):
             "total_rows":       sum(s["row_count"] for s in sheets),
         }
         # Scrape + delete: file TIDAK disimpan, hanya data JSON-nya
-        meta_file = CASEMIX_DATA_DIR / "klaim.json"
-        meta = {"files": [], "count": 0}
-        if meta_file.exists():
-            with open(meta_file, encoding="utf-8") as fp:
-                try: meta = json.load(fp)
-                except: pass
+        # Baca metadata: coba Supabase dulu, fallback ke local
+        meta = sb_read_json("casemix", "meta/klaim.json")
+        if meta is None:
+            meta_file = CASEMIX_DATA_DIR / "klaim.json"
+            meta = {"files": [], "count": 0}
+            if meta_file.exists():
+                with open(meta_file, encoding="utf-8") as fp:
+                    try: meta = json.load(fp)
+                    except: pass
         meta["files"].insert(0, entry)
         meta["count"] = len(meta["files"])
+        # Simpan ke local dan Supabase
+        meta_file = CASEMIX_DATA_DIR / "klaim.json"
         with open(meta_file, "w", encoding="utf-8") as fp:
             json.dump(meta, fp, ensure_ascii=False, indent=2)
+        sb_write_json("casemix", "meta/klaim.json", meta)
         return jsonify({"ok": True, "id": doc_id})
     except Exception as e:
         import traceback
@@ -801,34 +1010,55 @@ def casemix_add_news():
             news_dir.mkdir(parents=True, exist_ok=True)
             safe_fn = re.sub(r'[^\w\-.]', '_', img.filename)
             stored = f"{news_id}_{safe_fn}"
-            img.save(str(news_dir / stored))
-            entry["img_url"] = f"/casemix/files/hotnews/{stored}"
-    news_file = CASEMIX_DATA_DIR / "news.json"
-    data = {"news": [], "count": 0}
-    if news_file.exists():
-        with open(news_file, encoding="utf-8") as fp:
-            try: data = json.load(fp)
-            except: pass
+            img_bytes = img.read()
+            img_bytes = compress_image(img_bytes)
+            # Upload gambar ke Supabase
+            import mimetypes
+            ct = mimetypes.guess_type(img.filename)[0] or "image/jpeg"
+            sb_img_url = sb_upload("casemix", f"hotnews/{stored}", img_bytes, ct)
+            if sb_img_url:
+                entry["img_url"] = sb_img_url
+            else:
+                # Fallback: simpan lokal
+                with open(str(news_dir / stored), "wb") as lf:
+                    lf.write(img_bytes)
+                entry["img_url"] = f"/casemix/files/hotnews/{stored}"
+    # Baca metadata: coba Supabase dulu, fallback ke local
+    data = sb_read_json("casemix", "meta/news.json")
+    if data is None:
+        news_file = CASEMIX_DATA_DIR / "news.json"
+        data = {"news": [], "count": 0}
+        if news_file.exists():
+            with open(news_file, encoding="utf-8") as fp:
+                try: data = json.load(fp)
+                except: pass
     data["news"].insert(0, entry)
     data["count"] = len(data["news"])
+    # Simpan ke local dan Supabase
+    news_file = CASEMIX_DATA_DIR / "news.json"
     with open(news_file, "w", encoding="utf-8") as fp:
         json.dump(data, fp, ensure_ascii=False, indent=2)
+    sb_write_json("casemix", "meta/news.json", data)
     return jsonify({"ok": True, "id": news_id, "entry": entry})
 
 @app.route("/casemix/delete/<section>/<doc_id>", methods=["DELETE"])
 def casemix_delete(section, doc_id):
     if section not in CASEMIX_SECTIONS:
         return jsonify({"error": "Section tidak valid"}), 400
-    meta_file = CASEMIX_DATA_DIR / (f"news.json" if section == "hotnews" else f"{section}.json")
-    meta = {}
-    deleted_entry = None
-    if meta_file.exists():
-        with open(meta_file, encoding="utf-8") as fp:
-            try: meta = json.load(fp)
-            except: pass
+    meta_json_key = "news.json" if section == "hotnews" else f"{section}.json"
+    meta_file = CASEMIX_DATA_DIR / meta_json_key
+    # Baca metadata: coba Supabase dulu, fallback ke local
+    meta = sb_read_json("casemix", f"meta/{meta_json_key}")
+    if meta is None:
+        meta = {}
+        if meta_file.exists():
+            with open(meta_file, encoding="utf-8") as fp:
+                try: meta = json.load(fp)
+                except: pass
     list_key = "news" if section == "hotnews" else "files"
     items = meta.get(list_key, [])
     new_items = []
+    deleted_entry = None
     for item in items:
         if item.get("id") == doc_id:
             deleted_entry = item
@@ -836,12 +1066,17 @@ def casemix_delete(section, doc_id):
             new_items.append(item)
     meta[list_key] = new_items
     meta["count"] = len(new_items)
+    # Simpan metadata yang diupdate ke local dan Supabase
     with open(meta_file, "w", encoding="utf-8") as fp:
         json.dump(meta, fp, ensure_ascii=False, indent=2)
+    sb_write_json("casemix", f"meta/{meta_json_key}", meta)
     # Hapus file fisik jika ada (klaim tidak punya file fisik)
     if deleted_entry:
         fn = deleted_entry.get("filename") or deleted_entry.get("img_url", "").split("/")[-1]
         if fn:
+            # Hapus dari Supabase Storage
+            sb_delete("casemix", f"{section}/{fn}")
+            # Hapus dari local storage jika ada
             fp2 = CASEMIX_DIR / section / fn
             if fp2.exists():
                 fp2.unlink()
