@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Casemix — RS. Wava Husada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito+Sans:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal:        #0d6e7a;
+  --teal-dark:   #094e58;
+  --teal-light:  #1a8fa0;
+  --green:       #1f9068;
+  --green-light: #27b880;
+  --orange:      #e8821e;
+  --orange-light:#f4a44a;
+  --cream:       #f5f0e8;
+  --cream-dark:  #ede5d8;
+  --white:       #ffffff;
+  --dark:        #122830;
+  --dark-2:      #1e3d47;
+  --gray:        #6b8a92;
+  --gray-light:  #b8cdd2;
+  --shadow-sm:   0 2px 12px rgba(13,110,122,.12);
+  --shadow-md:   0 8px 32px rgba(13,110,122,.18);
+  --shadow-lg:   0 20px 60px rgba(13,110,122,.22);
+  --radius: 14px; --radius-sm: 8px;
+  --transition: .3s cubic-bezier(.4,0,.2,1);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Nunito Sans', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%; height: 72px;
+  background: rgba(9,78,88,.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  transition: var(--transition);
+}
+.navbar.scrolled { height: 64px; box-shadow: var(--shadow-md); }
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--green-light), var(--teal-light));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.nav-logo-text span:first-child { display: block; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--white); }
+.nav-logo-text span:last-child  { display: block; font-size: 10px; color: var(--gray-light); text-transform: uppercase; letter-spacing: 2px; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+.nav-links a { color: rgba(255,255,255,.75); text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: .4px; transition: var(--transition); position: relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--orange); transition:var(--transition); }
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--white); }
+.nav-links a.active::after { width: 100%; }
+.nav-back { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,.55) !important; font-size: 13px !important; }
+.nav-back svg { width: 14px; height: 14px; }
+.nav-back:hover { color: var(--orange-light) !important; }
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.8);border-radius:2px;transition:var(--transition)}
+.nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.nav-mobile{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--teal-dark);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.nav-mobile.open{display:flex}
+.nav-mobile a{color:rgba(255,255,255,.85);text-decoration:none;font-size:20px;font-weight:700;font-family:'Playfair Display',serif}
+.nav-mobile a:hover{color:var(--orange-light)}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  margin-top: 72px;
+  background: var(--teal-dark);
+  padding: 48px 5% 56px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(26,143,160,.2) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 60% at 10% 80%, rgba(31,144,104,.15) 0%, transparent 60%);
+}
+.page-header-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+.page-header-inner {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 32px;
+  flex-wrap: wrap;
+}
+.page-header-left {}
+.page-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: rgba(255,255,255,.45);
+  margin-bottom: 16px; text-decoration: none;
+}
+.page-breadcrumb a { color: rgba(255,255,255,.45); text-decoration: none; transition: var(--transition); }
+.page-breadcrumb a:hover { color: var(--orange-light); }
+.page-breadcrumb span { color: rgba(255,255,255,.25); }
+.page-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50px; padding: 5px 14px;
+  font-size: 11px; font-weight: 700; color: var(--orange-light);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px;
+}
+.page-badge::before { content:''; width:6px; height:6px; background:var(--green-light); border-radius:50%; }
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; line-height: 1.15;
+  color: var(--white); margin-bottom: 10px;
+}
+.page-title .accent { color: var(--orange-light); }
+.page-subtitle { font-size: 14px; color: rgba(255,255,255,.55); line-height: 1.6; max-width: 500px; }
+.page-header-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+}
+.page-rs-info {
+  text-align: right;
+}
+.page-rs-name {
+  font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700;
+  color: var(--white); margin-bottom: 4px;
+}
+.page-rs-addr { font-size: 12px; color: rgba(255,255,255,.45); }
+.page-rs-logo {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--cream-dark);
+  box-shadow: var(--shadow-sm);
+}
+.stats-bar-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 5%;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-cell {
+  padding: 20px 24px;
+  border-right: 1px solid var(--cream-dark);
+  display: flex; align-items: center; gap: 14px;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.stat-cell-icon.teal   { background: rgba(13,110,122,.12); }
+.stat-cell-icon.green  { background: rgba(31,144,104,.12); }
+.stat-cell-icon.orange { background: rgba(232,130,30,.12); }
+.stat-cell-icon.dark   { background: rgba(18,40,48,.08); }
+.stat-cell-num { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--dark); line-height: 1; }
+.stat-cell-lbl { font-size: 11px; color: var(--gray); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── MAIN CONTENT ── */
+.main-content { max-width: 1200px; margin: 0 auto; padding: 40px 5% 64px; }
+
+/* ── SECTION GROUP ── */
+.section-group { margin-bottom: 40px; }
+.group-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--gray); margin-bottom: 16px;
+}
+.group-label::after { content:''; flex:1; height:1px; background: var(--cream-dark); }
+.group-label span { white-space: nowrap; }
+
+/* ── SECTION CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+}
+.cards-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.cards-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ── SECTION CARD ── */
+.section-card {
+  background: var(--white);
+  border: 1.5px solid var(--cream-dark);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+  display: flex; flex-direction: column; gap: 14px;
+  text-decoration: none; color: inherit;
+  transition: var(--transition);
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.section-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--card-accent, linear-gradient(90deg, var(--teal), var(--teal-light)));
+  transform: scaleX(0); transform-origin: left; transition: var(--transition);
+}
+.section-card:hover {
+  border-color: transparent;
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+.section-card:hover::before { transform: scaleX(1); }
+
+/* Card accent variants */
+.card-teal   { --card-accent: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+.card-green  { --card-accent: linear-gradient(90deg, var(--green), var(--green-light)); }
+.card-orange { --card-accent: linear-gradient(90deg, var(--orange), var(--orange-light)); }
+.card-dark   { --card-accent: linear-gradient(90deg, var(--dark), var(--dark-2)); }
+
+.card-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  flex-shrink: 0;
+}
+.card-icon.teal   { background: rgba(13,110,122,.1); }
+.card-icon.green  { background: rgba(31,144,104,.1); }
+.card-icon.orange { background: rgba(232,130,30,.1); }
+.card-icon.dark   { background: rgba(18,40,48,.08); }
+
+.card-body { flex: 1; }
+.card-badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.badge-doclib   { background: rgba(13,110,122,.1); color: var(--teal); }
+.badge-data     { background: rgba(31,144,104,.1); color: var(--green); }
+.badge-gallery  { background: rgba(232,130,30,.1); color: var(--orange); }
+.badge-news     { background: rgba(18,40,48,.08); color: var(--dark-2); }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 700; color: var(--dark);
+  line-height: 1.3; margin-bottom: 6px;
+}
+.card-desc { font-size: 12px; color: var(--gray); line-height: 1.6; }
+
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px; border-top: 1px solid var(--cream-dark);
+}
+.card-count {
+  font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gray);
+  display: flex; align-items: center; gap: 5px;
+}
+.card-count .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cream-dark); }
+.card-count .dot.active { background: var(--green-light); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.card-action {
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  display: flex; align-items: center; gap: 4px;
+  transition: var(--transition);
+}
+.section-card:hover .card-action { color: var(--orange); gap: 7px; }
+
+/* ── KLAIM CARD SPECIAL ── */
+.card-klaim {
+  grid-column: span 1;
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--dark-2) 100%);
+  border-color: transparent;
+  color: var(--white);
+}
+.card-klaim .card-title { color: var(--white); }
+.card-klaim .card-desc  { color: rgba(255,255,255,.55); }
+.card-klaim .card-footer { border-top-color: rgba(255,255,255,.12); }
+.card-klaim .card-count  { color: rgba(255,255,255,.45); }
+.card-klaim .card-action { color: var(--orange-light); }
+.card-klaim:hover { box-shadow: 0 20px 60px rgba(9,78,88,.4); }
+.card-klaim::before { background: linear-gradient(90deg, var(--orange), var(--orange-light)); }
+.klaim-sub {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.klaim-tag {
+  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.75);
+}
+
+/* ── HOT NEWS CARD ── */
+.card-hotnews {
+  background: var(--dark);
+  border-color: transparent; color: var(--white);
+}
+.card-hotnews .card-title { color: var(--white); }
+.card-hotnews .card-desc  { color: rgba(255,255,255,.5); }
+.card-hotnews .card-footer { border-top-color: rgba(255,255,255,.1); }
+.card-hotnews .card-count  { color: rgba(255,255,255,.4); }
+.card-hotnews .card-action { color: var(--orange-light); }
+.card-hotnews:hover { box-shadow: 0 20px 60px rgba(18,40,48,.4); }
+.card-hotnews::before { background: linear-gradient(90deg, var(--orange), var(--orange-light)); }
+.news-preview {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px; padding: 10px 12px;
+}
+.news-preview-item {
+  font-size: 11px; color: rgba(255,255,255,.55); line-height: 1.5;
+  display: flex; align-items: flex-start; gap: 8px; padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.news-preview-item:last-child { border-bottom: none; padding-bottom: 0; }
+.news-preview-item::before { content: '•'; color: var(--orange-light); flex-shrink: 0; margin-top: 1px; }
+.news-empty { font-size: 11px; color: rgba(255,255,255,.3); text-align: center; padding: 12px; }
+
+/* ── UR CARD ── */
+.card-ur {
+  background: linear-gradient(135deg, #0a3d47 0%, #0d6e7a 100%);
+  border-color: transparent; color: var(--white);
+}
+.card-ur .card-title { color: var(--white); }
+.card-ur .card-desc  { color: rgba(255,255,255,.55); }
+.card-ur .card-footer { border-top-color: rgba(255,255,255,.12); }
+.card-ur .card-count  { color: rgba(255,255,255,.4); }
+.card-ur .card-action { color: var(--green-light); }
+.card-ur:hover { box-shadow: 0 20px 60px rgba(13,110,122,.5); }
+.card-ur::before { background: linear-gradient(90deg, var(--green-light), var(--teal-light)); }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.d1{transition-delay:.05s} .d2{transition-delay:.1s} .d3{transition-delay:.15s} .d4{transition-delay:.2s} .d5{transition-delay:.25s}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+  padding: .75rem 1.25rem; border-radius: 8px; font-size: .875rem;
+  background: var(--dark); color: var(--white);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .25s, transform .25s;
+  max-width: 320px; display: flex; align-items: center; gap: 8px;
+}
+.toast.show { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .cards-grid-5 { grid-template-columns: repeat(3, 1fr); }
+  .cards-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .page-header { padding: 36px 4% 44px; }
+  .page-header-right { display: none; }
+  .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+  .stat-cell:nth-child(2) { border-right: none; }
+  .cards-grid-5, .cards-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .main-content { padding: 28px 4% 48px; }
+}
+@media (max-width: 480px) {
+  .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+  .cards-grid-5, .cards-grid-4 { grid-template-columns: 1fr 1fr; }
+  .page-title { font-size: 22px; }
+}
+@media (max-width: 380px) {
+  .cards-grid-5, .cards-grid-4 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🗂️</div>
+    <div class="nav-logo-text">
+      <span>Dairy Meruno</span>
+      <span>Arsip Pribadi Rumah Sakit</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      Beranda
+    </a></li>
+    <li><a href="#klaim">Rekapitulasi</a></li>
+    <li><a href="#dokumen">Dokumen</a></li>
+    <li><a href="#media">Media</a></li>
+    <li><a href="/casemix/hotnews" class="active">Hot News</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="nav-mobile" id="mobileNav">
+  <a href="/" onclick="toggleMenu()">← Beranda</a>
+  <a href="#klaim" onclick="toggleMenu()">Rekapitulasi Klaim</a>
+  <a href="#dokumen" onclick="toggleMenu()">Dokumen</a>
+  <a href="#media" onclick="toggleMenu()">Media & Galeri</a>
+  <a href="/casemix/hotnews" onclick="toggleMenu()">Hot News</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-bg"></div>
+  <div class="page-header-dots"></div>
+  <div class="page-header-inner">
+    <div class="page-header-left">
+      <div class="page-breadcrumb">
+        <a href="/">Dairy Meruno</a>
+        <span>/</span>
+        <span style="color:rgba(255,255,255,.7)">Casemix</span>
+      </div>
+      <div class="page-badge">🏥 Instalasi Casemix</div>
+      <h1 class="page-title">Dashboard <span class="accent">Casemix</span></h1>
+      <p class="page-subtitle">Portal informasi dan dokumen Instalasi Casemix RS. Wava Husada — klaim, regulasi, utilization review, dan galeri kegiatan.</p>
+    </div>
+    <div class="page-header-right">
+      <div class="page-rs-logo">🏥</div>
+      <div class="page-rs-info">
+        <div class="page-rs-name">RS. Wava Husada</div>
+        <div class="page-rs-addr">Jl. Panglima Sudirman 99A<br>Kepanjen, Malang</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-cell">
+      <div class="stat-cell-icon teal">📁</div>
+      <div>
+        <div class="stat-cell-num" id="statDokumen">0</div>
+        <div class="stat-cell-lbl">Total Dokumen</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-icon green">📊</div>
+      <div>
+        <div class="stat-cell-num" id="statKlaim">—</div>
+        <div class="stat-cell-lbl">Data Klaim</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-icon orange">🖼️</div>
+      <div>
+        <div class="stat-cell-num" id="statFoto">0</div>
+        <div class="stat-cell-lbl">Foto Galeri</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-icon dark">📢</div>
+      <div>
+        <div class="stat-cell-num" id="statNews">0</div>
+        <div class="stat-cell-lbl">Hot News</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- ROW 1: Data & Klaim (sesuai wireframe baris atas kiri) -->
+  <div class="section-group" id="klaim">
+    <div class="group-label"><span>📊 Data & Laporan</span></div>
+    <div class="cards-grid cards-grid-5">
+
+      <!-- 1. Rekapitulasi Klaim -->
+      <a href="/casemix/klaim" class="section-card card-klaim card-green reveal">
+        <div>
+          <div class="card-badge badge-data" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.8)">Data · Excel</div>
+          <div style="font-size:28px;margin-bottom:8px">📊</div>
+          <div class="card-title">Rekapitulasi Klaim</div>
+          <div class="card-desc" style="margin-bottom:10px">Data klaim BPJS per kategori pembayaran.</div>
+          <div class="klaim-sub">
+            <span class="klaim-tag">INACBGS</span>
+            <span class="klaim-tag">Non-INACBGS</span>
+            <span class="klaim-tag">Obat</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot active" id="dotKlaim"></div><span id="countKlaim">Belum ada data</span></div>
+          <div class="card-action">Buka <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 2. Pedoman dan Regulasi -->
+      <a href="/casemix/regulasi" class="section-card card-teal reveal d1" id="dokumen">
+        <div class="card-icon teal">📋</div>
+        <div class="card-body">
+          <div class="card-badge badge-doclib">Dokumen · PDF/DOCX</div>
+          <div class="card-title">Pedoman dan Regulasi</div>
+          <div class="card-desc">PMK, SE, SK, dan regulasi BPJS yang berlaku.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotReg"></div><span id="countReg">0 dokumen</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 3. Galeri & Memory -->
+      <a href="/casemix/galeri" class="section-card card-orange reveal d2" id="media">
+        <div class="card-icon orange">🖼️</div>
+        <div class="card-body">
+          <div class="card-badge badge-gallery">Media · Foto</div>
+          <div class="card-title">Galeri &amp; Memory</div>
+          <div class="card-desc">Dokumentasi foto kegiatan, rapat, dan momen Instalasi Casemix.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotGal"></div><span id="countGal">0 foto</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 4. Utilization Review -->
+      <a href="/casemix/ur" class="section-card card-ur reveal d3">
+        <div class="card-icon" style="background:rgba(255,255,255,.1);font-size:22px">📑</div>
+        <div class="card-body">
+          <div class="card-badge" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)">Laporan · PPTX/PDF</div>
+          <div class="card-title">Utilization Review</div>
+          <div class="card-desc">Laporan UR periodik — top diagnosa, CBG, analisa anomali, PRB.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotUR"></div><span id="countUR">0 laporan</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 5. SPO -->
+      <a href="/casemix/spo" class="section-card card-teal reveal d4">
+        <div class="card-icon teal">📌</div>
+        <div class="card-body">
+          <div class="card-badge badge-doclib">Dokumen · PDF/DOCX</div>
+          <div class="card-title">SPO</div>
+          <div class="card-desc">Standar Prosedur Operasional koding, verifikasi, dan klaim.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotSPO"></div><span id="countSPO">0 dokumen</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ROW 2: Dokumen + Hot News (sesuai wireframe baris bawah) -->
+  <div class="section-group">
+    <div class="group-label"><span>📁 Pedoman &amp; Kebijakan</span></div>
+    <div class="cards-grid cards-grid-4">
+
+      <!-- 6. Pedoman Pengorganisasian -->
+      <a href="/casemix/pengorganisasian" class="section-card card-teal reveal">
+        <div class="card-icon teal">🏛️</div>
+        <div class="card-body">
+          <div class="card-badge badge-doclib">Dokumen · PDF/DOCX</div>
+          <div class="card-title">Pedoman Pengorganisasian</div>
+          <div class="card-desc">Struktur organisasi dan uraian tugas Instalasi Casemix.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotPO"></div><span id="countPO">0 dokumen</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 7. Pedoman Pelayanan -->
+      <a href="/casemix/pelayanan" class="section-card card-teal reveal d1">
+        <div class="card-icon teal">📖</div>
+        <div class="card-body">
+          <div class="card-badge badge-doclib">Dokumen · PDF/DOCX</div>
+          <div class="card-title">Pedoman Pelayanan</div>
+          <div class="card-desc">Panduan teknis pelayanan casemix dan alur klaim pasien.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotPL"></div><span id="countPL">0 dokumen</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 8. Kebijakan Layanan -->
+      <a href="/casemix/kebijakan" class="section-card card-teal reveal d2">
+        <div class="card-icon teal">⚖️</div>
+        <div class="card-body">
+          <div class="card-badge badge-doclib">Dokumen · PDF/DOCX</div>
+          <div class="card-title">Kebijakan Layanan</div>
+          <div class="card-desc">SK dan kebijakan internal RS terkait pelayanan casemix.</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotKB"></div><span id="countKB">0 dokumen</span></div>
+          <div class="card-action">Lihat <span>→</span></div>
+        </div>
+      </a>
+
+      <!-- 9. Hot News -->
+      <a href="/casemix/hotnews" class="section-card card-hotnews reveal d3">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <div style="font-size:24px">📢</div>
+          <div>
+            <div class="card-badge badge-news" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)">Pengumuman</div>
+            <div class="card-title">Hot News</div>
+          </div>
+        </div>
+        <div class="news-preview" id="newsPreview">
+          <div class="news-empty">Belum ada pengumuman</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-count"><div class="dot" id="dotNews"></div><span id="countNews">0 berita</span></div>
+          <div class="card-action">Lihat Semua <span>→</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// NAVBAR SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 50);
+});
+
+// MOBILE MENU
+function toggleMenu() {
+  const h = document.getElementById('hamburger');
+  const m = document.getElementById('mobileNav');
+  h.classList.toggle('open');
+  m.classList.toggle('open');
+  document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+}
+
+// REVEAL
+const revealObs = new IntersectionObserver(
+  es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.1 }
+);
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// TOAST
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  const icons = { success: '✅', error: '❌', info: 'ℹ️', warn: '⚠️' };
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// LOAD STATS dari backend Flask
+async function loadStats() {
+  try {
+    // Nanti akan diisi dari /casemix/api/stats
+    // Untuk sekarang tampil 0 / placeholder
+    const sections = ['regulasi','spo','pengorganisasian','pelayanan','kebijakan','ur','galeri'];
+    let totalDok = 0;
+    // Fetch masing-masing section count
+    for (const sec of sections) {
+      try {
+        const res = await fetch(`/casemix/api/files/${sec}`);
+        if (res.ok) {
+          const data = await res.json();
+          const count = data.files ? data.files.length : 0;
+          totalDok += count;
+          // Update count per section
+          const map = {
+            regulasi: 'countReg', spo: 'countSPO',
+            pengorganisasian: 'countPO', pelayanan: 'countPL',
+            kebijakan: 'countKB', ur: 'countUR', galeri: 'countGal'
+          };
+          const dotMap = {
+            regulasi: 'dotReg', spo: 'dotSPO',
+            pengorganisasian: 'dotPO', pelayanan: 'dotPL',
+            kebijakan: 'dotKB', ur: 'dotUR', galeri: 'dotGal'
+          };
+          if (map[sec]) {
+            const label = sec === 'galeri' ? 'foto' : sec === 'ur' ? 'laporan' : 'dokumen';
+            document.getElementById(map[sec]).textContent = `${count} ${label}`;
+            if (count > 0 && dotMap[sec]) {
+              document.getElementById(dotMap[sec]).classList.add('active');
+            }
+          }
+        }
+      } catch(_) {}
+    }
+    document.getElementById('statDokumen').textContent = totalDok;
+
+    // Set statFoto from galeri count already fetched in loop above
+    const galCountEl = document.getElementById('countGal');
+    const galCountText = galCountEl ? galCountEl.textContent : '0 foto';
+    const galCountNum = parseInt(galCountText) || 0;
+    document.getElementById('statFoto').textContent = galCountNum;
+
+    // Load klaim
+    try {
+      const res = await fetch('/casemix/api/files/klaim');
+      if (res.ok) {
+        const data = await res.json();
+        const count = data.files ? data.files.length : 0;
+        document.getElementById('statKlaim').textContent = count > 0 ? `${count} periode` : '—';
+        document.getElementById('countKlaim').textContent = count > 0 ? `${count} periode` : 'Belum ada data';
+        if (count > 0) document.getElementById('dotKlaim')?.classList.add('active');
+      }
+    } catch(_) {}
+
+    // Load hot news
+    try {
+      const res = await fetch('/casemix/api/news');
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.news || [];
+        document.getElementById('statNews').textContent = items.length;
+        document.getElementById('countNews').textContent = `${items.length} berita`;
+        if (items.length > 0) {
+          document.getElementById('dotNews').classList.add('active');
+          const preview = document.getElementById('newsPreview');
+          preview.innerHTML = items.slice(0, 3).map(n => `
+            <div class="news-preview-item">
+              <span>${n.title || 'Pengumuman'}</span>
+            </div>`).join('');
+        }
+      }
+    } catch(_) {}
+
+  } catch(err) {
+    // Backend belum aktif — tampilkan placeholder saja
+ 

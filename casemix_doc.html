@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Dokumen — Casemix RS. Wava Husada</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#0d6e7a; --teal-dark:#094e58; --teal-light:#1a8fa0;
+  --green:#1f9068; --green-light:#27b880;
+  --orange:#e8821e; --orange-light:#f4a44a;
+  --cream:#f5f0e8; --cream-dark:#ede5d8;
+  --dark:#122830; --dark-2:#1e3d47;
+  --gray:#6b8a92; --gray-light:#b8cdd2;
+  --white:#fff;
+  --red:#c0392b; --blue:#2980b9;
+  --radius:14px; --shadow:0 4px 20px rgba(18,40,48,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* ── Navbar ── */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--teal-dark);
+  padding:0 5%;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);
+}
+.nav-brand{font-family:'Playfair Display',serif;font-size:17px;color:white;font-weight:700;white-space:nowrap}
+.nav-breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.6);font-weight:600}
+.nav-breadcrumb a{color:rgba(255,255,255,.7);transition:.2s}.nav-breadcrumb a:hover{color:white}
+.nav-breadcrumb .sep{opacity:.4}
+.nav-breadcrumb .current{color:var(--orange-light);font-weight:700}
+.nav-right{display:flex;align-items:center}
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  color:white;padding:7px 16px;border-radius:50px;font-size:13px;font-weight:700;
+  transition:.2s;
+}
+.nav-back:hover{background:rgba(255,255,255,.2)}
+
+/* ── Page Header ── */
+.page-header{
+  background:linear-gradient(135deg, var(--teal-dark) 0%, var(--dark-2) 60%, #0a2530 100%);
+  padding:50px 5% 40px;position:relative;overflow:hidden;
+}
+.page-header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(13,110,122,.3),transparent);
+}
+.page-header-inner{position:relative;max-width:900px;margin:0 auto}
+.section-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:50px;padding:5px 16px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--orange-light);margin-bottom:16px;
+}
+.page-header h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,4vw,38px);color:white;
+  margin-bottom:8px;line-height:1.2;
+}
+.page-header p{color:rgba(255,255,255,.6);font-size:15px;margin-bottom:20px}
+.header-stats{display:flex;gap:16px;flex-wrap:wrap}
+.hstat{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:10px 18px;
+  font-size:13px;color:rgba(255,255,255,.8);font-weight:600;
+}
+.hstat span{color:var(--orange-light);font-family:'Space Mono',monospace;font-weight:700;margin-right:6px}
+
+/* ── Main Content ── */
+.main{max-width:900px;margin:0 auto;padding:36px 5% 80px}
+
+/* ── Upload Card ── */
+.upload-card{
+  background:var(--white);border-radius:var(--radius);border:1.5px solid var(--cream-dark);
+  box-shadow:var(--shadow);padding:28px;margin-bottom:28px;
+}
+.upload-card h2{font-size:16px;font-weight:800;color:var(--teal-dark);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.drop-zone{
+  border:2px dashed var(--gray-light);border-radius:12px;
+  padding:32px;text-align:center;cursor:pointer;
+  transition:.2s;background:var(--cream);position:relative;
+}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.04)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:36px;margin-bottom:10px;display:block}
+.drop-text{font-size:14px;color:var(--gray);font-weight:600}
+.drop-text strong{color:var(--teal);cursor:pointer}
+.drop-hint{font-size:12px;color:var(--gray-light);margin-top:4px}
+.file-preview{
+  margin-top:12px;
+  background:var(--cream);border:1px solid var(--cream-dark);
+  border-radius:8px;padding:12px 16px;
+  display:none;align-items:center;gap:10px;
+}
+.file-preview.show{display:flex}
+.file-preview .fp-icon{font-size:24px}
+.file-preview .fp-name{font-weight:700;font-size:14px;color:var(--dark)}
+.file-preview .fp-size{font-size:12px;color:var(--gray)}
+.file-preview .fp-remove{margin-left:auto;cursor:pointer;color:var(--red);font-size:18px;opacity:.7;transition:.2s}
+.file-preview .fp-remove:hover{opacity:1}
+.form-group{margin-top:16px}
+.form-group label{display:block;font-size:13px;font-weight:700;color:var(--dark-2);margin-bottom:6px}
+.form-group input,.form-group textarea{
+  width:100%;padding:10px 14px;
+  border:1.5px solid var(--cream-dark);border-radius:8px;
+  font-family:'Nunito Sans',sans-serif;font-size:14px;
+  background:var(--cream);color:var(--dark);
+  transition:.2s;
+}
+.form-group input:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--teal);background:white;
+}
+.form-group textarea{resize:vertical;min-height:70px}
+.upload-btn{
+  margin-top:18px;width:100%;padding:13px;
+  background:var(--teal);color:white;border:none;
+  border-radius:10px;font-family:'Nunito Sans',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;
+  transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.upload-btn:hover{background:var(--teal-dark)}
+.upload-btn:disabled{opacity:.5;cursor:not-allowed}
+.upload-progress{
+  display:none;margin-top:12px;
+  background:var(--cream);border-radius:8px;overflow:hidden;height:6px;
+}
+.upload-progress.show{display:block}
+.upload-progress-bar{
+  height:100%;background:linear-gradient(90deg,var(--teal),var(--green-light));
+  width:0%;transition:width .3s ease;border-radius:8px;
+}
+.upload-msg{
+  display:none;margin-top:10px;padding:10px 14px;
+  border-radius:8px;font-size:13px;font-weight:600;
+}
+.upload-msg.show{display:block}
+.upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
+.upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
+
+/* ── Document List ── */
+.doc-list-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.doc-list-header h2{font-size:16px;font-weight:800;color:var(--teal-dark);display:flex;align-items:center;gap:8px}
+.doc-count{
+  background:var(--teal);color:white;
+  border-radius:50px;padding:3px 12px;
+  font-size:12px;font-weight:700;font-family:'Space Mono',monospace;
+}
+.doc-empty{
+  background:var(--white);border-radius:var(--radius);
+  border:1.5px dashed var(--cream-dark);
+  padding:48px;text-align:center;color:var(--gray);
+}
+.doc-empty .empty-icon{font-size:40px;margin-bottom:12px;display:block;opacity:.5}
+.doc-empty p{font-size:15px;font-weight:600}
+.doc-empty small{font-size:13px;opacity:.7}
+
+/* ── Document Cards ── */
+.doc-cards{display:flex;flex-direction:column;gap:12px}
+.doc-card{
+  background:var(--white);border-radius:var(--radius);
+  border:1.5px solid var(--cream-dark);
+  box-shadow:var(--shadow);
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 20px;transition:.2s;
+  opacity:0;transform:translateY(12px);
+}
+.doc-card.revealed{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease}
+.doc-card:hover{border-color:var(--teal-light);box-shadow:0 6px 24px rgba(13,110,122,.1)}
+.doc-type-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;margin-top:2px;
+}
+.doc-type-icon.pdf{background:rgba(192,57,43,.1);color:var(--red)}
+.doc-type-icon.docx,.doc-type-icon.doc{background:rgba(41,128,185,.1);color:var(--blue)}
+.doc-type-icon.pptx,.doc-type-icon.ppt{background:rgba(232,130,30,.1);color:var(--orange)}
+.doc-type-icon.default{background:rgba(107,138,146,.1);color:var(--gray)}
+.doc-info{flex:1;min-width:0}
+.doc-title{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:4px;line-height:1.3}
+.doc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.doc-meta-tag{
+  font-size:11px;font-weight:700;padding:2px 10px;border-radius:50px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.doc-meta-tag.type{background:var(--cream);color:var(--gray)}
+.doc-meta-tag.date{background:rgba(13,110,122,.08);color:var(--teal-dark)}
+.doc-desc{font-size:13px;color:var(--gray);line-height:1.5}
+.doc-actions{display:flex;gap:8px;flex-shrink:0;align-items:center}
+.btn-download{
+  display:flex;align-items:center;gap:6px;
+  background:var(--teal);color:white;
+  padding:8px 16px;border-radius:50px;
+  font-size:13px;font-weight:700;transition:.2s;
+}
+.btn-download:hover{background:var(--teal-dark)}
+.btn-delete{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(192,57,43,.08);color:var(--red);
+  border:none;cursor:pointer;font-size:16px;transition:.2s;
+}
+.btn-delete:hover{background:rgba(192,57,43,.15)}
+
+/* ── Delete Confirm Modal ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(18,40,48,.5);z-index:200;
+  align-items:center;justify-content:center;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:white;border-radius:16px;
+  padding:28px;max-width:360px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  animation:modal-in .2s ease;
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal h3{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:8px}
+.modal p{font-size:14px;color:var(--gray);margin-bottom:20px;line-height:1.5}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.btn-cancel{
+  padding:9px 20px;border-radius:50px;
+  border:1.5px solid var(--cream-dark);background:var(--cream);
+  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
+  color:var(--gray);cursor:pointer;transition:.2s;
+}
+.btn-cancel:hover{border-color:var(--gray-light);color:var(--dark)}
+.btn-confirm-delete{
+  padding:9px 20px;border-radius:50px;
+  background:var(--red);color:white;border:none;
+  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:.2s;
+}
+.btn-confirm-delete:hover{background:#a93226}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .navbar{padding:0 4%}
+  .nav-breadcrumb{display:none}
+  .doc-card{flex-wrap:wrap}
+  .doc-actions{width:100%;justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-brand">🏥 Casemix</div>
+  <div class="nav-breadcrumb">
+    <a href="/">Dairy Meruno</a>
+    <span class="sep">›</span>
+    <a href="/casemix">Casemix</a>
+    <span class="sep">›</span>
+    <span class="current" id="nav-section-title">Dokumen</span>
+  </div>
+  <div class="nav-right">
+    <a href="/casemix" class="nav-back">← Casemix</a>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="section-badge">📋 Document Library</div>
+    <h1 id="header-title">Memuat...</h1>
+    <p id="header-subtitle">RS. Wava Husada — Instalasi Casemix</p>
+    <div class="header-stats">
+      <div class="hstat"><span id="stat-total">0</span>Dokumen tersedia</div>
+      <div class="hstat" id="stat-types-wrap" style="display:none"><span id="stat-types">—</span>Tipe file</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Upload Card -->
+  <div class="upload-card">
+    <h2>⬆️ Upload Dokumen Baru</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="file-input" name="file" accept=".pdf,.docx,.doc">
+        <span class="drop-icon">📁</span>
+        <div class="drop-text">Seret file ke sini atau <strong>klik untuk browse</strong></div>
+        <div class="drop-hint" id="accept-hint">Format: PDF, DOCX, DOC</div>
+      </div>
+
+      <div class="file-preview" id="file-preview">
+        <span class="fp-icon" id="fp-icon">📄</span>
+        <div>
+          <div class="fp-name" id="fp-name"></div>
+          <div class="fp-size" id="fp-size"></div>
+        </div>
+        <span class="fp-remove" id="fp-remove" title="Hapus pilihan">✕</span>
+      </div>
+
+      <div class="form-group">
+        <label for="title-input">Judul Dokumen <span style="color:var(--gray);font-weight:400">(opsional — default: nama file)</span></label>
+        <input type="text" id="title-input" name="title" placeholder="Contoh: SPO Penanganan Pasien Rawat Inap v2.1">
+      </div>
+
+      <div class="form-group">
+        <label for="desc-input">Deskripsi <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+        <textarea id="desc-input" name="description" placeholder="Keterangan singkat tentang dokumen ini..."></textarea>
+      </div>
+
+      <button type="submit" class="upload-btn" id="upload-btn" disabled>
+        📤 Upload Dokumen
+      </button>
+    </form>
+
+    <div class="upload-progress" id="upload-progress">
+      <div class="upload-progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="upload-msg" id="upload-msg"></div>
+  </div>
+
+  <!-- Document List -->
+  <div class="doc-list-header">
+    <h2>📚 Daftar Dokumen <span class="doc-count" id="doc-count">0</span></h2>
+  </div>
+
+  <div id="doc-container">
+    <div class="doc-empty" id="doc-empty">
+      <span class="empty-icon">📂</span>
+      <p>Belum ada dokumen</p>
+      <small>Upload dokumen pertama menggunakan form di atas</small>
+    </div>
+    <div class="doc-cards" id="doc-cards" style="display:none"></div>
+  </div>
+
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3>🗑️ Hapus Dokumen?</h3>
+    <p id="modal-desc">Dokumen ini akan dihapus secara permanen dan tidak dapat dikembalikan.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="btn-cancel">Batal</button>
+      <button class="btn-confirm-delete" id="btn-confirm-delete">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Deteksi Section dari URL ──────────────────────────────────────────────────
+const SECTION = window.location.pathname.split('/').filter(Boolean).pop() || 'regulasi';
+
+const SECTION_META = {
+  regulasi:         { title:'Pedoman & Regulasi',        icon:'📜', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  spo:              { title:'SPO',                        icon:'📋', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  pengorganisasian: { title:'Pedoman Pengorganisasian',  icon:'🏛️', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  pelayanan:        { title:'Pedoman Pelayanan',          icon:'💊', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  kebijakan:        { title:'Kebijakan Layanan',          icon:'⚖️', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+};
+
+const meta = SECTION_META[SECTION] || { title: SECTION, icon: '📂', accept: '.pdf,.docx,.doc', hint: 'PDF, DOCX' };
+
+// Set page titles
+document.title = `${meta.title} — Casemix RS. Wava Husada`;
+document.getElementById('page-title').textContent = document.title;
+document.getElementById('nav-section-title').textContent = meta.title;
+document.getElementById('header-title').textContent = `${meta.icon} ${meta.title}`;
+document.getElementById('accept-hint').textContent = `Format: ${meta.hint}`;
+document.getElementById('file-input').setAttribute('accept', meta.accept);
+
+// ── File Input Handling ───────────────────────────────────────────────────────
+const dropZone   = document.getElementById('drop-zone');
+const fileInput  = document.getElementById('file-input');
+const filePreview = document.getElementById('file-preview');
+const uploadBtn  = document.getElementById('upload-btn');
+let selectedFile = null;
+
+function fileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  if (ext === 'pdf')  return '📕';
+  if (['docx','doc'].includes(ext)) return '📘';
+  return '📄';
+}
+function fileSizeStr(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1048576) return `${(bytes/1024).toFixed(1)} KB`;
+  return `${(bytes/1048576).toFixed(1)} MB`;
+}
+function setFile(file) {
+  selectedFile = file;
+  document.getElementById('fp-icon').textContent = fileIcon(file.name);
+  document.getElementById('fp-name').textContent = file.name;
+  document.getElementById('fp-size').textContent = fileSizeStr(file.size);
+  filePreview.classList.add('show');
+  uploadBtn.disabled = false;
+}
+function clearFile() {
+  selectedFile = null;
+  fileInput.value = '';
+  filePreview.classList.remove('show');
+  uploadBtn.disabled = true;
+}
+
+fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+document.getElementById('fp-remove').addEventListener('click', clearFile);
+
+// Drag & Drop
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    fileInput.files = e.dataTransfer.files;
+    setFile(file);
+  }
+});
+
+// ── Upload Form ───────────────────────────────────────────────────────────────
+const uploadProgress = document.getElementById('upload-progress');
+const progressBar    = document.getElementById('progress-bar');
+const uploadMsg      = document.getElementById('upload-msg');
+
+document.getElementById('upload-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!selectedFile) return;
+
+  const fd = new FormData();
+  fd.append('file', selectedFile);
+  const title = document.getElementById('title-input').value.trim();
+  const desc  = document.getElementById('desc-input').value.trim();
+  if (title) fd.append('title', title);
+  if (desc)  fd.append('description', desc);
+
+  uploadBtn.disabled = true;
+  uploadBtn.innerHTML = '⏳ Mengupload...';
+  uploadProgress.classList.add('show');
+  uploadMsg.className = 'upload-msg';
+
+  // Fake progress animation
+  let p = 0;
+  const pInterval = setInterval(() => {
+    p = Math.min(p + Math.random() * 15, 85);
+    progressBar.style.width = p + '%';
+  }, 150);
+
+  try {
+    const res = await fetch(`/casemix/upload/${SECTION}`, { method: 'POST', body: fd });
+    clearInterval(pInterval);
+    progressBar.style.width = '100%';
+
+    if (res.ok) {
+      showMsg('✅ Dokumen berhasil diupload!', 'success');
+      clearFile();
+      document.getElementById('title-input').value = '';
+      document.getElementById('desc-input').value = '';
+      setTimeout(() => { progressBar.style.width = '0%'; uploadProgress.classList.remove('show'); }, 1000);
+      loadDocs();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showMsg(`❌ Gagal: ${err.error || res.statusText}`, 'error');
+      progressBar.style.width = '0%';
+      uploadProgress.classList.remove('show');
+    }
+  } catch (err) {
+    clearInterval(pInterval);
+    showMsg(`❌ Error jaringan: ${err.message}`, 'error');
+    progressBar.style.width = '0%';
+    uploadProgress.classList.remove('show');
+  }
+
+  uploadBtn.disabled = false;
+  uploadBtn.innerHTML = '📤 Upload Dokumen';
+});
+
+function showMsg(text, type) {
+  uploadMsg.textContent = text;
+  uploadMsg.className = `upload-msg show ${type}`;
+  setTimeout(() => { uploadMsg.className = 'upload-msg'; }, 4000);
+}
+
+// ── Load Documents ────────────────────────────────────────────────────────────
+let allDocs = [];
+
+async function loadDocs() {
+  try {
+    const res = await fetch(`/casemix/api/files/${SECTION}`);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    allDocs = data.files || [];
+    renderDocs(allDocs);
+  } catch {
+    allDocs = [];
+    renderDocs([]);
+  }
+}
+
+function docTypeClass(filename) {
+  if (!filename) return 'default';
+  const ext = filename.split('.').pop().toLowerCase();
+  if (ext === 'pdf')  return 'pdf';
+  if (['docx','doc'].includes(ext)) return 'docx';
+  return 'default';
+}
+function docTypeLabel(filename) {
+  if (!filename) return '—';
+  return filename.split('.').pop().toUpperCase();
+}
+function docTypeIcon(filename) {
+  if (!filename) return '📄';
+  const ext = filename.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return '📕';
+  if (['docx','doc'].includes(ext)) return '📘';
+  return '📄';
+}
+
+function renderDocs(docs) {
+  const empty = document.getElementById('doc-empty');
+  const cards = document.getElementById('doc-cards');
+  const count = document.getElementById('doc-count');
+
+  count.textContent = docs.length;
+  document.getElementById('stat-total').textContent = docs.length;
+
+  // Stats: tipe file
+  if (docs.length > 0) {
+    const types = [...new Set(docs.map(d => docTypeLabel(d.original_name || d.filename)))];
+    document.getElementById('stat-types').textContent = types.join(', ');
+    document.getElementById('stat-types-wrap').style.display = '';
+  }
+
+  if (docs.length === 0) {
+    empty.style.display = '';
+    cards.style.display = 'none';
+    cards.innerHTML = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  cards.style.display = 'flex';
+  cards.innerHTML = docs.map((d, i) => `
+    <div class="doc-card" data-id="${d.id}" style="transition-delay:${i * 50}ms">
+      <div class="doc-type-icon ${docTypeClass(d.original_name || d.filename)}">
+        ${docTypeIcon(d.original_name || d.filename)}
+      </div>
+      <div class="doc-info">
+        <div class="doc-title">${escHtml(d.title || d.original_name || d.filename)}</div>
+        <div class="doc-meta">
+          <span class="doc-meta-tag type">${docTypeLabel(d.original_name || d.filename)}</span>
+          <span class="doc-meta-tag date">📅 ${d.uploaded_at_display || d.uploaded_at?.slice(0,10) || '—'}</span>
+        </div>
+        ${d.description ? `<div class="doc-desc">${escHtml(d.description)}</div>` : ''}
+      </div>
+      <div class="doc-actions">
+        <a href="${d.file_url}" class="btn-download" download>⬇️ Download</a>
+        <button class="btn-delete" onclick="confirmDelete('${d.id}', '${escAttr(d.title || d.original_name || '')}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Reveal animation
+  requestAnimationFrame(() => {
+    cards.querySelectorAll('.doc-card').forEach((card, i) => {
+      setTimeout(() => card.classList.add('revealed'), i * 60);
+    });
+  });
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function escAttr(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;') }
+
+// ── Delete ────────────────────────────────────────────────────────────────────
+let pendingDeleteId = null;
+
+function confirmDelete(id, title) {
+  pendingDeleteId = id;
+  document.getElementById('modal-desc').textContent =
+    `"${title || id}" akan dihapus secara permanen dan tidak dapat dikembalikan.`;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+document.getElementById('btn-cancel').addEventListener('click', () => {
+  document.getElementById('modal-overlay').classList.remove('show');
+  pendingDeleteId = null;
+});
+
+document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+  if (!pendingDeleteId) return;
+  document.getElementById('modal-overlay').classList.remove('show');
+  try {
+    const res = await fetch(`/casemix/delete/${SECTION}/${pendingDeleteId}`, { method: 'DELETE' });
+    if (res.ok) {
+      allDocs = allDocs.filter(d => d.id !== pendingDeleteId);
+      renderDocs(allDocs);
+    }
+  } catch (err) {
+    alert('Gagal menghapus: ' + err.message);
+  }
+  pendingDeleteId = null;
+});
+
+// Close modal on overlay click
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) {
+    e.currentTarget.classList.remove('show');
+    pendingDeleteId = null;
+  }
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadDocs();
+</script>
+</body>
+</html>

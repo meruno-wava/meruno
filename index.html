@@ -229,11 +229,10 @@
   .stat-unit { font-size:20px; color:var(--orange); transition:var(--transition); }
   .stat-label { font-size:13px; color:var(--gray); text-transform:uppercase; letter-spacing:1.5px; margin-top:8px; transition:var(--transition); }
 
-  /* ── CHANGELOG & CHECKLIST ── */
+  /* ── CHANGELOG ── */
   .devlog-section { padding:100px 0; background:var(--white); }
-  .devlog-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:56px; }
+  .devlog-layout { display:grid; grid-template-columns:1fr; gap:48px; margin-top:56px; max-width:760px; margin-left:auto; margin-right:auto; }
 
-  /* changelog */
   .changelog-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; }
   .cl-header { background:var(--teal-dark); padding:20px 28px; display:flex; align-items:center; justify-content:space-between; }
   .cl-header h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); }
@@ -252,33 +251,6 @@
   .cl-item { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.5; color:var(--dark); }
   .cl-item::before { content:'+'; color:var(--green); font-weight:700; flex-shrink:0; }
   .cl-item.plan::before { content:'◦'; color:var(--orange); }
-
-  /* checklist */
-  .checklist-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; }
-  .chk-header { background:var(--dark-2); padding:20px 28px; }
-  .chk-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-  .chk-header-top h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); }
-  .chk-header a { font-size:12px; color:rgba(255,255,255,.6); text-decoration:none; font-weight:700; background:rgba(255,255,255,.1); padding:4px 12px; border-radius:20px; transition:var(--transition); }
-  .chk-header a:hover { background:rgba(255,255,255,.2); color:white; }
-  .chk-progress-track { height:6px; background:rgba(255,255,255,.15); border-radius:3px; overflow:hidden; }
-  .chk-progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--green-light),var(--teal-light)); transition:width .5s ease; }
-  .chk-progress-label { font-size:11px; color:rgba(255,255,255,.5); margin-top:6px; }
-  .chk-body { padding:20px 24px; display:flex; flex-direction:column; gap:6px; max-height:380px; overflow-y:auto; }
-  .chk-group-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--gray); margin-top:12px; margin-bottom:4px; }
-  .chk-group-label:first-child { margin-top:0; }
-  .chk-item { display:flex; align-items:flex-start; gap:10px; padding:8px 10px; border-radius:8px; transition:var(--transition); }
-  .chk-item:hover { background:var(--cream); }
-  .chk-box { width:18px; height:18px; border-radius:5px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px; }
-  .chk-box.done    { background:var(--green);  color:white; }
-  .chk-box.active  { background:var(--orange); color:white; }
-  .chk-box.pending { border:2px solid var(--gray-light); }
-  .chk-label { font-size:13px; line-height:1.4; color:var(--dark); }
-  .chk-item.is-done .chk-label { text-decoration:line-through; color:var(--gray); }
-  .chk-tag { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; margin-left:auto; flex-shrink:0; white-space:nowrap; }
-  .chk-tag.t-done   { background:rgba(31,144,104,.12); color:var(--green); }
-  .chk-tag.t-active { background:rgba(232,130,30,.12); color:var(--orange); }
-  .chk-tag.t-high   { background:rgba(220,50,50,.1);   color:#c03030; }
-  .chk-tag.t-med    { background:rgba(232,130,30,.1);  color:var(--orange); }
 
   /* ── CTA ── */
   .cta-section { padding:100px 0; background:var(--cream); text-align:center; }
@@ -304,6 +276,33 @@
   .footer-bottom span { font-size:13px; }
   .footer-badge { display:flex; gap:8px; }
   .footer-badge span { font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; background:rgba(255,255,255,.06); color:rgba(255,255,255,.5); }
+
+  /* ── CASEMIX MODULE ── */
+  .casemix-section { padding:100px 0; padding-top:88px; background:var(--teal-dark); position:relative; }
+  .casemix-section::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px); background-size:40px 40px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%); pointer-events:none; }
+  .casemix-card { background:linear-gradient(135deg,var(--teal-dark) 0%,var(--dark) 100%); border-radius:20px; padding:48px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden; }
+  .casemix-card::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; border-radius:50%; background:rgba(26,143,160,.12); pointer-events:none; }
+  .casemix-card::after  { content:''; position:absolute; bottom:-80px; left:30%; width:200px; height:200px; border-radius:50%; background:rgba(232,130,30,.08); pointer-events:none; }
+  .casemix-card-inner { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; position:relative; z-index:1; }
+  .casemix-icon-wrap { font-size:52px; margin-bottom:20px; display:inline-block; }
+  .casemix-card-title { font-family:'Playfair Display',serif; font-size:clamp(22px,2.5vw,30px); font-weight:700; color:var(--white); margin-bottom:10px; line-height:1.2; }
+  .casemix-card-sub { font-size:14px; color:rgba(255,255,255,.6); line-height:1.6; margin-bottom:24px; }
+  .casemix-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .casemix-chip { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; background:rgba(255,255,255,.1); color:rgba(255,255,255,.8); border:1px solid rgba(255,255,255,.15); letter-spacing:.3px; transition:var(--transition); }
+  .casemix-chip:hover { background:rgba(255,255,255,.18); color:var(--white); }
+  .casemix-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  .casemix-stat { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:16px 12px; text-align:center; }
+  .casemix-stat-num { display:block; font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:var(--white); line-height:1; }
+  .casemix-stat-num.orange { color:var(--orange-light); }
+  .casemix-stat-lbl { display:block; font-size:10px; color:rgba(255,255,255,.45); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px; }
+  .casemix-modules { display:flex; flex-direction:column; gap:14px; }
+  .casemix-module { display:flex; gap:14px; align-items:flex-start; padding:14px 16px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09); border-radius:12px; transition:var(--transition); }
+  .casemix-module:hover { background:rgba(255,255,255,.11); border-color:rgba(255,255,255,.18); }
+  .casemix-module-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+  .casemix-module-name { font-size:13px; font-weight:700; color:rgba(255,255,255,.9); margin-bottom:3px; }
+  .casemix-module-desc { font-size:11px; color:rgba(255,255,255,.45); line-height:1.5; }
+  @media(max-width:1024px){ .casemix-card-inner { grid-template-columns:1fr; gap:40px; } }
+  @media(max-width:768px){ .casemix-section { padding:64px 0; } .casemix-card { padding:32px 24px; } }
 
   /* ── REVEAL ── */
   .reveal { opacity:0; transform:translateY(30px); transition:opacity .6s ease,transform .6s ease; }
@@ -354,14 +353,13 @@
     .stats-grid{grid-template-columns:1fr 1fr}
     .search-layout{grid-template-columns:1fr}
     .upload-layout{grid-template-columns:1fr}
-    .devlog-layout{grid-template-columns:1fr}
     .section-inner{padding:0 4%}
     .upload-section,.search-section,.stats-section,.devlog-section{padding:64px 0}
     .hero-right,.hero-stat-divider{display:none}
     .dashboard-card{display:none}
-    .devlog-layout .changelog-card,.devlog-layout .checklist-card{border-radius:10px}
-    .cl-header,.chk-header{padding:16px 18px}
-    .cl-items,.chk-body{padding:12px 16px}
+    .devlog-layout .changelog-card{border-radius:10px}
+    .cl-header{padding:16px 18px}
+    .cl-items{padding:12px 16px}
   }
   @media(max-width:480px){
     .hero-title{font-size:26px}
@@ -390,6 +388,7 @@
     <li><a href="#upload">Unggah</a></li>
     <li><a href="#search">Pencarian</a></li>
     <li><a href="#devlog">Changelog</a></li>
+    <li><a href="/casemix">🏥 Casemix</a></li>
     <li><a href="#upload" class="nav-cta">Mulai Sekarang →</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -404,8 +403,68 @@
   <a href="#devlog" onclick="toggleMenu()">Changelog</a>
   <a href="/excel.html" onclick="toggleMenu()">Excel Viewer</a>
   <a href="/pdf.html" onclick="toggleMenu()">PDF Viewer</a>
+  <a href="/casemix" onclick="toggleMenu()">🏥 Casemix</a>
   <a href="#upload" class="nav-cta" onclick="toggleMenu()">Mulai Sekarang →</a>
 </div>
+
+
+<!-- CASEMIX MODULE -->
+<section class="casemix-section" id="casemix">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:52px;position:relative;z-index:1">
+      <div class="section-label" style="color:var(--orange-light)">🏥 Modul Rumah Sakit</div>
+      <h2 class="section-title light reveal">Dashboard Casemix</h2>
+      <p class="section-desc light reveal reveal-delay-1" style="margin:0 auto">
+        Pusat pengelolaan dokumen, data klaim, galeri, dan informasi terkini Instalasi Casemix RS. Wava Husada.
+      </p>
+    </div>
+
+    <div class="casemix-card reveal" style="position:relative;z-index:1">
+      <div class="casemix-card-inner">
+        <div class="casemix-card-left">
+          <div class="casemix-icon-wrap">🏥</div>
+          <h3 class="casemix-card-title">Dashboard Instalasi Casemix</h3>
+          <p class="casemix-card-sub">RS. Wava Husada — Kelola dokumen, data klaim, galeri, dan hot news</p>
+          <div class="casemix-chips">
+            <span class="casemix-chip">📊 Rekapitulasi Klaim</span>
+            <span class="casemix-chip">📋 Pedoman & Regulasi</span>
+            <span class="casemix-chip">🖼️ Galeri & Memory</span>
+            <span class="casemix-chip">📁 Utilization Review</span>
+            <span class="casemix-chip">📄 SPO</span>
+            <span class="casemix-chip">🏗️ Pedoman Pengorganisasian</span>
+            <span class="casemix-chip">🩺 Pedoman Pelayanan</span>
+            <span class="casemix-chip">📜 Kebijakan Layanan</span>
+            <span class="casemix-chip">📰 Hot News</span>
+          </div>
+          <a href="/casemix" class="btn btn-orange" style="margin-top:32px;display:inline-flex">
+            Buka Dashboard Casemix →
+          </a>
+        </div>
+        <div class="casemix-card-right">
+          <div class="casemix-stat-grid">
+            <div class="casemix-stat"><span class="casemix-stat-num" id="cmxTotalDocs">9</span><span class="casemix-stat-lbl">Section</span></div>
+            <div class="casemix-stat"><span class="casemix-stat-num" id="cmxTotalFiles">3</span><span class="casemix-stat-lbl">Sistem</span></div>
+            <div class="casemix-stat"><span class="casemix-stat-num orange" id="cmxNews">—</span><span class="casemix-stat-lbl">Hot News</span></div>
+          </div>
+          <div class="casemix-modules">
+            <div class="casemix-module">
+              <span class="casemix-module-icon">📁</span>
+              <div><div class="casemix-module-name">Document Library</div><div class="casemix-module-desc">Regulasi, SPO, Pengorganisasian, Pelayanan, Kebijakan</div></div>
+            </div>
+            <div class="casemix-module">
+              <span class="casemix-module-icon">📊</span>
+              <div><div class="casemix-module-name">Data & Report Viewer</div><div class="casemix-module-desc">Klaim Excel + Utilization Review PPTX/PDF</div></div>
+            </div>
+            <div class="casemix-module">
+              <span class="casemix-module-icon">🖼️</span>
+              <div><div class="casemix-module-name">Media & Announcement</div><div class="casemix-module-desc">Galeri foto + Hot News feed</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 <!-- HERO -->
@@ -460,19 +519,19 @@
           <div class="dash-row">
             <div class="dash-widget">
               <div class="dw-label">Total Arsip</div>
-              <div class="dw-value">143</div>
+              <div class="dw-value" id="dashTotalArsip">—</div>
               <div class="dw-bar"><div class="dw-bar-fill teal"></div></div>
             </div>
             <div class="dash-widget">
               <div class="dw-label">Dokumen Baru</div>
-              <div class="dw-value orange">12</div>
+              <div class="dw-value orange" id="dashDokBaru">—</div>
               <div class="dw-bar"><div class="dw-bar-fill orange"></div></div>
             </div>
           </div>
           <div class="dash-row">
             <div class="dash-widget span-2">
               <div class="dw-label">File Terbaru</div>
-              <div class="dw-file-list">
+              <div class="dw-file-list" id="dashFileList">
                 <div class="dw-file">
                   <div class="dw-file-icon excel">📊</div>
                   <span class="dw-file-name">rekap_pasien_juni2026.xlsx</span>
@@ -514,8 +573,8 @@
     <div class="upload-layout">
       <div class="upload-left">
         <div class="section-label">Upload & Proses</div>
-        <h2 class="section-title reveal">Unggah Arsip Anda</h2>
-        <p class="section-desc reveal reveal-delay-1">Drag & drop file Excel atau PDF, sistem langsung membaca dan mengindeks dokumen ke database arsip Anda.</p>
+        <h2 class="section-title reveal">Upload Dokumen</h2>
+        <p class="section-desc reveal reveal-delay-1">Unggah file Excel atau PDF — sistem langsung membaca, mengindeks, dan menyimpan ke database arsip.</p>
         <div class="upload-zone reveal reveal-delay-2" id="uploadZone"
              ondragover="event.preventDefault();this.classList.add('drag-over')"
              ondragleave="this.classList.remove('drag-over')"
@@ -523,7 +582,7 @@
              onclick="document.getElementById('fileInput').click()">
           <div class="upload-icon">📁</div>
           <h3>Seret File ke Sini</h3>
-          <p>atau klik untuk memilih file</p>
+          <p>atau klik untuk memilih file dari komputer</p>
           <div class="upload-types">
             <button class="upload-type excel" onclick="event.stopPropagation()">📊 Excel (.xlsx)</button>
             <button class="upload-type pdf" onclick="event.stopPropagation()">📄 PDF (.pdf)</button>
@@ -603,8 +662,8 @@
 <section class="stats-section">
   <div class="section-inner">
     <div class="stats-grid">
-      <div class="stat-item reveal"><div class="stat-num"><span class="count-num" data-target="10">0</span><span class="stat-unit">+</span></div><div class="stat-label">Format File</div></div>
-      <div class="stat-item reveal reveal-delay-1"><div class="stat-num"><span class="count-num" data-target="50">0</span><span class="stat-unit">K</span></div><div class="stat-label">Baris per File</div></div>
+      <div class="stat-item reveal"><div class="stat-num"><span id="statTotalArsip">0</span><span class="stat-unit">+</span></div><div class="stat-label">Total Dokumen Arsip</div></div>
+      <div class="stat-item reveal reveal-delay-1"><div class="stat-num"><span id="statTotalCasemix">0</span><span class="stat-unit">+</span></div><div class="stat-label">Total Dokumen Casemix</div></div>
       <div class="stat-item reveal reveal-delay-2"><div class="stat-num"><span class="count-num" data-target="99">0</span><span class="stat-unit">%</span></div><div class="stat-label">Akurasi Ekstraksi</div></div>
       <div class="stat-item reveal reveal-delay-3"><div class="stat-num"><span class="count-num" data-target="100">0</span><span class="stat-unit">%</span></div><div class="stat-label">Data Lokal & Privat</div></div>
     </div>
@@ -612,13 +671,13 @@
 </section>
 
 
-<!-- CHANGELOG & CHECKLIST -->
+<!-- CHANGELOG -->
 <section class="devlog-section" id="devlog">
   <div class="section-inner">
     <div style="text-align:center">
-      <div class="section-label">Transparansi Pengembangan</div>
-      <h2 class="section-title reveal">Changelog & Checklist</h2>
-      <p class="section-desc reveal reveal-delay-1" style="margin:0 auto">Riwayat perubahan dan progres pengembangan fitur Dairy Meruno.</p>
+      <div class="section-label">Riwayat Pembaruan</div>
+      <h2 class="section-title reveal">Changelog</h2>
+      <p class="section-desc reveal reveal-delay-1" style="margin:0 auto">Riwayat perubahan fitur dan tampilan Dairy Meruno.</p>
     </div>
 
     <div class="devlog-layout">
@@ -631,76 +690,51 @@
         <div class="cl-body">
           <div class="cl-version">
             <div class="cl-version-head">
+              <span class="cl-v-num">v0.2.0</span>
+              <span class="cl-v-date">15 Juni 2026</span>
+              <span class="cl-v-badge released">✓ Rilis</span>
+            </div>
+            <div class="cl-items">
+              <div class="cl-item">Dashboard Instalasi Casemix RS. Wava Husada</div>
+              <div class="cl-item">9 section: Document Library (5), Data Viewer (2), Media & Announcement (2)</div>
+              <div class="cl-item">Rekapitulasi Klaim: upload Excel, tampil tabel, sheet tabs, dan statistik numerik</div>
+              <div class="cl-item">Utilization Review: upload PPTX/PDF, unduh, dan hapus</div>
+              <div class="cl-item">Galeri & Memory: grid foto, drag-drop upload, lightbox prev/next</div>
+              <div class="cl-item">Hot News: form tambah berita, feed vertikal, gambar opsional</div>
+              <div class="cl-item">Document Library: upload, tampil, dan hapus dokumen per section</div>
+            </div>
+          </div>
+          <div class="cl-version">
+            <div class="cl-version-head">
               <span class="cl-v-num">v0.1.0</span>
               <span class="cl-v-date">10 Juni 2026</span>
               <span class="cl-v-badge released">✓ Rilis</span>
             </div>
             <div class="cl-items">
               <div class="cl-item">Landing page utama dengan desain teal + orange</div>
-              <div class="cl-item">Hero: search bar, dashboard mockup interaktif</div>
-              <div class="cl-item">Upload zone drag & drop + preview hasil parsing</div>
-              <div class="cl-item">Search demo real-time dengan 5 filter</div>
-              <div class="cl-item">Section Changelog & Checklist di beranda</div>
-              <div class="cl-item">Script <code style="font-family:monospace;background:var(--cream);padding:1px 5px;border-radius:3px;font-size:11px">jalankan-server.bat</code> untuk localhost:8080</div>
+              <div class="cl-item">Hero: search bar interaktif dan dashboard mockup animasi</div>
+              <div class="cl-item">Upload zone drag & drop dengan preview hasil parsing</div>
+              <div class="cl-item">Pencarian real-time dengan 5 filter (Semua, Excel, PDF, Tahun, Kategori)</div>
+              <div class="cl-item">4 counter statistik animasi</div>
             </div>
           </div>
           <div class="cl-version">
             <div class="cl-version-head">
-              <span class="cl-v-num">Belum Rilis</span>
+              <span class="cl-v-num">v0.3.0</span>
               <span class="cl-v-date">Direncanakan</span>
               <span class="cl-v-badge planned">⏳ Direncanakan</span>
             </div>
             <div class="cl-items">
-              <div class="cl-item plan">Integrasi SheetJS — parsing Excel nyata</div>
-              <div class="cl-item plan">Integrasi PDF.js — baca PDF di browser</div>
-              <div class="cl-item plan">Penyimpanan IndexedDB lokal</div>
-              <div class="cl-item plan">Halaman Dashboard & Manajemen Arsip</div>
+              <div class="cl-item plan">Export hasil pencarian ke Excel/CSV</div>
+              <div class="cl-item plan">Notifikasi dokumen baru</div>
+              <div class="cl-item plan">Peningkatan tampilan mobile</div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- CHECKLIST -->
-      <div class="checklist-card reveal reveal-delay-1">
-        <div class="chk-header">
-          <div class="chk-header-top">
-            <h3>✅ Checklist</h3>
-            <a href="checklist.html">Lihat Semua →</a>
-          </div>
-          <div class="chk-progress-track">
-            <div class="chk-progress-fill" id="chkFill"></div>
-          </div>
-          <div class="chk-progress-label" id="chkLabel">Menghitung...</div>
-        </div>
-        <div class="chk-body">
-          <div class="chk-group-label">✅ Selesai</div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Landing page index.html</div><span class="chk-tag t-done">Selesai</span></div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Upload zone + preview hasil</div><span class="chk-tag t-done">Selesai</span></div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Search demo real-time</div><span class="chk-tag t-done">Selesai</span></div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">jalankan-server.bat</div><span class="chk-tag t-done">Selesai</span></div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Changelog & Checklist di beranda</div><span class="chk-tag t-done">Selesai</span></div>
-          <div class="chk-item is-done"><div class="chk-box done">✓</div><div class="chk-label">Memory & dokumentasi sesi</div><span class="chk-tag t-done">Selesai</span></div>
-
-          <div class="chk-group-label">🔄 Sedang</div>
-          <div class="chk-item"><div class="chk-box active">⏳</div><div class="chk-label">Update konten → arsip RS</div><span class="chk-tag t-active">Aktif</span></div>
-
-          <div class="chk-group-label">📋 Antrian</div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Integrasi SheetJS (Excel nyata)</div><span class="chk-tag t-high">Tinggi</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Integrasi PDF.js</div><span class="chk-tag t-high">Tinggi</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Simpan ke IndexedDB lokal</div><span class="chk-tag t-high">Tinggi</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Halaman Dashboard</div><span class="chk-tag t-high">Tinggi</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Manajemen Arsip</div><span class="chk-tag t-high">Tinggi</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Autentikasi PIN</div><span class="chk-tag t-med">Menengah</span></div>
-          <div class="chk-item"><div class="chk-box pending"></div><div class="chk-label">Export hasil pencarian</div><span class="chk-tag t-med">Menengah</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
-
-
-
 
 
 <script>
@@ -831,12 +865,90 @@ async function processFile(file){
   }
 }
 
-// CHECKLIST PROGRESS
-const done=document.querySelectorAll('.chk-item.is-done').length;
-const total=document.querySelectorAll('.chk-item').length;
-const pct=Math.round(done/total*100);
-document.getElementById('chkFill').style.width=pct+'%';
-document.getElementById('chkLabel').textContent=`${done} dari ${total} tugas selesai (${pct}%)`;
+// ── SINKRONISASI DATA ARSIP (Hero Mockup) ──
+(async function syncArchive(){
+  try {
+    const res = await fetch('/api/archive');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!Array.isArray(data)) return;
+
+    // Total arsip
+    const total = data.length;
+    const elTotal = document.getElementById('dashTotalArsip');
+    if (elTotal) elTotal.textContent = total;
+
+    // Dokumen baru (7 hari terakhir)
+    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const newDocs = data.filter(d => {
+      if (!d.uploaded_at) return false;
+      return new Date(d.uploaded_at).getTime() >= sevenDaysAgo;
+    }).length;
+    const elNew = document.getElementById('dashDokBaru');
+    if (elNew) elNew.textContent = newDocs;
+
+    // 3 file terbaru di hero mockup
+    const sorted = data.slice().sort((a,b)=>new Date(b.uploaded_at||0)-new Date(a.uploaded_at||0));
+    const latest3 = sorted.slice(0,3);
+    const listEl = document.getElementById('dashFileList');
+    if (listEl && latest3.length > 0) {
+      listEl.innerHTML = latest3.map(d => {
+        const isExcel = (d.type||'').toLowerCase() === 'excel' || (d.filename||'').match(/\.xlsx?$/i);
+        const cls = isExcel ? 'excel' : 'pdf';
+        const icon = isExcel ? '📊' : '📄';
+        const name = d.filename || d.original_name || 'file';
+        return `<div class="dw-file">
+          <div class="dw-file-icon ${cls}">${icon}</div>
+          <span class="dw-file-name">${name}</span>
+          <span class="dw-file-status">✓ Terbaca</span>
+        </div>`;
+      }).join('');
+    }
+
+    // Stats section — Total Dokumen Arsip
+    const elStatArsip = document.getElementById('statTotalArsip');
+    if (elStatArsip) {
+      let c=0; const iv=setInterval(()=>{c=Math.min(c+Math.ceil(total/50||1),total);elStatArsip.textContent=c;if(c>=total)clearInterval(iv);},22);
+    }
+  } catch(e) { /* server belum aktif, biarkan default */ }
+})();
+
+// ── SINKRONISASI DATA CASEMIX ──
+(async function syncCasemix(){
+  const sections = ['regulasi','spo','pengorganisasian','pelayanan','kebijakan','ur','galeri','klaim'];
+  let totalFiles = 0;
+  let newsCount = 0;
+
+  try {
+    const results = await Promise.allSettled([
+      ...sections.map(s => fetch(`/casemix/api/files/${s}`).then(r=>r.json())),
+      fetch('/casemix/api/news').then(r=>r.json())
+    ]);
+
+    results.slice(0, sections.length).forEach(r => {
+      if (r.status === 'fulfilled' && r.value && typeof r.value.count === 'number') {
+        totalFiles += r.value.count;
+      }
+    });
+
+    const newsResult = results[sections.length];
+    if (newsResult.status === 'fulfilled' && newsResult.value && typeof newsResult.value.count === 'number') {
+      newsCount = newsResult.value.count;
+    }
+
+    // Update Casemix stats in the Casemix section card
+    const elCmxFiles = document.getElementById('cmxTotalFiles');
+    if (elCmxFiles) elCmxFiles.textContent = totalFiles;
+    const elCmxNews = document.getElementById('cmxNews');
+    if (elCmxNews) elCmxNews.textContent = newsCount;
+
+    // Update Stats section — Total Dokumen Casemix
+    const elStatCasemix = document.getElementById('statTotalCasemix');
+    if (elStatCasemix) {
+      let c=0; const iv=setInterval(()=>{c=Math.min(c+Math.ceil(totalFiles/50||1),totalFiles);elStatCasemix.textContent=c;if(c>=totalFiles)clearInterval(iv);},22);
+    }
+  } catch(e) { /* server belum aktif */ }
+})();
 </script>
 </body>
 </html>

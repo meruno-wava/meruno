@@ -6,42 +6,33 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] — 2026-06-15
+
+### Ditambahkan
+- **Dashboard Instalasi Casemix RS. Wava Husada** — modul baru terintegrasi ke Dairy Meruno
+  - Dashboard utama dengan 9 section card dan stats bar real-time
+  - Document Library: upload, tampil, dan hapus dokumen per section (Regulasi, SPO, Pengorganisasian, Pelayanan, Kebijakan)
+  - Rekapitulasi Klaim: upload Excel, tampil tabel data, sheet tabs, dan statistik numerik
+  - Utilization Review: upload PPTX/PDF, unduh, dan hapus
+  - Galeri & Memory: grid foto, drag-drop upload, lightbox prev/next
+  - Hot News: form tambah berita, feed vertikal, gambar opsional
+- **index.html** — section Casemix terintegrasi di halaman utama dengan navigasi langsung ke dashboard
+
+---
+
 ## [0.1.0] — 2026-06-10
 
 ### Ditambahkan
-- `index.html` — Landing page utama Dairy Meruno
+- Landing page utama Dairy Meruno
   - Navbar sticky dengan logo dan CTA
-  - Hero section: judul animasi, search bar, dashboard mockup interaktif
+  - Hero: judul animasi, search bar interaktif, dashboard mockup
   - Section Fitur: 3 card (Baca Excel, Baca PDF, Database Search)
-  - Section Upload: drag & drop zone, progress bar, preview hasil parsing
-  - Section Search Demo: pencarian real-time + filter (Semua / Excel / PDF / Tahun / Kategori)
-  - Section Stats: 4 counter animasi
-  - Section CTA dan Footer lengkap
-  - Section Changelog & Checklist (terintegrasi di halaman)
-- `jalankan-server.bat` — Script start localhost:8080 via Python
-- `changelog.md` + `changelog.html` — Riwayat perubahan
-- `checklist.md` + `checklist.html` — Daftar tugas pengembangan
-- `claude.md` — Dokumentasi sesi dan keputusan teknis
+  - Upload zone drag & drop dengan progress bar dan preview hasil parsing
+  - Pencarian real-time dengan filter (Semua / Excel / PDF / Tahun / Kategori)
+  - 4 counter statistik animasi
+  - CTA dan Footer
 
 ### Keputusan Desain
 - Palet warna: teal (#0d6e7a) + orange (#e8821e), terinspirasi wavahusada.com
 - Font: Playfair Display (heading) + Nunito Sans (body) + Space Mono (data/angka)
-- Single HTML file — portabel, tidak perlu build tool
-- Vanilla JS — ringan, cocok untuk prototype awal
 
-### Catatan
-- Fitur upload dan search masih **simulasi** (frontend only)
-- Backend belum diintegrasikan
-
----
-
-## [Unreleased]
-
-### Direncanakan
-- Integrasi SheetJS untuk parsing Excel nyata di browser
-- Integrasi PDF.js untuk membaca PDF
-- Halaman Dashboard pasca-login
-- Halaman manajemen file/arsip
-- Fitur export hasil pencarian ke Excel/PDF
-- Autentikasi sederhana (PIN/password)
-- Penyimpanan data lokal (IndexedDB)

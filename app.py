@@ -21,6 +21,29 @@ EXCEL_DATA_FILE = DATA_DIR / "excel_data.json"
 PDF_DATA_FILE   = DATA_DIR / "pdf_data.json"
 ARCHIVE_FILE    = DATA_DIR / "archive.json"
 
+# ── Casemix Konstanta ─────────────────────────────────────────────────────────
+CASEMIX_DIR      = BASE / "uploads" / "casemix"
+CASEMIX_DATA_DIR = DATA_DIR / "casemix"
+CASEMIX_DIR.mkdir(parents=True, exist_ok=True)
+CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+CASEMIX_SECTIONS = [
+    'klaim', 'regulasi', 'spo', 'pengorganisasian',
+    'pelayanan', 'kebijakan', 'ur', 'galeri', 'hotnews',
+]
+DOC_SECTIONS = ['regulasi', 'spo', 'pengorganisasian', 'pelayanan', 'kebijakan']
+CASEMIX_ACCEPT = {
+    'klaim':            ['.xlsx', '.xls'],
+    'regulasi':         ['.pdf', '.docx', '.doc'],
+    'spo':              ['.pdf', '.docx', '.doc'],
+    'pengorganisasian': ['.pdf', '.docx', '.doc'],
+    'pelayanan':        ['.pdf', '.docx', '.doc'],
+    'kebijakan':        ['.pdf', '.docx', '.doc'],
+    'ur':               ['.pdf', '.pptx', '.ppt'],
+    'galeri':           ['.jpg', '.jpeg', '.png', '.webp'],
+    'hotnews':          [],
+}
+
 # ── Konfigurasi AI (opsional) ────────────────────────────────────────────────
 # Set environment variable ANTHROPIC_API_KEY untuk mengaktifkan AI summary
 CLAUDE_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -458,6 +481,314 @@ code{{font-family:'Space Mono',monospace;font-size:12px;background:var(--cream);
   <p class="note">📝 Halaman ini di-generate otomatis dari <code>checklist.md</code> — edit file .md untuk memperbarui.</p>
 </div>
 </body></html>"""
+
+
+# ── Casemix Routes ───────────────────────────────────────────────────────────
+
+SECTION_TITLES = {
+    'klaim':            'Rekapitulasi Klaim',
+    'regulasi':         'Pedoman & Regulasi',
+    'spo':              'SPO',
+    'pengorganisasian': 'Pedoman Pengorganisasian',
+    'pelayanan':        'Pedoman Pelayanan',
+    'kebijakan':        'Kebijakan Layanan',
+    'ur':               'Utilization Review',
+    'galeri':           'Galeri & Memory',
+    'hotnews':          'Hot News',
+}
+
+@app.route("/casemix")
+def casemix_dashboard():
+    return send_from_directory(str(BASE), "casemix.html")
+
+@app.route("/casemix/<section>")
+def casemix_section(section):
+    if section not in CASEMIX_SECTIONS:
+        return "Section tidak ditemukan", 404
+    if section in DOC_SECTIONS:
+        return send_from_directory(str(BASE), "casemix_doc.html")
+    page_map = {
+        'klaim':   'casemix_klaim.html',
+        'ur':      'casemix_ur.html',
+        'galeri':  'casemix_galeri.html',
+        'hotnews': 'casemix_hotnews.html',
+    }
+    page = page_map.get(section)
+    if page:
+        fp = BASE / page
+        if fp.exists():
+            return send_from_directory(str(BASE), page)
+        return f"Halaman {page} belum dibuat", 404
+    return "Halaman belum tersedia", 404
+
+@app.route("/casemix/api/files/<section>")
+def casemix_files(section):
+    if section not in CASEMIX_SECTIONS:
+        return jsonify({"files": [], "error": "Section tidak valid"}), 400
+    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
+    if meta_file.exists():
+        with open(meta_file, encoding="utf-8") as fp:
+            try:
+                return jsonify(json.load(fp))
+            except Exception:
+                pass
+    return jsonify({"files": [], "count": 0})
+
+@app.route("/casemix/api/news")
+def casemix_news():
+    news_file = CASEMIX_DATA_DIR / "news.json"
+    if news_file.exists():
+        with open(news_file, encoding="utf-8") as fp:
+            try:
+                return jsonify(json.load(fp))
+            except Exception:
+                pass
+    return jsonify({"news": [], "count": 0})
+
+@app.route("/casemix/api/section-info")
+def casemix_section_info():
+    section = request.args.get("section", "")
+    if not section or section not in CASEMIX_SECTIONS:
+        return jsonify({"error": "Parameter section tidak valid"}), 400
+    return jsonify({
+        "title": SECTION_TITLES.get(section, section),
+        "is_doc": section in DOC_SECTIONS,
+        "accept": CASEMIX_ACCEPT.get(section, []),
+    })
+
+@app.route("/casemix/files/<section>/<filename>")
+def casemix_file_serve(section, filename):
+    section_dir = CASEMIX_DIR / section
+    fp = section_dir / filename
+    if not fp.exists():
+        return "File tidak ditemukan", 404
+    return send_from_directory(str(section_dir), filename)
+
+@app.route("/casemix/upload/<section>", methods=["POST"])
+def casemix_upload(section):
+    if section not in CASEMIX_SECTIONS:
+        return jsonify({"error": "Section tidak valid"}), 400
+    if section == 'hotnews':
+        return casemix_add_news()
+    if "file" not in request.files:
+        return jsonify({"error": "Tidak ada file dikirim"}), 400
+    f = request.files["file"]
+    if not f.filename:
+        return jsonify({"error": "Nama file kosong"}), 400
+    fn = f.filename.lower()
+    allowed = CASEMIX_ACCEPT.get(section, [])
+    if allowed and not any(fn.endswith(ext) for ext in allowed):
+        exts = ", ".join(allowed)
+        return jsonify({"error": f"Format tidak didukung. Gunakan: {exts}"}), 400
+    if section == 'klaim':
+        return casemix_process_klaim(f)
+    if section == 'galeri':
+        return casemix_save_galeri(f)
+    return casemix_save_doc(f, section)
+
+def casemix_save_doc(file, section):
+    section_dir = CASEMIX_DIR / section
+    section_dir.mkdir(parents=True, exist_ok=True)
+    doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
+    stored_name = f"{doc_id}_{safe_fn}"
+    file.save(str(section_dir / stored_name))
+    title = request.form.get("title", file.filename)
+    desc  = request.form.get("description", "")
+    entry = {
+        "id":               doc_id,
+        "title":            title,
+        "filename":         stored_name,
+        "original_name":    file.filename,
+        "description":      desc,
+        "uploaded_at":      datetime.datetime.now().isoformat(),
+        "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "file_url":         f"/casemix/files/{section}/{stored_name}",
+        "section":          section,
+    }
+    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
+    meta = {"files": [], "count": 0}
+    if meta_file.exists():
+        with open(meta_file, encoding="utf-8") as fp:
+            try: meta = json.load(fp)
+            except: pass
+    meta["files"].insert(0, entry)
+    meta["count"] = len(meta["files"])
+    with open(meta_file, "w", encoding="utf-8") as fp:
+        json.dump(meta, fp, ensure_ascii=False, indent=2)
+    return jsonify({"ok": True, "id": doc_id, "entry": entry})
+
+def casemix_save_galeri(file):
+    section_dir = CASEMIX_DIR / "galeri"
+    section_dir.mkdir(parents=True, exist_ok=True)
+    doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
+    stored_name = f"{doc_id}_{safe_fn}"
+    file.save(str(section_dir / stored_name))
+    caption = request.form.get("caption", "")
+    entry = {
+        "id":               doc_id,
+        "caption":          caption,
+        "filename":         stored_name,
+        "original_name":    file.filename,
+        "uploaded_at":      datetime.datetime.now().isoformat(),
+        "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "img_url":          f"/casemix/files/galeri/{stored_name}",
+    }
+    meta_file = CASEMIX_DATA_DIR / "galeri.json"
+    meta = {"files": [], "count": 0}
+    if meta_file.exists():
+        with open(meta_file, encoding="utf-8") as fp:
+            try: meta = json.load(fp)
+            except: pass
+    meta["files"].insert(0, entry)
+    meta["count"] = len(meta["files"])
+    with open(meta_file, "w", encoding="utf-8") as fp:
+        json.dump(meta, fp, ensure_ascii=False, indent=2)
+    return jsonify({"ok": True, "id": doc_id, "entry": entry})
+
+def casemix_process_klaim(file):
+    if file.filename.lower().endswith('.xls'):
+        return jsonify({"error": "Format .xls lama tidak didukung. Buka di Excel → Save As → .xlsx dulu."}), 400
+    try:
+        import openpyxl, pandas as pd
+    except ImportError:
+        return jsonify({"error": "Jalankan: pip install openpyxl pandas"}), 500
+    try:
+        fb = file.read()
+        wb = openpyxl.load_workbook(BytesIO(fb), data_only=True)
+        sheets = []
+        for sn in wb.sheetnames:
+            ws = wb[sn]
+            hdrs = [str(c.value) if c.value is not None else f"Kolom {c.column_letter}"
+                    for c in ws[1]]
+            rows = []
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                r = []
+                for v in row:
+                    if isinstance(v, (datetime.datetime, datetime.date)):
+                        r.append(str(v)[:10])
+                    elif v is None:
+                        r.append("")
+                    else:
+                        r.append(str(v))
+                rows.append(r)
+                if len(rows) >= 1000:
+                    break
+            df = pd.read_excel(BytesIO(fb), sheet_name=sn, nrows=1000)
+            num_cols = df.select_dtypes(include="number").columns.tolist()
+            col_stats = {}
+            for c in num_cols[:12]:
+                try:
+                    col_stats[c] = {
+                        "sum":   round(float(df[c].sum()), 2),
+                        "avg":   round(float(df[c].mean()), 2),
+                        "min":   round(float(df[c].min()), 2),
+                        "max":   round(float(df[c].max()), 2),
+                        "count": int(df[c].count()),
+                    }
+                except: pass
+            sheets.append({
+                "name":        sn,
+                "headers":     hdrs,
+                "rows":        rows,
+                "row_count":   len(rows),
+                "col_count":   len(hdrs),
+                "numeric_cols": num_cols,
+                "col_stats":   col_stats,
+            })
+        doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        entry = {
+            "id":               doc_id,
+            "title":            request.form.get("title", file.filename),
+            "original_name":    file.filename,
+            "uploaded_at":      datetime.datetime.now().isoformat(),
+            "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+            "sheets":           sheets,
+            "total_rows":       sum(s["row_count"] for s in sheets),
+        }
+        # Scrape + delete: file TIDAK disimpan, hanya data JSON-nya
+        meta_file = CASEMIX_DATA_DIR / "klaim.json"
+        meta = {"files": [], "count": 0}
+        if meta_file.exists():
+            with open(meta_file, encoding="utf-8") as fp:
+                try: meta = json.load(fp)
+                except: pass
+        meta["files"].insert(0, entry)
+        meta["count"] = len(meta["files"])
+        with open(meta_file, "w", encoding="utf-8") as fp:
+            json.dump(meta, fp, ensure_ascii=False, indent=2)
+        return jsonify({"ok": True, "id": doc_id})
+    except Exception as e:
+        import traceback
+        return jsonify({"error": str(e), "detail": traceback.format_exc()}), 500
+
+def casemix_add_news():
+    title   = request.form.get("title", "").strip()
+    content = request.form.get("content", "").strip()
+    if not title:
+        return jsonify({"error": "Judul wajib diisi"}), 400
+    news_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    entry = {
+        "id":                 news_id,
+        "title":              title,
+        "content":            content,
+        "published_at":       datetime.datetime.now().isoformat(),
+        "published_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "img_url":            None,
+    }
+    if "image" in request.files:
+        img = request.files["image"]
+        if img.filename:
+            news_dir = CASEMIX_DIR / "hotnews"
+            news_dir.mkdir(parents=True, exist_ok=True)
+            safe_fn = re.sub(r'[^\w\-.]', '_', img.filename)
+            stored = f"{news_id}_{safe_fn}"
+            img.save(str(news_dir / stored))
+            entry["img_url"] = f"/casemix/files/hotnews/{stored}"
+    news_file = CASEMIX_DATA_DIR / "news.json"
+    data = {"news": [], "count": 0}
+    if news_file.exists():
+        with open(news_file, encoding="utf-8") as fp:
+            try: data = json.load(fp)
+            except: pass
+    data["news"].insert(0, entry)
+    data["count"] = len(data["news"])
+    with open(news_file, "w", encoding="utf-8") as fp:
+        json.dump(data, fp, ensure_ascii=False, indent=2)
+    return jsonify({"ok": True, "id": news_id, "entry": entry})
+
+@app.route("/casemix/delete/<section>/<doc_id>", methods=["DELETE"])
+def casemix_delete(section, doc_id):
+    if section not in CASEMIX_SECTIONS:
+        return jsonify({"error": "Section tidak valid"}), 400
+    meta_file = CASEMIX_DATA_DIR / (f"news.json" if section == "hotnews" else f"{section}.json")
+    meta = {}
+    deleted_entry = None
+    if meta_file.exists():
+        with open(meta_file, encoding="utf-8") as fp:
+            try: meta = json.load(fp)
+            except: pass
+    list_key = "news" if section == "hotnews" else "files"
+    items = meta.get(list_key, [])
+    new_items = []
+    for item in items:
+        if item.get("id") == doc_id:
+            deleted_entry = item
+        else:
+            new_items.append(item)
+    meta[list_key] = new_items
+    meta["count"] = len(new_items)
+    with open(meta_file, "w", encoding="utf-8") as fp:
+        json.dump(meta, fp, ensure_ascii=False, indent=2)
+    # Hapus file fisik jika ada (klaim tidak punya file fisik)
+    if deleted_entry:
+        fn = deleted_entry.get("filename") or deleted_entry.get("img_url", "").split("/")[-1]
+        if fn:
+            fp2 = CASEMIX_DIR / section / fn
+            if fp2.exists():
+                fp2.unlink()
+    return jsonify({"ok": True, "deleted": deleted_entry is not None})
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
