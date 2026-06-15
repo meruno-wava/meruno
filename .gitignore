@@ -1,5 +1,6 @@
 # Internal / dokumentasi pribadi
 CLAUDE.md
+*.md
 
 # Data upload & hasil parsing (lokal saja)
 data/
