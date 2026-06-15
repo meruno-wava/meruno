@@ -1,0 +1,6 @@
+flask>=3.0
+openpyxl>=3.1
+pandas>=2.0
+pdfplumber>=0.10
+# Optional: aktifkan AI summary dengan set ANTHROPIC_API_KEY
+# anthropic>=0.25

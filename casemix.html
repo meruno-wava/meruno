@@ -721,4 +721,20 @@ async function loadStats() {
           document.getElementById('dotNews').classList.add('active');
           const preview = document.getElementById('newsPreview');
           preview.innerHTML = items.slice(0, 3).map(n => `
-            <div clas
+            <div class="news-preview-item">
+              <span>${n.title || 'Pengumuman'}</span>
+            </div>`).join('');
+        }
+      }
+    } catch(_) {}
+
+  } catch(err) {
+    // Backend belum aktif — tampilkan placeholder saja
+  }
+}
+
+// Inisialisasi
+loadStats();
+</script>
+</body>
+</html>

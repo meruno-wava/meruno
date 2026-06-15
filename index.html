@@ -63,79 +63,7 @@
   .nav-cta:hover { background: var(--orange-light) !important; transform: translateY(-1px); }
   .nav-cta::after { display: none !important; }
 
-  /* ── HERO ── */
-  .hero { min-height: 100vh; background: var(--teal-dark); position: relative; display: flex; align-items: center; overflow: hidden; padding-top: 72px; }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(26,143,160,.25) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 70% at 10% 80%, rgba(31,144,104,.2) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 90% 90%, rgba(232,130,30,.15) 0%, transparent 55%);
-    animation: bgPulse 8s ease-in-out infinite alternate;
-  }
-  @keyframes bgPulse { 0%{opacity:.7;transform:scale(1)} 100%{opacity:1;transform:scale(1.05)} }
-  .hero-circles { position:absolute; inset:0; pointer-events:none; }
-  .hero-circles span { position:absolute; border-radius:50%; background:rgba(255,255,255,.04); animation:floatCircle var(--d,12s) ease-in-out infinite alternate; }
-  .hero-circles span:nth-child(1){width:500px;height:500px;top:-100px;right:-100px;--d:14s}
-  .hero-circles span:nth-child(2){width:300px;height:300px;bottom:50px;left:5%;--d:10s;background:rgba(31,144,104,.06)}
-  .hero-circles span:nth-child(3){width:200px;height:200px;top:30%;right:25%;--d:16s;background:rgba(232,130,30,.06)}
-  .hero-circles span:nth-child(4){width:150px;height:150px;bottom:20%;right:10%;--d:11s}
-  @keyframes floatCircle { 0%{transform:translateY(0) scale(1)} 100%{transform:translateY(-30px) scale(1.08)} }
-  .hero-dots { position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px); background-size:40px 40px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%); }
-  .hero-content { position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:80px 5% 100px; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; width:100%; }
-  .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 16px; font-size:12px; font-weight:700; color:var(--orange-light); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; animation:fadeInUp .6s ease both; }
-  .hero-badge::before { content:''; width:8px; height:8px; background:var(--orange-light); border-radius:50%; animation:blinkDot 1.5s ease-in-out infinite; }
-  @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:.3} }
-  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(36px,4.5vw,58px); font-weight:800; line-height:1.12; color:var(--white); margin-bottom:20px; animation:fadeInUp .7s .1s ease both; }
-  .hero-title .accent { color:var(--orange-light); }
-  .hero-title .green-accent { color:#6de0b5; }
-  .hero-desc { font-size:16px; line-height:1.7; color:rgba(255,255,255,.7); max-width:480px; margin-bottom:36px; animation:fadeInUp .7s .2s ease both; }
-  .hero-search { display:flex; background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.15); border-radius:60px; overflow:hidden; max-width:500px; margin-bottom:40px; animation:fadeInUp .7s .3s ease both; transition:var(--transition); }
-  .hero-search:focus-within { border-color:var(--orange-light); background:rgba(255,255,255,.12); box-shadow:0 0 0 4px rgba(232,130,30,.15); }
-  .hero-search input { flex:1; padding:14px 20px; background:none; border:none; outline:none; color:var(--white); font-family:'Nunito Sans',sans-serif; font-size:15px; }
-  .hero-search input::placeholder { color:rgba(255,255,255,.45); }
-  .hero-search button { background:var(--orange); border:none; cursor:pointer; padding:12px 24px; color:var(--white); font-family:'Nunito Sans',sans-serif; font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; transition:var(--transition); margin:4px; border-radius:50px; }
-  .hero-search button:hover { background:var(--orange-light); }
-  .hero-stats { display:flex; gap:32px; animation:fadeInUp .7s .4s ease both; }
-  .hero-stat .num { font-family:'Space Mono',monospace; font-size:26px; font-weight:700; color:var(--white); line-height:1; }
-  .hero-stat .num span { color:var(--orange-light); }
-  .hero-stat .label { font-size:11px; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1.5px; margin-top:4px; }
-  .hero-stat-divider { width:1px; background:rgba(255,255,255,.12); }
-  .hero-right { position:relative; animation:fadeInRight .8s .3s ease both; }
-  .dashboard-card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:20px; overflow:hidden; backdrop-filter:blur(20px); box-shadow:var(--shadow-lg); }
-  .dash-header { background:rgba(255,255,255,.06); padding:14px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(255,255,255,.08); }
-  .dash-dots { display:flex; gap:6px; }
-  .dash-dots span { width:10px; height:10px; border-radius:50%; }
-  .dash-dots span:nth-child(1){background:#ff5f56} .dash-dots span:nth-child(2){background:#ffbd2e} .dash-dots span:nth-child(3){background:#27c93f}
-  .dash-title { font-family:'Space Mono',monospace; font-size:12px; color:rgba(255,255,255,.5); margin-left:6px; }
-  .dash-body { padding:20px; }
-  .dash-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-  .dash-widget { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:14px; }
-  .dash-widget.span-2 { grid-column:1/-1; }
-  .dw-label { font-size:10px; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
-  .dw-value { font-family:'Space Mono',monospace; font-size:22px; font-weight:700; color:var(--white); line-height:1; }
-  .dw-value.green { color:var(--green-light); } .dw-value.orange { color:var(--orange-light); }
-  .dw-bar { height:6px; background:rgba(255,255,255,.1); border-radius:3px; margin-top:8px; overflow:hidden; }
-  .dw-bar-fill { height:100%; border-radius:3px; animation:barGrow 1.5s .8s ease both; }
-  @keyframes barGrow { from{width:0} }
-  .dw-bar-fill.teal { background:linear-gradient(90deg,var(--teal-light),var(--green-light)); width:68%; }
-  .dw-bar-fill.orange { background:linear-gradient(90deg,var(--orange),var(--orange-light)); width:54%; }
-  .dw-file-list { display:flex; flex-direction:column; gap:8px; }
-  .dw-file { display:flex; align-items:center; gap:10px; padding:8px 10px; background:rgba(255,255,255,.04); border-radius:8px; border:1px solid rgba(255,255,255,.06); }
-  .dw-file-icon { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-  .dw-file-icon.excel{background:rgba(31,144,104,.3);color:var(--green-light)} .dw-file-icon.pdf{background:rgba(232,130,30,.3);color:var(--orange-light)}
-  .dw-file-name { font-size:11px; color:rgba(255,255,255,.7); flex:1; }
-  .dw-file-status { font-size:10px; font-weight:700; color:var(--green-light); background:rgba(39,184,128,.15); padding:2px 8px; border-radius:20px; }
-  .dw-search-demo { display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px 12px; }
-  .dw-search-demo span:first-child { font-size:14px; }
-  .dw-search-demo span:last-child { font-family:'Space Mono',monospace; font-size:11px; color:rgba(255,255,255,.5); }
-  .dw-search-cursor { display:inline-block; width:2px; height:12px; background:var(--orange-light); margin-left:2px; animation:blink .8s ease-in-out infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
   @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
-
-  /* ── WAVE ── */
-  .wave-divider { display:block; line-height:0; }
-  .wave-divider svg { display:block; width:100%; }
 
   /* ── SECTION BASE ── */
   section { position:relative; }
@@ -166,26 +94,26 @@
   .fc-tag { font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; background:var(--cream); color:var(--teal); border:1px solid var(--cream-dark); }
 
   /* ── UPLOAD ── */
-  .upload-section { padding:100px 0; background:var(--white); }
+  .upload-section { padding:100px 0; background:var(--teal-dark); }
   .upload-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
-  .upload-zone { border:2.5px dashed var(--gray-light); border-radius:var(--radius); padding:48px 32px; text-align:center; background:var(--cream); transition:var(--transition); cursor:pointer; position:relative; overflow:hidden; margin-top:32px; }
-  .upload-zone:hover { border-color:var(--teal); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
-  .upload-zone.drag-over { border-color:var(--orange); background:rgba(232,130,30,.04); transform:scale(1.01); }
+  .upload-zone { border:2.5px dashed rgba(255,255,255,.25); border-radius:var(--radius); padding:48px 32px; text-align:center; background:rgba(255,255,255,.06); transition:var(--transition); cursor:pointer; position:relative; overflow:hidden; margin-top:32px; }
+  .upload-zone:hover { border-color:rgba(255,255,255,.5); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+  .upload-zone.drag-over { border-color:var(--orange); background:rgba(232,130,30,.08); transform:scale(1.01); }
   .upload-icon { font-size:48px; margin-bottom:16px; }
-  .upload-zone h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--dark); margin-bottom:8px; }
-  .upload-zone p { font-size:14px; color:var(--gray); margin-bottom:20px; }
+  .upload-zone h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); margin-bottom:8px; }
+  .upload-zone p { font-size:14px; color:rgba(255,255,255,.6); margin-bottom:20px; }
   .upload-types { display:flex; justify-content:center; gap:12px; }
   .upload-type { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:700; padding:6px 14px; border-radius:20px; cursor:pointer; transition:var(--transition); }
-  .upload-type.excel { background:rgba(31,144,104,.12); color:var(--green); border:1px solid rgba(31,144,104,.25); }
-  .upload-type.pdf   { background:rgba(232,130,30,.12); color:var(--orange); border:1px solid rgba(232,130,30,.25); }
+  .upload-type.excel { background:rgba(39,184,128,.18); color:var(--green-light); border:1px solid rgba(39,184,128,.3); }
+  .upload-type.pdf   { background:rgba(232,130,30,.18); color:var(--orange-light); border:1px solid rgba(232,130,30,.3); }
   .upload-type:hover { transform:translateY(-1px); box-shadow:var(--shadow-sm); }
   .upload-features { display:flex; flex-direction:column; gap:24px; }
-  .uf-item { display:flex; gap:20px; align-items:flex-start; padding:24px; border-radius:var(--radius); border:1.5px solid var(--cream-dark); background:var(--cream); transition:var(--transition); }
-  .uf-item:hover { border-color:var(--teal-light); box-shadow:var(--shadow-sm); }
-  .uf-num { width:40px; height:40px; border-radius:10px; background:var(--teal); color:var(--white); font-family:'Space Mono',monospace; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .uf-item { display:flex; gap:20px; align-items:flex-start; padding:24px; border-radius:var(--radius); border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.06); transition:var(--transition); }
+  .uf-item:hover { border-color:rgba(255,255,255,.22); box-shadow:var(--shadow-sm); }
+  .uf-num { width:40px; height:40px; border-radius:10px; background:var(--teal-light); color:var(--white); font-family:'Space Mono',monospace; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .uf-num.orange{background:var(--orange)} .uf-num.green{background:var(--green)}
-  .uf-content h4 { font-size:16px; font-weight:700; color:var(--dark); margin-bottom:4px; }
-  .uf-content p { font-size:13px; color:var(--gray); line-height:1.6; }
+  .uf-content h4 { font-size:16px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .uf-content p { font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; }
 
   /* ── SEARCH DEMO ── */
   .search-section { padding:100px 0; background:linear-gradient(135deg,var(--teal-dark) 0%,var(--dark-2) 100%); overflow:hidden; }
@@ -219,15 +147,15 @@
   .sp-text p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.6; }
 
   /* ── STATS ── */
-  .stats-section { padding:80px 0; background:var(--cream); }
-  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--cream-dark); border-radius:var(--radius); overflow:hidden; border:1.5px solid var(--cream-dark); }
-  .stat-item { background:var(--white); padding:40px 32px; text-align:center; transition:var(--transition); }
-  .stat-item:hover { background:var(--teal); }
+  .stats-section { padding:80px 0; background:var(--teal-dark); }
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:rgba(255,255,255,.06); border-radius:var(--radius); overflow:hidden; border:1px solid rgba(255,255,255,.1); }
+  .stat-item { background:rgba(255,255,255,.04); padding:40px 32px; text-align:center; transition:var(--transition); }
+  .stat-item:hover { background:rgba(255,255,255,.12); }
   .stat-item:hover .stat-num,.stat-item:hover .stat-unit { color:var(--white); }
   .stat-item:hover .stat-label { color:rgba(255,255,255,.7); }
-  .stat-num { font-family:'Space Mono',monospace; font-size:40px; font-weight:700; color:var(--teal); line-height:1; transition:var(--transition); }
-  .stat-unit { font-size:20px; color:var(--orange); transition:var(--transition); }
-  .stat-label { font-size:13px; color:var(--gray); text-transform:uppercase; letter-spacing:1.5px; margin-top:8px; transition:var(--transition); }
+  .stat-num { font-family:'Space Mono',monospace; font-size:40px; font-weight:700; color:var(--white); line-height:1; transition:var(--transition); }
+  .stat-unit { font-size:20px; color:var(--orange-light); transition:var(--transition); }
+  .stat-label { font-size:13px; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1.5px; margin-top:8px; transition:var(--transition); }
 
   /* ── CHANGELOG ── */
   .devlog-section { padding:100px 0; background:var(--white); }
@@ -310,18 +238,18 @@
   .reveal-delay-1{transition-delay:.1s} .reveal-delay-2{transition-delay:.2s} .reveal-delay-3{transition-delay:.3s}
 
   /* ── RESULT PANEL ── */
-  .result-panel { background:var(--cream); border:1.5px solid var(--cream-dark); border-radius:var(--radius); padding:20px; margin-top:16px; display:none; }
+  .result-panel { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:var(--radius); padding:20px; margin-top:16px; display:none; }
   .result-panel.show { display:block; }
-  .result-panel h4 { font-size:14px; font-weight:700; color:var(--dark); margin-bottom:12px; }
+  .result-panel h4 { font-size:14px; font-weight:700; color:var(--white); margin-bottom:12px; }
   .result-table { width:100%; border-collapse:collapse; font-size:12px; }
-  .result-table th { background:var(--teal); color:var(--white); padding:8px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:1px; }
-  .result-table td { padding:8px 12px; border-bottom:1px solid var(--cream-dark); color:var(--dark-2); }
-  .result-table tr:hover td { background:rgba(13,110,122,.04); }
+  .result-table th { background:rgba(255,255,255,.15); color:var(--white); padding:8px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+  .result-table td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.8); }
+  .result-table tr:hover td { background:rgba(255,255,255,.05); }
   .upload-progress { display:none; margin-top:12px; }
   .upload-progress.show { display:block; }
-  .progress-bar-wrap { height:6px; background:var(--cream-dark); border-radius:3px; overflow:hidden; }
-  .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--teal),var(--green-light)); border-radius:3px; width:0; transition:width .4s ease; }
-  .progress-label { font-size:12px; color:var(--gray); margin-top:6px; text-align:right; }
+  .progress-bar-wrap { height:6px; background:rgba(255,255,255,.12); border-radius:3px; overflow:hidden; }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--teal-light),var(--green-light)); border-radius:3px; width:0; transition:width .4s ease; }
+  .progress-label { font-size:12px; color:rgba(255,255,255,.6); margin-top:6px; text-align:right; }
 
   /* ── HAMBURGER MOBILE ── */
   .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1001}
@@ -337,37 +265,25 @@
 
   /* ── RESPONSIVE ── */
   @media(max-width:1024px){
-    .hero-content,.search-layout,.upload-layout,.devlog-layout{grid-template-columns:1fr;gap:40px}
+    .search-layout,.upload-layout,.devlog-layout{grid-template-columns:1fr;gap:40px}
     .stats-grid{grid-template-columns:1fr 1fr}
-    .hero-right{display:none}
   }
   @media(max-width:768px){
     .nav-links{display:none}
     .nav-hamburger{display:flex}
-    .hero-content{padding:60px 5% 80px}
-    .hero-title{font-size:32px}
-    .hero-desc{font-size:15px}
-    .hero-search{max-width:100%}
-    .hero-stats{gap:20px}
-    .hero-stat .num{font-size:20px}
     .stats-grid{grid-template-columns:1fr 1fr}
     .search-layout{grid-template-columns:1fr}
     .upload-layout{grid-template-columns:1fr}
     .section-inner{padding:0 4%}
     .upload-section,.search-section,.stats-section,.devlog-section{padding:64px 0}
-    .hero-right,.hero-stat-divider{display:none}
-    .dashboard-card{display:none}
     .devlog-layout .changelog-card{border-radius:10px}
     .cl-header{padding:16px 18px}
     .cl-items{padding:12px 16px}
   }
   @media(max-width:480px){
-    .hero-title{font-size:26px}
     .stats-grid{grid-template-columns:1fr}
     .stat-item{padding:28px 20px}
     .stat-num{font-size:32px}
-    .hero-stats{flex-direction:column;gap:12px;align-items:flex-start}
-    .hero-stat-divider{display:none}
     .sdb-filters{gap:6px}
     .sdb-filter{font-size:10px;padding:3px 8px}
   }
@@ -389,7 +305,6 @@
     <li><a href="#search">Pencarian</a></li>
     <li><a href="#devlog">Changelog</a></li>
     <li><a href="/casemix">🏥 Casemix</a></li>
-    <li><a href="#upload" class="nav-cta">Mulai Sekarang →</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -404,7 +319,6 @@
   <a href="/excel.html" onclick="toggleMenu()">Excel Viewer</a>
   <a href="/pdf.html" onclick="toggleMenu()">PDF Viewer</a>
   <a href="/casemix" onclick="toggleMenu()">🏥 Casemix</a>
-  <a href="#upload" class="nav-cta" onclick="toggleMenu()">Mulai Sekarang →</a>
 </div>
 
 
@@ -467,114 +381,14 @@
 </section>
 
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-circles"><span></span><span></span><span></span><span></span></div>
-  <div class="hero-dots"></div>
-  <div class="hero-content">
-    <div class="hero-left">
-      <div class="hero-badge">🏥 Arsip Digital Rumah Sakit</div>
-      <h1 class="hero-title">
-        Arsip <span class="accent">Terorganisir</span>,<br>
-        Dokumen <span class="green-accent">Mudah Dicari</span>
-      </h1>
-      <p class="hero-desc">
-        Dairy Meruno adalah sistem informasi arsip pribadi rumah sakit — membaca
-        file Excel, dokumen PDF, dan menyimpannya sebagai database yang dapat
-        dicari kapan saja.
-      </p>
-      <div class="hero-search">
-        <input type="text" placeholder="Cari arsip, rekam medis, laporan, dokumen..." id="heroSearch">
-        <button onclick="doSearch()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Cari
-        </button>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="num" id="counter1">0<span>+</span></div>
-          <div class="label">Format Didukung</div>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <div class="num" id="counter2">0<span>K</span></div>
-          <div class="label">Dokumen Dapat Diindeks</div>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <div class="num" id="counter3">0<span>%</span></div>
-          <div class="label">Data Lokal & Aman</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="dashboard-card">
-        <div class="dash-header">
-          <div class="dash-dots"><span></span><span></span><span></span></div>
-          <span class="dash-title">dairy-meruno / arsip.app</span>
-        </div>
-        <div class="dash-body">
-          <div class="dash-row">
-            <div class="dash-widget">
-              <div class="dw-label">Total Arsip</div>
-              <div class="dw-value" id="dashTotalArsip">—</div>
-              <div class="dw-bar"><div class="dw-bar-fill teal"></div></div>
-            </div>
-            <div class="dash-widget">
-              <div class="dw-label">Dokumen Baru</div>
-              <div class="dw-value orange" id="dashDokBaru">—</div>
-              <div class="dw-bar"><div class="dw-bar-fill orange"></div></div>
-            </div>
-          </div>
-          <div class="dash-row">
-            <div class="dash-widget span-2">
-              <div class="dw-label">File Terbaru</div>
-              <div class="dw-file-list" id="dashFileList">
-                <div class="dw-file">
-                  <div class="dw-file-icon excel">📊</div>
-                  <span class="dw-file-name">rekap_pasien_juni2026.xlsx</span>
-                  <span class="dw-file-status">✓ Terbaca</span>
-                </div>
-                <div class="dw-file">
-                  <div class="dw-file-icon pdf">📄</div>
-                  <span class="dw-file-name">surat_rujukan_RS_042.pdf</span>
-                  <span class="dw-file-status">✓ Terbaca</span>
-                </div>
-                <div class="dw-file">
-                  <div class="dw-file-icon excel">📊</div>
-                  <span class="dw-file-name">laporan_administrasi_q2.xlsx</span>
-                  <span class="dw-file-status">✓ Terbaca</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="dash-row">
-            <div class="dash-widget span-2">
-              <div class="dw-label">Pencarian Cepat</div>
-              <div class="dw-search-demo">
-                <span>🔍</span>
-                <span id="typeDemo">Mencari "rekam medis 2026"<span class="dw-search-cursor"></span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
 <!-- UPLOAD -->
 <section class="upload-section" id="upload">
   <div class="section-inner">
     <div class="upload-layout">
       <div class="upload-left">
-        <div class="section-label">Upload & Proses</div>
-        <h2 class="section-title reveal">Upload Dokumen</h2>
-        <p class="section-desc reveal reveal-delay-1">Unggah file Excel atau PDF — sistem langsung membaca, mengindeks, dan menyimpan ke database arsip.</p>
+        <div class="section-label" style="color:var(--orange-light)">Upload & Proses</div>
+        <h2 class="section-title light reveal">Upload Dokumen</h2>
+        <p class="section-desc light reveal reveal-delay-1">Unggah file Excel atau PDF — sistem langsung membaca, mengindeks, dan menyimpan ke database arsip.</p>
         <div class="upload-zone reveal reveal-delay-2" id="uploadZone"
              ondragover="event.preventDefault();this.classList.add('drag-over')"
              ondragleave="this.classList.remove('drag-over')"
@@ -751,37 +565,12 @@ const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 // COUNTERS
-function animCount(el,target){
-  let c=0,step=Math.ceil(target/40);
-  const iv=setInterval(()=>{c=Math.min(c+step,target);el.textContent=c;if(c>=target)clearInterval(iv)},28);
-}
-new IntersectionObserver(e=>{if(e[0].isIntersecting){
-  setTimeout(()=>animCount(document.getElementById('counter1'),10),100);
-  setTimeout(()=>animCount(document.getElementById('counter2'),50),300);
-  setTimeout(()=>animCount(document.getElementById('counter3'),100),500);
-  e[0].target.__io?.disconnect();
-}}).observe(document.querySelector('.hero-stats'));
-
 new IntersectionObserver(e=>{if(e[0].isIntersecting){
   document.querySelectorAll('.count-num').forEach((el,i)=>{
     const t=+el.dataset.target;
     setTimeout(()=>{let c=0;const iv=setInterval(()=>{c=Math.min(c+Math.ceil(t/50),t);el.textContent=c;if(c>=t)clearInterval(iv)},22)},i*100);
   });
 }}).observe(document.querySelector('.stats-grid'));
-
-// TYPEWRITER
-const phrases=['Mencari "rekam medis 2026"','Mencari "surat rujukan BPJS"','Mencari "laporan administrasi Q2"','Mencari "hasil lab pasien Juni"'];
-let pi=0,ci=0,del=false;
-const te=document.getElementById('typeDemo');
-function tw(){
-  const cur=phrases[pi];
-  del?ci--:ci++;
-  if(!del&&ci>cur.length){del=true;setTimeout(tw,2000);return}
-  if(del&&ci===0){del=false;pi=(pi+1)%phrases.length}
-  te.innerHTML=cur.substring(0,ci)+'<span class="dw-search-cursor"></span>';
-  setTimeout(tw,del?40:80);
-}
-tw();
 
 // SEARCH DATA
 const sampleData=[
@@ -818,13 +607,6 @@ function setFilter(el,f){
   el.classList.add('active');
   renderResults(f==='Semua'?sampleData:f==='Excel'?sampleData.filter(d=>d.type==='excel'):f==='PDF'?sampleData.filter(d=>d.type==='pdf'):f==='2026'?sampleData.filter(d=>d.name.includes('2026')):sampleData.filter(d=>d.name.toLowerCase().includes('administrasi')||d.match.toLowerCase().includes('bpjs')));
 }
-
-// HERO SEARCH
-function doSearch(){
-  const q=document.getElementById('heroSearch').value.trim();
-  if(q){document.getElementById('dbSearch').value=q;document.getElementById('search').scrollIntoView({behavior:'smooth'});setTimeout(doDbSearch,600);}
-}
-document.getElementById('heroSearch').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
 
 // UPLOAD — kirim ke Flask backend
 function handleFileSelect(i){if(i.files&&i.files[0])processFile(i.files[0]);}
@@ -865,46 +647,14 @@ async function processFile(file){
   }
 }
 
-// ── SINKRONISASI DATA ARSIP (Hero Mockup) ──
+// ── SINKRONISASI DATA ARSIP ──
 (async function syncArchive(){
   try {
     const res = await fetch('/api/archive');
     if (!res.ok) return;
     const data = await res.json();
     if (!Array.isArray(data)) return;
-
-    // Total arsip
     const total = data.length;
-    const elTotal = document.getElementById('dashTotalArsip');
-    if (elTotal) elTotal.textContent = total;
-
-    // Dokumen baru (7 hari terakhir)
-    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    const newDocs = data.filter(d => {
-      if (!d.uploaded_at) return false;
-      return new Date(d.uploaded_at).getTime() >= sevenDaysAgo;
-    }).length;
-    const elNew = document.getElementById('dashDokBaru');
-    if (elNew) elNew.textContent = newDocs;
-
-    // 3 file terbaru di hero mockup
-    const sorted = data.slice().sort((a,b)=>new Date(b.uploaded_at||0)-new Date(a.uploaded_at||0));
-    const latest3 = sorted.slice(0,3);
-    const listEl = document.getElementById('dashFileList');
-    if (listEl && latest3.length > 0) {
-      listEl.innerHTML = latest3.map(d => {
-        const isExcel = (d.type||'').toLowerCase() === 'excel' || (d.filename||'').match(/\.xlsx?$/i);
-        const cls = isExcel ? 'excel' : 'pdf';
-        const icon = isExcel ? '📊' : '📄';
-        const name = d.filename || d.original_name || 'file';
-        return `<div class="dw-file">
-          <div class="dw-file-icon ${cls}">${icon}</div>
-          <span class="dw-file-name">${name}</span>
-          <span class="dw-file-status">✓ Terbaca</span>
-        </div>`;
-      }).join('');
-    }
-
     // Stats section — Total Dokumen Arsip
     const elStatArsip = document.getElementById('statTotalArsip');
     if (elStatArsip) {
