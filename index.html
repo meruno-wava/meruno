@@ -297,7 +297,7 @@
   .casemix-card-title { font-family:'Playfair Display',serif; font-size:clamp(22px,2.5vw,30px); font-weight:700; color:var(--white); margin-bottom:10px; line-height:1.2; }
   .casemix-card-sub { font-size:14px; color:rgba(255,255,255,.6); line-height:1.6; margin-bottom:24px; }
   .casemix-chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .casemix-chip { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; background:rgba(255,255,255,.1); color:rgba(255,255,255,.8); border:1px solid rgba(255,255,255,.15); letter-spacing:.3px; transition:var(--transition); }
+  .casemix-chip { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; background:rgba(255,255,255,.1); color:rgba(255,255,255,.8); border:1px solid rgba(255,255,255,.15); letter-spacing:.3px; transition:var(--transition); text-decoration:none; display:inline-block; cursor:pointer; }
   .casemix-chip:hover { background:rgba(255,255,255,.18); color:var(--white); }
   .casemix-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
   .casemix-stat { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:16px 12px; text-align:center; }
@@ -558,15 +558,15 @@
           <h3 class="casemix-card-title">Dashboard Instalasi Casemix</h3>
           <p class="casemix-card-sub">RS. Wava Husada — Kelola dokumen, data klaim, galeri, dan hot news</p>
           <div class="casemix-chips">
-            <span class="casemix-chip">📊 Rekapitulasi Klaim</span>
-            <span class="casemix-chip">📋 Pedoman & Regulasi</span>
-            <span class="casemix-chip">🖼️ Galeri & Memory</span>
-            <span class="casemix-chip">📁 Utilization Review</span>
-            <span class="casemix-chip">📄 SPO</span>
-            <span class="casemix-chip">🏗️ Pedoman Pengorganisasian</span>
-            <span class="casemix-chip">🩺 Pedoman Pelayanan</span>
-            <span class="casemix-chip">📜 Kebijakan Layanan</span>
-            <span class="casemix-chip">📰 Hot News</span>
+            <a href="/casemix/klaim" class="casemix-chip">📊 Rekapitulasi Klaim</a>
+            <a href="/casemix/regulasi" class="casemix-chip">📋 Pedoman & Regulasi</a>
+            <a href="/casemix/galeri" class="casemix-chip">🖼️ Galeri & Memory</a>
+            <a href="/casemix/ur" class="casemix-chip">📁 Utilization Review</a>
+            <a href="/casemix/spo" class="casemix-chip">📄 SPO</a>
+            <a href="/casemix/pengorganisasian" class="casemix-chip">🏗️ Pedoman Pengorganisasian</a>
+            <a href="/casemix/pelayanan" class="casemix-chip">🩺 Pedoman Pelayanan</a>
+            <a href="/casemix/kebijakan" class="casemix-chip">📜 Kebijakan Layanan</a>
+            <a href="/casemix/hotnews" class="casemix-chip">📰 Hot News</a>
           </div>
           <a href="/casemix" class="btn btn-orange" style="margin-top:32px;display:inline-flex">
             Buka Dashboard Casemix →
