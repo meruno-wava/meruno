@@ -75,6 +75,19 @@
   }
   .version-badge.released { background: rgba(31,144,104,.15); color: var(--green); }
   .version-badge.unreleased { background: rgba(232,130,30,.15); color: var(--orange); }
+  .version-badge.final { background: #094e58; color: #fff; }
+
+  .version-block.milestone {
+    border: 2px solid #094e58;
+    box-shadow: 0 4px 24px rgba(9,78,88,.15);
+  }
+  .version-block.milestone .version-header {
+    background: #094e58;
+  }
+  .version-block.milestone .version-num { color: #fff; }
+  .version-block.milestone .version-date {
+    background: rgba(255,255,255,.15); color: rgba(255,255,255,.85);
+  }
 
   .version-body { padding: 24px 28px; }
 
@@ -132,6 +145,64 @@
 
 <div class="content">
   <a href="index.html" class="back-btn">← Kembali ke Beranda</a>
+
+  <!-- v1.0.0 -->
+  <div class="version-block milestone">
+    <div class="version-header">
+      <span class="version-num">v1.0.0</span>
+      <span class="version-date">16 Juni 2026</span>
+      <span class="version-badge final">🎉 Rilis Final</span>
+    </div>
+    <div class="version-body">
+      <div class="change-group">
+        <h4>Ditambahkan</h4>
+        <ul class="change-list added">
+          <li>Tombol "← Dashboard Casemix" di setiap halaman bagian — kembali ke ringkasan utama cukup satu ketukan</li>
+          <li>Form unggah di setiap halaman Casemix kini bisa dilipat dan dibuka kembali di perangkat ponsel — layar lebih lega untuk melihat isi dokumen</li>
+        </ul>
+      </div>
+      <div class="change-group">
+        <h4>Catatan Rilis</h4>
+        <ul class="change-list improved">
+          <li>Versi 1.0.0 menandai selesainya seluruh modul Casemix RS. Wava Husada — semua halaman siap digunakan oleh seluruh staf</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- v0.7.0 -->
+  <div class="version-block">
+    <div class="version-header">
+      <span class="version-num">v0.7.0</span>
+      <span class="version-date">16 Juni 2026</span>
+      <span class="version-badge released">✓ Rilis</span>
+    </div>
+    <div class="version-body">
+      <div class="change-group">
+        <h4>Ditambahkan</h4>
+        <ul class="change-list added">
+          <li>Dashboard Casemix dan Beranda kini menampilkan total pemakaian ruang penyimpanan per bagian maupun secara keseluruhan</li>
+          <li>Setelah mengunggah file, muncul keterangan ukuran file sebelum dan sesudah dipadatkan — di semua halaman Casemix</li>
+          <li>Kartu data klaim menampilkan ukuran file yang diunggah</li>
+          <li>Kartu foto di Galeri menampilkan ukuran foto</li>
+          <li>Tombol-tombol bagian Casemix di Beranda kini bisa diklik untuk langsung berpindah ke halaman yang sesuai</li>
+        </ul>
+      </div>
+      <div class="change-group">
+        <h4>Ditingkatkan</h4>
+        <ul class="change-list improved">
+          <li>Tampilan Dashboard Casemix di perangkat ponsel kini dua kolom — lebih ringkas dan tidak perlu banyak gulir</li>
+          <li>Hasil pencarian kini menampilkan judul dokumen yang telah diganti nama, bukan nama file asli</li>
+        </ul>
+      </div>
+      <div class="change-group">
+        <h4>Diperbaiki</h4>
+        <ul class="change-list fixed">
+          <li>Teks pada submenu navigasi Casemix tidak lagi menghilang saat diarahkan kursor ke atasnya</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <!-- v0.6.0 -->
   <div class="version-block">
