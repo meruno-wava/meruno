@@ -238,29 +238,6 @@
   .stat-unit { font-size:20px; color:var(--orange-light); transition:var(--transition); }
   .stat-label { font-size:13px; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1.5px; margin-top:8px; transition:var(--transition); }
 
-  /* ── CHANGELOG ── */
-  .devlog-section { padding:100px 0; background:var(--white); }
-  .devlog-layout { display:grid; grid-template-columns:1fr; gap:48px; margin-top:56px; max-width:760px; margin-left:auto; margin-right:auto; }
-
-  .changelog-card { background:var(--white); border-radius:var(--radius); border:1.5px solid var(--cream-dark); overflow:hidden; }
-  .cl-header { background:var(--teal-dark); padding:20px 28px; display:flex; align-items:center; justify-content:space-between; }
-  .cl-header h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--white); }
-  .cl-header a { font-size:12px; color:rgba(255,255,255,.6); text-decoration:none; font-weight:700; background:rgba(255,255,255,.1); padding:4px 12px; border-radius:20px; transition:var(--transition); }
-  .cl-header a:hover { background:rgba(255,255,255,.2); color:white; }
-  .cl-body { padding:0; }
-  .cl-version { border-bottom:1px solid var(--cream-dark); }
-  .cl-version:last-child { border-bottom:none; }
-  .cl-version-head { padding:16px 24px; display:flex; align-items:center; gap:12px; background:var(--cream); border-bottom:1px solid var(--cream-dark); }
-  .cl-v-num { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--teal); }
-  .cl-v-date { font-size:12px; color:var(--gray); }
-  .cl-v-badge { margin-left:auto; font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; }
-  .cl-v-badge.released { background:rgba(31,144,104,.15); color:var(--green); }
-  .cl-v-badge.planned  { background:rgba(232,130,30,.15); color:var(--orange); }
-  .cl-items { padding:16px 24px; display:flex; flex-direction:column; gap:8px; }
-  .cl-item { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.5; color:var(--dark); }
-  .cl-item::before { content:'+'; color:var(--green); font-weight:700; flex-shrink:0; }
-  .cl-item.plan::before { content:'◦'; color:var(--orange); }
-
   /* ── CTA ── */
   .cta-section { padding:100px 0; background:var(--cream); text-align:center; }
   .cta-box { max-width:700px; margin:0 auto; }
@@ -459,7 +436,7 @@
 
   /* ── RESPONSIVE ── */
   @media(max-width:1024px){
-    .search-layout,.devlog-layout{grid-template-columns:1fr;gap:40px}
+    .search-layout{grid-template-columns:1fr;gap:40px}
     .stats-grid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:768px){
@@ -468,10 +445,7 @@
     .stats-grid{grid-template-columns:1fr 1fr}
     .search-layout{grid-template-columns:1fr}
     .section-inner{padding:0 4%}
-    .search-section,.stats-section,.devlog-section{padding:64px 0}
-    .devlog-layout .changelog-card{border-radius:10px}
-    .cl-header{padding:16px 18px}
-    .cl-items{padding:12px 16px}
+    .search-section,.stats-section{padding:64px 0}
   }
   @media(max-width:480px){
     .stats-grid{grid-template-columns:1fr}
@@ -495,7 +469,7 @@
   </a>
   <ul class="nav-links">
     <li><a href="#search">Pencarian</a></li>
-    <li><a href="#devlog">Changelog</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
     <li>
       <div class="nav-dropdown">
         <a href="/casemix" class="nav-link nav-casemix">
@@ -523,7 +497,7 @@
 <!-- MOBILE NAV -->
 <div class="nav-mobile" id="mobileNav">
   <a href="#search" onclick="toggleMenu()">Pencarian</a>
-  <a href="#devlog" onclick="toggleMenu()">Changelog</a>
+  <a href="changelog.html" onclick="toggleMenu()">Changelog</a>
   <div class="mobile-nav-section" style="text-align:center">
     <div class="mobile-nav-label">🌿 Casemix</div>
     <a href="/casemix" class="mobile-nav-link" onclick="toggleMenu()">Dashboard</a>
@@ -681,86 +655,6 @@
 
 
 <!-- CHANGELOG -->
-<section class="devlog-section" id="devlog">
-  <div class="section-inner">
-    <div style="text-align:center">
-      <div class="section-label">Riwayat Pembaruan</div>
-      <h2 class="section-title reveal">Changelog</h2>
-      <p class="section-desc reveal reveal-delay-1" style="margin:0 auto">Riwayat perubahan fitur dan tampilan Dairy Meruno.</p>
-    </div>
-
-    <div class="devlog-layout">
-      <!-- CHANGELOG -->
-      <div class="changelog-card reveal">
-        <div class="cl-header">
-          <h3>📋 Changelog</h3>
-          <a href="changelog.html">Lihat Semua →</a>
-        </div>
-        <div class="cl-body">
-          <div class="cl-version">
-            <div class="cl-version-head">
-              <span class="cl-v-num">v0.4.0</span>
-              <span class="cl-v-date">15 Juni 2026</span>
-              <span class="cl-v-badge released">✓ Rilis</span>
-            </div>
-            <div class="cl-items">
-              <div class="cl-item">Deploy ke Railway (https://meruno.up.railway.app)</div>
-              <div class="cl-item">Supabase Storage — file persisten, tidak hilang saat redeploy</div>
-              <div class="cl-item">Kompresi otomatis: PDF, gambar (max 1920px), PPTX</div>
-              <div class="cl-item">Sync Hot News dari wavahusada.com (WP REST API)</div>
-              <div class="cl-item">Search terintegrasi dengan data Casemix</div>
-              <div class="cl-item">Stats counter real-time dari API Casemix</div>
-              <div class="cl-item">Mobile responsive semua halaman Casemix</div>
-              <div class="cl-item">Menu "Unggah" dihapus — diganti dropdown navigasi Casemix</div>
-            </div>
-          </div>
-          <div class="cl-version">
-            <div class="cl-version-head">
-              <span class="cl-v-num">v0.2.0</span>
-              <span class="cl-v-date">15 Juni 2026</span>
-              <span class="cl-v-badge released">✓ Rilis</span>
-            </div>
-            <div class="cl-items">
-              <div class="cl-item">Dashboard Instalasi Casemix RS. Wava Husada</div>
-              <div class="cl-item">9 section: Document Library (5), Data Viewer (2), Media & Announcement (2)</div>
-              <div class="cl-item">Rekapitulasi Klaim: upload Excel, tampil tabel, sheet tabs, dan statistik numerik</div>
-              <div class="cl-item">Utilization Review: upload PPTX/PDF, unduh, dan hapus</div>
-              <div class="cl-item">Galeri & Memory: grid foto, drag-drop upload, lightbox prev/next</div>
-              <div class="cl-item">Hot News: form tambah berita, feed vertikal, gambar opsional</div>
-              <div class="cl-item">Document Library: upload, tampil, dan hapus dokumen per section</div>
-            </div>
-          </div>
-          <div class="cl-version">
-            <div class="cl-version-head">
-              <span class="cl-v-num">v0.1.0</span>
-              <span class="cl-v-date">10 Juni 2026</span>
-              <span class="cl-v-badge released">✓ Rilis</span>
-            </div>
-            <div class="cl-items">
-              <div class="cl-item">Landing page utama dengan desain teal + orange</div>
-              <div class="cl-item">Hero: search bar interaktif dan dashboard mockup animasi</div>
-              <div class="cl-item">Upload zone drag & drop dengan preview hasil parsing</div>
-              <div class="cl-item">Pencarian real-time dengan 5 filter (Semua, Excel, PDF, Tahun, Kategori)</div>
-              <div class="cl-item">4 counter statistik animasi</div>
-            </div>
-          </div>
-          <div class="cl-version">
-            <div class="cl-version-head">
-              <span class="cl-v-num">v0.3.0</span>
-              <span class="cl-v-date">Direncanakan</span>
-              <span class="cl-v-badge planned">⏳ Direncanakan</span>
-            </div>
-            <div class="cl-items">
-              <div class="cl-item plan">Export hasil pencarian ke Excel/CSV</div>
-              <div class="cl-item plan">Notifikasi dokumen baru</div>
-              <div class="cl-item plan">Peningkatan tampilan mobile</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 <footer>
