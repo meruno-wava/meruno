@@ -530,6 +530,7 @@ function renderKlaim(files){
           </div>
           <div class="klaim-card-actions">
             <button class="btn-lihat" id="expand-${escAttr(k.id)}">Lihat Data ▼</button>
+            <button class="btn-lihat" style="background:#1a8fa0" onclick="event.stopPropagation();downloadExcel('${escAttr(k.id)}')" title="Unduh sebagai Excel">↓ Unduh</button>
             <button class="btn-delete-klaim" onclick="event.stopPropagation();openDel('${escAttr(k.id)}','${escAttr(k.title||k.original_name)}')">🗑</button>
           </div>
         </div>
@@ -601,6 +602,21 @@ document.getElementById('modal-overlay').addEventListener('click', e=>{
 
 // ── Init ───────────────────────────────────────────────────────────────────────
 loadKlaim();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+function downloadExcel(id) {
+  const k = allKlaim.find(x => x.id === id);
+  if (!k || !k.sheets || k.sheets.length === 0) return;
+  const wb = XLSX.utils.book_new();
+  k.sheets.forEach(s => {
+    const aoa = [s.headers, ...s.rows];
+    const ws  = XLSX.utils.aoa_to_sheet(aoa);
+    XLSX.utils.book_append_sheet(wb, ws, s.name || 'Sheet1');
+  });
+  const fname = (k.original_name || k.title || 'klaim').replace(/\.xlsx?$/i,'') + '.xlsx';
+  XLSX.writeFile(wb, fname);
+}
 </script>
 </body>
 </html>
