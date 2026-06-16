@@ -840,6 +840,7 @@ def casemix_save_doc(file, section):
         "filename":         stored_name,
         "original_name":    file.filename,
         "description":      desc,
+        "size":             len(fb),
         "uploaded_at":      datetime.datetime.now().isoformat(),
         "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
         "file_url":         sb_url if sb_url else f"/casemix/files/{section}/{stored_name}",
