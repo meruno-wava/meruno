@@ -634,7 +634,8 @@ newsForm.addEventListener('submit', async e => {
     const r = await fetch('/casemix/upload/hotnews', { method:'POST', body:fd });
     const data = await r.json().catch(()=>({}));
     if(r.ok && data.ok){
-      showMsg('success', '✅ Berita berhasil dipublikasikan!');
+      const imgNote = imageFile ? sizeNotice(data.original_size, data.compressed_size) : '';
+      showMsg('success', '✅ Berita berhasil dipublikasikan!' + imgNote);
       newsForm.reset();
       imgRemove.click();
       await loadNews();
@@ -649,14 +650,22 @@ newsForm.addEventListener('submit', async e => {
   }
 });
 
+function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+function sizeNotice(orig,comp){
+  if(!orig||!comp) return '';
+  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
+  return pct>1
+    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
+}
 function showMsg(type, text){
-  uploadMsg.textContent = text;
+  uploadMsg.innerHTML = text;
   uploadMsg.className = 'upload-msg show ' + type;
-  if(type === 'success') setTimeout(hideMsg, 4000);
+  if(type === 'success') setTimeout(hideMsg, 5000);
 }
 function hideMsg(){
   uploadMsg.className = 'upload-msg';
-  uploadMsg.textContent = '';
+  uploadMsg.innerHTML = '';
 }
 
 /* ── Delete Modal ── */

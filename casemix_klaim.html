@@ -468,6 +468,7 @@ async function loadKlaim(){
 }
 
 function numFmt(n){ return Number(n).toLocaleString('id-ID') }
+function fmtSize(b){ if(!b||b===0)return''; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
 
 function renderKlaim(files){
   const empty = document.getElementById('klaim-empty');
@@ -520,6 +521,7 @@ function renderKlaim(files){
               <span>${numFmt(k.total_rows)} baris</span>
               <span>·</span>
               <span>${sheets.length} sheet</span>
+              ${k.size ? `<span>·</span><span>${fmtSize(k.size)}</span>` : ''}
             </div>
           </div>
           <div class="klaim-card-actions">

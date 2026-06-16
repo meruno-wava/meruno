@@ -492,17 +492,25 @@ function fmtBytes(b) {
   return (b / 1048576).toFixed(1) + ' MB';
 }
 
+function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+function sizeNotice(orig,comp){
+  if(!orig||!comp) return '';
+  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
+  return pct>1
+    ? `<br><small style="opacity:.8;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.8;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
+}
 function showAlert(type, msg) {
   const ok = document.getElementById('alertOk');
   const err = document.getElementById('alertErr');
   ok.classList.remove('show');
   err.classList.remove('show');
   if (type === 'ok') {
-    document.getElementById('alertOkMsg').textContent = msg;
+    document.getElementById('alertOkMsg').innerHTML = msg;
     ok.classList.add('show');
     setTimeout(() => ok.classList.remove('show'), 5000);
   } else {
-    document.getElementById('alertErrMsg').textContent = msg;
+    document.getElementById('alertErrMsg').innerHTML = msg;
     err.classList.add('show');
     setTimeout(() => err.classList.remove('show'), 7000);
   }
@@ -580,7 +588,7 @@ btnUpload.addEventListener('click', async () => {
     updateStats();
     clearFile();
     document.getElementById('captionInput').value = '';
-    showAlert('ok', 'Foto berhasil diupload!');
+    showAlert('ok', '✅ Foto berhasil diupload!' + sizeNotice(data.original_size, data.compressed_size));
   } catch (e) {
     showAlert('err', e.message || 'Gagal upload. Coba lagi.');
   } finally {
@@ -642,7 +650,7 @@ function renderGallery() {
       </div>
       <div class="gi-body">
         <div class="gi-caption${capClass}">${escHtml(capDisplay)}</div>
-        <div class="gi-date">🕐 ${escHtml(entry.uploaded_at_display || '')}</div>
+        <div class="gi-date">🕐 ${escHtml(entry.uploaded_at_display || '')}${entry.size ? `<span style="font-size:11px;opacity:0.5"> · ${fmtSz(entry.size)}</span>` : ''}</div>
       </div>
     </div>`;
   }).join('');

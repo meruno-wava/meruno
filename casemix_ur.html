@@ -511,7 +511,8 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
     progressBar.style.width = '100%';
 
     if (res.ok) {
-      showMsg('✅ Dokumen UR berhasil diupload!', 'success');
+      const result = await res.json().catch(() => ({}));
+      showMsg('✅ Dokumen UR berhasil diupload!' + sizeNotice(result.original_size, result.compressed_size), 'success');
       clearFile();
       document.getElementById('title-input').value = '';
       document.getElementById('desc-input').value = '';
@@ -534,10 +535,18 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
   uploadBtn.innerHTML = '📤 Upload Dokumen UR';
 });
 
+function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+function sizeNotice(orig,comp){
+  if(!orig||!comp) return '';
+  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
+  return pct>1
+    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
+}
 function showMsg(text, type) {
-  uploadMsg.textContent = text;
+  uploadMsg.innerHTML = text;
   uploadMsg.className = `upload-msg show ${type}`;
-  setTimeout(() => { uploadMsg.className = 'upload-msg'; }, 4000);
+  setTimeout(() => { uploadMsg.className = 'upload-msg'; uploadMsg.innerHTML=''; }, 5000);
 }
 
 // ── Inline Rename ─────────────────────────────────────────────────────────────

@@ -827,10 +827,11 @@ async function loadAllCasemixDocs() {
       casemixCache[sec.key] = data.files || [];
       (data.files || []).forEach(f => {
         const fname = f.filename || f.title || f.id || '';
+        const displayTitle = f.title || f.caption || f.original_name || fname;
         allCasemixDocs.push({
           id: f.id || fname,
           filename: fname,
-          title: f.title || fname,
+          title: displayTitle,
           section: sec.key,
           sectionLabel: sec.label,
           url: `/casemix/${sec.key}`,

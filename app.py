@@ -819,6 +819,7 @@ def casemix_save_doc(file, section):
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
     fb = file.read()
+    original_size = len(fb)
     ext = Path(file.filename).suffix.lower()
     if ext == ".pdf":
         fb = compress_pdf(fb)
@@ -862,7 +863,8 @@ def casemix_save_doc(file, section):
     with open(meta_file, "w", encoding="utf-8") as fp:
         json.dump(meta, fp, ensure_ascii=False, indent=2)
     sb_write_json("casemix", f"meta/{section}.json", meta)
-    return jsonify({"ok": True, "id": doc_id, "entry": entry})
+    return jsonify({"ok": True, "id": doc_id, "entry": entry,
+                    "original_size": original_size, "compressed_size": len(fb)})
 
 def casemix_save_galeri(file):
     section_dir = CASEMIX_DIR / "galeri"
@@ -871,6 +873,7 @@ def casemix_save_galeri(file):
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
     fb = file.read()
+    original_size = len(fb)
     fb = compress_image(fb)
     caption = request.form.get("caption", "")
     # Upload ke Supabase
@@ -889,6 +892,7 @@ def casemix_save_galeri(file):
         "uploaded_at":      datetime.datetime.now().isoformat(),
         "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
         "img_url":          sb_url if sb_url else f"/casemix/files/galeri/{stored_name}",
+        "size":             len(fb),
     }
     # Baca metadata: coba Supabase dulu, fallback ke local
     meta = sb_read_json("casemix", "meta/galeri.json")
@@ -906,7 +910,8 @@ def casemix_save_galeri(file):
     with open(meta_file, "w", encoding="utf-8") as fp:
         json.dump(meta, fp, ensure_ascii=False, indent=2)
     sb_write_json("casemix", "meta/galeri.json", meta)
-    return jsonify({"ok": True, "id": doc_id, "entry": entry})
+    return jsonify({"ok": True, "id": doc_id, "entry": entry,
+                    "original_size": original_size, "compressed_size": len(fb)})
 
 def casemix_process_klaim(file):
     if file.filename.lower().endswith('.xls'):
@@ -917,6 +922,7 @@ def casemix_process_klaim(file):
         return jsonify({"error": "Jalankan: pip install openpyxl pandas"}), 500
     try:
         fb = file.read()
+        original_size = len(fb)
         wb = openpyxl.load_workbook(BytesIO(fb), data_only=True)
         sheets = []
         for sn in wb.sheetnames:
@@ -967,6 +973,7 @@ def casemix_process_klaim(file):
             "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
             "sheets":           sheets,
             "total_rows":       sum(s["row_count"] for s in sheets),
+            "size":             original_size,
         }
         # Scrape + delete: file TIDAK disimpan, hanya data JSON-nya
         # Baca metadata: coba Supabase dulu, fallback ke local
@@ -996,6 +1003,8 @@ def casemix_add_news():
     if not title:
         return jsonify({"error": "Judul wajib diisi"}), 400
     news_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    img_original_size = 0
+    img_compressed_size = 0
     entry = {
         "id":                 news_id,
         "title":              title,
@@ -1012,7 +1021,9 @@ def casemix_add_news():
             safe_fn = re.sub(r'[^\w\-.]', '_', img.filename)
             stored = f"{news_id}_{safe_fn}"
             img_bytes = img.read()
+            img_original_size = len(img_bytes)
             img_bytes = compress_image(img_bytes)
+            img_compressed_size = len(img_bytes)
             # Upload gambar ke Supabase
             import mimetypes
             ct = mimetypes.guess_type(img.filename)[0] or "image/jpeg"
@@ -1040,7 +1051,9 @@ def casemix_add_news():
     with open(news_file, "w", encoding="utf-8") as fp:
         json.dump(data, fp, ensure_ascii=False, indent=2)
     sb_write_json("casemix", "meta/news.json", data)
-    return jsonify({"ok": True, "id": news_id, "entry": entry})
+    return jsonify({"ok": True, "id": news_id, "entry": entry,
+                    "original_size": img_original_size if img_original_size else 0,
+                    "compressed_size": img_compressed_size if img_compressed_size else 0})
 
 @app.route("/casemix/delete/<section>/<doc_id>", methods=["DELETE"])
 def casemix_delete(section, doc_id):
