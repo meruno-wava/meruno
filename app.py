@@ -113,7 +113,7 @@ def _rebuild_meta_from_storage(section):
     Dipakai sebagai fallback ketika metadata/<section>.json belum ada."""
     sb = get_supabase()
     if not sb or section in ('news', 'klaim', 'hotnews'):
-        return None  # Tidak bisa di-rebuild dari file listing
+        return None
     try:
         files_list = sb.storage.from_("casemix").list(section)
         if not files_list:
@@ -124,9 +124,8 @@ def _rebuild_meta_from_storage(section):
                 continue
             fname = f['name']
             if '.' not in fname or fname.startswith('.'):
-                continue  # Skip folder entries
+                continue
             url = f"{SUPABASE_URL}/storage/v1/object/public/casemix/{section}/{fname}"
-            # Parse nama file: YYYYMMDD_HHMMSS_originalname.ext
             parts = fname.split('_', 2)
             if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit():
                 orig = parts[2]
@@ -155,7 +154,7 @@ def _rebuild_meta_from_storage(section):
         if not entries:
             return None
         meta = {"files": entries, "count": len(entries)}
-        save_meta(section, meta)  # Cache ke Supabase agar tidak perlu scan ulang
+        save_meta(section, meta)
         print(f"[load_meta] Rebuilt metadata for '{section}': {len(entries)} files")
         return meta
     except Exception as e:
@@ -173,7 +172,6 @@ def load_meta(section):
             data = sb.storage.from_("casemix").download(f"metadata/{section}.json")
             return json.loads(data.decode('utf-8'))
         except Exception:
-            # metadata JSON belum ada — coba rebuild dari file listing
             rebuilt = _rebuild_meta_from_storage(section)
             if rebuilt:
                 return rebuilt
@@ -186,7 +184,6 @@ def save_meta(section, meta_dict):
         return
     content = json.dumps(meta_dict, ensure_ascii=False, indent=2).encode('utf-8')
     path = f"metadata/{section}.json"
-    # Remove existing then re-upload (most reliable upsert pattern)
     try:
         sb.storage.from_("casemix").remove([path])
     except Exception:
@@ -1064,4 +1061,68 @@ def casemix_add_news():
                 # Fallback: simpan lokal
                 with open(str(news_dir / stored), "wb") as lf:
                     lf.write(img_bytes)
-                
+                entry["img_url"] = f"/casemix/files/hotnews/{stored}"
+    data = load_meta('news')
+    data["news"].insert(0, entry)
+    data["count"] = len(data["news"])
+    save_meta('news', data)
+    return jsonify({"ok": True, "id": news_id, "entry": entry,
+                    "original_size": img_original_size if img_original_size else 0,
+                    "compressed_size": img_compressed_size if img_compressed_size else 0})
+
+@app.route("/casemix/delete/<section>/<doc_id>", methods=["DELETE"])
+def casemix_delete(section, doc_id):
+    if section not in CASEMIX_SECTIONS:
+        return jsonify({"error": "Section tidak valid"}), 400
+    meta_section = 'news' if section == 'hotnews' else section
+    meta = load_meta(meta_section)
+    list_key = "news" if section == "hotnews" else "files"
+    items = meta.get(list_key, [])
+    new_items = []
+    deleted_entry = None
+    for item in items:
+        if item.get("id") == doc_id:
+            deleted_entry = item
+        else:
+            new_items.append(item)
+    meta[list_key] = new_items
+    meta["count"] = len(new_items)
+    save_meta(meta_section, meta)
+    # Hapus file fisik jika ada (klaim tidak punya file fisik)
+    if deleted_entry:
+        fn = deleted_entry.get("filename") or deleted_entry.get("img_url", "").split("/")[-1]
+        if fn:
+            # Hapus dari Supabase Storage
+            sb_delete("casemix", f"{section}/{fn}")
+            # Hapus dari local storage jika ada
+            fp2 = CASEMIX_DIR / section / fn
+            if fp2.exists():
+                fp2.unlink()
+    return jsonify({"ok": True, "deleted": deleted_entry is not None})
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    import webbrowser, threading
+
+    print()
+    print("=" * 55)
+    print("  🗂️  DAIRY MERUNO — Sistem Arsip RS")
+    print("  📍  http://localhost:8080")
+    print("  ⚡  Flask " + __import__("flask").__version__)
+    if CLAUDE_API_KEY:
+        print("  🤖  AI aktif (Claude API)")
+    else:
+        print("  💡  Set ANTHROPIC_API_KEY untuk mengaktifkan AI")
+    print("=" * 55)
+    print()
+
+    def open_browser():
+        import time; time.sleep(1.5)
+        webbrowser.open("http://localhost:8080")
+    threading.Thread(target=open_browser, daemon=True).start()
+
+    port = int(os.environ.get("PORT", 8080))
+    host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+    app.run(host=host, port=port, debug=False)
