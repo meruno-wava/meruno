@@ -194,6 +194,50 @@ a{text-decoration:none;color:inherit}
 .btn-confirm-delete{padding:8px 18px;border-radius:50px;background:var(--red);color:white;border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-confirm-delete:hover{background:#a93226}
 
+/* ── Doc Viewer ── */
+.doc-viewer-wrap{
+  border-top:1.5px solid var(--cream-dark);
+  padding-top:14px;
+  display:flex;flex-direction:column;gap:8px;
+  flex:1;min-height:0;
+}
+.doc-viewer-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;
+}
+.doc-viewer-label{font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px}
+.doc-viewer-open-btn{
+  font-size:12px;font-weight:700;color:var(--teal-dark);
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--teal-dark);transition:.15s;
+}
+.doc-viewer-open-btn:hover{background:rgba(9,78,88,.06)}
+.doc-viewer-frame-wrap{
+  position:relative;flex:1;min-height:480px;
+  border-radius:10px;overflow:hidden;
+  border:1.5px solid var(--cream-dark);
+  background:#f8f8f8;
+}
+.doc-viewer-frame{
+  width:100%;height:100%;
+  position:absolute;inset:0;border:none;
+}
+.doc-viewer-loading{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#f8f8f8;pointer-events:none;transition:opacity .3s;
+}
+.dv-spinner{
+  width:28px;height:28px;
+  border:3px solid var(--cream-dark);
+  border-top-color:var(--teal);
+  border-radius:50%;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.klaim-viewer-col{overflow-y:auto}
+.klaim-content{min-height:600px}
+.doc-detail{flex:1;min-height:0}
+
 /* ── Responsive ── */
 @media(max-width:900px){
   .ud-grid{grid-template-columns:1fr}
@@ -348,6 +392,19 @@ a{text-decoration:none;color:inherit}
             <a class="dd-btn-dl" id="dd-btn-dl" href="#">↓ Unduh</a>
             <a class="dd-btn-open" id="dd-btn-open" href="#" target="_blank">↗ Buka</a>
             <button class="dd-btn-del" onclick="openDelCurrent()">🗑 Hapus</button>
+          </div>
+          <div class="doc-viewer-wrap" id="doc-viewer-wrap" style="display:none">
+            <div class="doc-viewer-toolbar">
+              <span class="doc-viewer-label" id="doc-viewer-label">Pratinjau</span>
+              <a class="doc-viewer-open-btn" id="doc-viewer-open-btn" href="#" target="_blank">↗ Buka tab baru</a>
+            </div>
+            <div class="doc-viewer-frame-wrap">
+              <iframe class="doc-viewer-frame" id="doc-viewer-frame" src="" frameborder="0" allowfullscreen></iframe>
+              <div class="doc-viewer-loading" id="doc-viewer-loading">
+                <div class="dv-spinner"></div>
+                <div style="font-size:12px;color:var(--gray);margin-top:10px">Memuat pratinjau...</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -529,6 +586,7 @@ function renderDocs(docs) {
     listEl.innerHTML = '<div class="file-empty">Belum ada dokumen UR</div>';
     document.getElementById('doc-empty-state').style.display = '';
     document.getElementById('doc-detail').style.display = 'none';
+    document.getElementById('doc-viewer-wrap').style.display = 'none';
     activeDocId = null;
     return;
   }
@@ -597,6 +655,28 @@ function selectDoc(id) {
   dlBtn.setAttribute('download', fname);
   document.getElementById('dd-btn-open').href = url;
 
+  // Viewer
+  const viewerWrap = document.getElementById('doc-viewer-wrap');
+  const viewerFrame = document.getElementById('doc-viewer-frame');
+  const viewerLoading = document.getElementById('doc-viewer-loading');
+  document.getElementById('doc-viewer-open-btn').href = url;
+  document.getElementById('doc-viewer-label').textContent =
+    ext === 'pdf' ? 'Pratinjau PDF' : `Pratinjau ${extUp} (via Google Docs)`;
+
+  const viewerUrl = ext === 'pdf'
+    ? url + '#toolbar=0&view=FitH'
+    : `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+
+  viewerWrap.style.display = 'flex';
+  viewerLoading.style.opacity = '1';
+  viewerLoading.style.pointerEvents = 'auto';
+  viewerFrame.src = '';
+  setTimeout(() => { viewerFrame.src = viewerUrl; }, 80);
+  viewerFrame.onload = () => {
+    viewerLoading.style.opacity = '0';
+    viewerLoading.style.pointerEvents = 'none';
+  };
+
   document.getElementById('doc-empty-state').style.display = 'none';
   document.getElementById('doc-detail').style.display = 'flex';
 }
@@ -640,83 +720,4 @@ function startDescDD() {
 function saveDescDD() {
   const sp = document.getElementById('dd-desc');
   const i  = document.getElementById('dd-desc-input');
-  if (i.style.display === 'none') return;
-  const v = i.value.trim();
-  sp.dataset.raw = v;
-  sp.textContent = v || 'Tambah keterangan...';
-  sp.className = 'dd-desc' + (v ? '' : ' empty');
-  const d = allDocs.find(x => String(x.id) === String(activeDocId));
-  if (d) d.description = v;
-  sp.style.display = 'block';
-  i.style.display = 'none';
-}
-function cancelDescDD() {
-  document.getElementById('dd-desc').style.display = 'block';
-  document.getElementById('dd-desc-input').style.display = 'none';
-}
-
-// ── Open delete from detail panel ─────────────────────────────────────────────
-function openDelCurrent() {
-  if (!activeDocId) return;
-  const d = allDocs.find(x => String(x.id) === String(activeDocId));
-  if (d) openDel(String(d.id), d.title || d.original_name || 'Dokumen');
-}
-
-// ── Load Documents ────────────────────────────────────────────────────────────
-async function loadDocs() {
-  try {
-    const res = await fetch(`/casemix/api/files/${SECTION}`);
-    if (!res.ok) throw new Error(res.statusText);
-    const data = await res.json();
-    renderDocs(data.files || []);
-  } catch {
-    renderDocs([]);
-  }
-}
-
-// ── Delete ────────────────────────────────────────────────────────────────────
-let pendingDeleteId = null;
-
-function openDel(id, title) {
-  pendingDeleteId = id;
-  document.getElementById('modal-desc').textContent =
-    `"${title || id}" akan dihapus secara permanen dan tidak dapat dikembalikan.`;
-  document.getElementById('modal-overlay').classList.add('show');
-}
-function closeDel() {
-  document.getElementById('modal-overlay').classList.remove('show');
-  pendingDeleteId = null;
-}
-
-document.getElementById('btn-cancel').addEventListener('click', closeDel);
-
-document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
-  if (!pendingDeleteId) return;
-  const deletedId = pendingDeleteId;
-  document.getElementById('modal-overlay').classList.remove('show');
-  pendingDeleteId = null;
-  try {
-    const res = await fetch(`/casemix/delete/${SECTION}/${deletedId}`, { method: 'DELETE' });
-    if (res.ok) {
-      allDocs = allDocs.filter(d => String(d.id) !== String(deletedId));
-      if (String(deletedId) === String(activeDocId)) {
-        activeDocId = null;
-        document.getElementById('doc-empty-state').style.display = '';
-        document.getElementById('doc-detail').style.display = 'none';
-      }
-      renderDocs(allDocs);
-    }
-  } catch (err) {
-    alert('Gagal menghapus: ' + err.message);
-  }
-});
-
-document.getElementById('modal-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeDel();
-});
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-loadDocs();
-</script>
-</body>
-</html>
+  if (i.style.display === 'n

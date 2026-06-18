@@ -6,7 +6,7 @@ GitHub: https://github.com/JIAkbar/meruno
 """
 
 from flask import Flask, request, redirect, send_from_directory, jsonify, Response
-import os, json, re, datetime, math
+import os, json, re, datetime, math, io
 from pathlib import Path
 from io import BytesIO
 
@@ -33,7 +33,6 @@ ARCHIVE_FILE    = DATA_DIR / "archive.json"
 CASEMIX_DIR      = BASE / "uploads" / "casemix"
 CASEMIX_DATA_DIR = DATA_DIR / "casemix"
 CASEMIX_DIR.mkdir(parents=True, exist_ok=True)
-CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 CASEMIX_SECTIONS = [
     'klaim', 'regulasi', 'spo', 'pengorganisasian',
@@ -104,6 +103,40 @@ def sb_write_json(bucket: str, path: str, obj: dict) -> bool:
     data = json.dumps(obj, ensure_ascii=False, indent=2).encode()
     url = sb_upload(bucket, path, data, "application/json")
     return url is not None
+
+# ── Casemix Metadata (Supabase Storage) ───────────────────────────────────────
+
+SECTIONS_ALL = ['regulasi','spo','pengorganisasian','pelayanan','kebijakan','ur','klaim','galeri','hotnews']
+
+def load_meta(section):
+    """Load metadata JSON dari Supabase Storage bucket 'casemix'.
+    Returns dict dengan 'files'[] atau 'news'[] tergantung section."""
+    key = 'news' if section == 'news' else 'files'
+    sb = get_supabase()
+    if sb:
+        try:
+            data = sb.storage.from_("casemix").download(f"metadata/{section}.json")
+            return json.loads(data.decode('utf-8'))
+        except Exception:
+            pass
+    return {key: [], 'count': 0}
+
+def save_meta(section, meta_dict):
+    """Simpan metadata JSON ke Supabase Storage bucket 'casemix', overwrite existing."""
+    sb = get_supabase()
+    if not sb:
+        return
+    content = json.dumps(meta_dict, ensure_ascii=False, indent=2).encode('utf-8')
+    path = f"metadata/{section}.json"
+    # Remove existing then re-upload (most reliable upsert pattern)
+    try:
+        sb.storage.from_("casemix").remove([path])
+    except Exception:
+        pass
+    try:
+        sb.storage.from_("casemix").upload(path, io.BytesIO(content), {"content-type": "application/json"})
+    except Exception as e:
+        print(f"[save_meta] {section}: {e}")
 
 # ── File Compression ──────────────────────────────────────────────────────────
 
@@ -680,37 +713,11 @@ def casemix_section(section):
 def casemix_files(section):
     if section not in CASEMIX_SECTIONS:
         return jsonify({"files": [], "error": "Section tidak valid"}), 400
-    CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    # Coba Supabase dulu
-    sb_data = sb_read_json("casemix", f"meta/{section}.json")
-    if sb_data is not None:
-        return jsonify(sb_data)
-    # Fallback ke local file
-    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
-    if meta_file.exists():
-        with open(meta_file, encoding="utf-8") as fp:
-            try:
-                return jsonify(json.load(fp))
-            except Exception:
-                pass
-    return jsonify({"files": [], "count": 0})
+    return jsonify(load_meta(section))
 
 @app.route("/casemix/api/news")
 def casemix_news():
-    CASEMIX_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    # Coba Supabase dulu
-    sb_data = sb_read_json("casemix", "meta/news.json")
-    if sb_data is not None:
-        return jsonify(sb_data)
-    # Fallback ke local file
-    news_file = CASEMIX_DATA_DIR / "news.json"
-    if news_file.exists():
-        with open(news_file, encoding="utf-8") as fp:
-            try:
-                return jsonify(json.load(fp))
-            except Exception:
-                pass
-    return jsonify({"news": [], "count": 0})
+    return jsonify(load_meta('news'))
 
 @app.route("/casemix/api/sync-news", methods=["POST"])
 def casemix_sync_news():
@@ -724,11 +731,7 @@ def casemix_sync_news():
     except Exception as e:
         return jsonify({"error": f"Gagal mengambil data: {e}"}), 502
 
-    news_file = CASEMIX_DATA_DIR / "news.json"
-    # Coba baca dari Supabase dulu, fallback ke local
-    existing = sb_read_json("casemix", "meta/news.json")
-    if existing is None:
-        existing = json.loads(news_file.read_text(encoding="utf-8")) if news_file.exists() else {"news": [], "count": 0}
+    existing = load_meta('news')
     existing_ids = {n["id"] for n in existing["news"]}
 
     def strip_html(s):
@@ -767,10 +770,7 @@ def casemix_sync_news():
         added += 1
 
     existing["count"] = len(existing["news"])
-    # Simpan ke local
-    news_file.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
-    # Simpan ke Supabase
-    sb_write_json("casemix", "meta/news.json", existing)
+    save_meta('news', existing)
     return jsonify({"added": added, "total": existing["count"]})
 
 @app.route("/casemix/api/section-info")
@@ -855,22 +855,10 @@ def casemix_save_doc(file, section):
         "file_url":         sb_url if sb_url else f"/casemix/files/{section}/{stored_name}",
         "section":          section,
     }
-    # Baca metadata: coba Supabase dulu, fallback ke local
-    meta = sb_read_json("casemix", f"meta/{section}.json")
-    if meta is None:
-        meta_file = CASEMIX_DATA_DIR / f"{section}.json"
-        meta = {"files": [], "count": 0}
-        if meta_file.exists():
-            with open(meta_file, encoding="utf-8") as fp:
-                try: meta = json.load(fp)
-                except: pass
+    meta = load_meta(section)
     meta["files"].insert(0, entry)
     meta["count"] = len(meta["files"])
-    # Simpan metadata ke local dan Supabase
-    meta_file = CASEMIX_DATA_DIR / f"{section}.json"
-    with open(meta_file, "w", encoding="utf-8") as fp:
-        json.dump(meta, fp, ensure_ascii=False, indent=2)
-    sb_write_json("casemix", f"meta/{section}.json", meta)
+    save_meta(section, meta)
     return jsonify({"ok": True, "id": doc_id, "entry": entry,
                     "original_size": original_size, "compressed_size": len(fb)})
 
@@ -902,22 +890,10 @@ def casemix_save_galeri(file):
         "img_url":          sb_url if sb_url else f"/casemix/files/galeri/{stored_name}",
         "size":             len(fb),
     }
-    # Baca metadata: coba Supabase dulu, fallback ke local
-    meta = sb_read_json("casemix", "meta/galeri.json")
-    if meta is None:
-        meta_file = CASEMIX_DATA_DIR / "galeri.json"
-        meta = {"files": [], "count": 0}
-        if meta_file.exists():
-            with open(meta_file, encoding="utf-8") as fp:
-                try: meta = json.load(fp)
-                except: pass
+    meta = load_meta('galeri')
     meta["files"].insert(0, entry)
     meta["count"] = len(meta["files"])
-    # Simpan ke local dan Supabase
-    meta_file = CASEMIX_DATA_DIR / "galeri.json"
-    with open(meta_file, "w", encoding="utf-8") as fp:
-        json.dump(meta, fp, ensure_ascii=False, indent=2)
-    sb_write_json("casemix", "meta/galeri.json", meta)
+    save_meta('galeri', meta)
     return jsonify({"ok": True, "id": doc_id, "entry": entry,
                     "original_size": original_size, "compressed_size": len(fb)})
 
@@ -984,22 +960,10 @@ def casemix_process_klaim(file):
             "size":             original_size,
         }
         # Scrape + delete: file TIDAK disimpan, hanya data JSON-nya
-        # Baca metadata: coba Supabase dulu, fallback ke local
-        meta = sb_read_json("casemix", "meta/klaim.json")
-        if meta is None:
-            meta_file = CASEMIX_DATA_DIR / "klaim.json"
-            meta = {"files": [], "count": 0}
-            if meta_file.exists():
-                with open(meta_file, encoding="utf-8") as fp:
-                    try: meta = json.load(fp)
-                    except: pass
+        meta = load_meta('klaim')
         meta["files"].insert(0, entry)
         meta["count"] = len(meta["files"])
-        # Simpan ke local dan Supabase
-        meta_file = CASEMIX_DATA_DIR / "klaim.json"
-        with open(meta_file, "w", encoding="utf-8") as fp:
-            json.dump(meta, fp, ensure_ascii=False, indent=2)
-        sb_write_json("casemix", "meta/klaim.json", meta)
+        save_meta('klaim', meta)
         return jsonify({"ok": True, "id": doc_id, "entry": entry, "count": meta["count"], "original_size": original_size, "compressed_size": original_size})
     except Exception as e:
         import traceback
@@ -1043,22 +1007,10 @@ def casemix_add_news():
                 with open(str(news_dir / stored), "wb") as lf:
                     lf.write(img_bytes)
                 entry["img_url"] = f"/casemix/files/hotnews/{stored}"
-    # Baca metadata: coba Supabase dulu, fallback ke local
-    data = sb_read_json("casemix", "meta/news.json")
-    if data is None:
-        news_file = CASEMIX_DATA_DIR / "news.json"
-        data = {"news": [], "count": 0}
-        if news_file.exists():
-            with open(news_file, encoding="utf-8") as fp:
-                try: data = json.load(fp)
-                except: pass
+    data = load_meta('news')
     data["news"].insert(0, entry)
     data["count"] = len(data["news"])
-    # Simpan ke local dan Supabase
-    news_file = CASEMIX_DATA_DIR / "news.json"
-    with open(news_file, "w", encoding="utf-8") as fp:
-        json.dump(data, fp, ensure_ascii=False, indent=2)
-    sb_write_json("casemix", "meta/news.json", data)
+    save_meta('news', data)
     return jsonify({"ok": True, "id": news_id, "entry": entry,
                     "original_size": img_original_size if img_original_size else 0,
                     "compressed_size": img_compressed_size if img_compressed_size else 0})
@@ -1067,16 +1019,8 @@ def casemix_add_news():
 def casemix_delete(section, doc_id):
     if section not in CASEMIX_SECTIONS:
         return jsonify({"error": "Section tidak valid"}), 400
-    meta_json_key = "news.json" if section == "hotnews" else f"{section}.json"
-    meta_file = CASEMIX_DATA_DIR / meta_json_key
-    # Baca metadata: coba Supabase dulu, fallback ke local
-    meta = sb_read_json("casemix", f"meta/{meta_json_key}")
-    if meta is None:
-        meta = {}
-        if meta_file.exists():
-            with open(meta_file, encoding="utf-8") as fp:
-                try: meta = json.load(fp)
-                except: pass
+    meta_section = 'news' if section == 'hotnews' else section
+    meta = load_meta(meta_section)
     list_key = "news" if section == "hotnews" else "files"
     items = meta.get(list_key, [])
     new_items = []
@@ -1088,10 +1032,7 @@ def casemix_delete(section, doc_id):
             new_items.append(item)
     meta[list_key] = new_items
     meta["count"] = len(new_items)
-    # Simpan metadata yang diupdate ke local dan Supabase
-    with open(meta_file, "w", encoding="utf-8") as fp:
-        json.dump(meta, fp, ensure_ascii=False, indent=2)
-    sb_write_json("casemix", f"meta/{meta_json_key}", meta)
+    save_meta(meta_section, meta)
     # Hapus file fisik jika ada (klaim tidak punya file fisik)
     if deleted_entry:
         fn = deleted_entry.get("filename") or deleted_entry.get("img_url", "").split("/")[-1]
@@ -1130,3 +1071,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
     app.run(host=host, port=port, debug=False)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
