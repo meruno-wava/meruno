@@ -6,11 +6,19 @@ GitHub: https://github.com/JIAkbar/meruno
 """
 
 from flask import Flask, request, redirect, send_from_directory, jsonify, Response
-import os, json, re, datetime
+import os, json, re, datetime, math
 from pathlib import Path
 from io import BytesIO
 
 app = Flask(__name__)
+
+def safe_num(v):
+    """Konversi nilai numerik ke float JSON-safe (NaN/Inf → 0)."""
+    try:
+        f = float(v)
+        return 0 if (math.isnan(f) or math.isinf(f)) else round(f, 2)
+    except: return 0
+
 BASE = Path(__file__).parent
 DATA_DIR = BASE / "data"
 UPLOAD_DIR = BASE / "uploads"
@@ -948,10 +956,10 @@ def casemix_process_klaim(file):
             for c in num_cols[:12]:
                 try:
                     col_stats[c] = {
-                        "sum":   round(float(df[c].sum()), 2),
-                        "avg":   round(float(df[c].mean()), 2),
-                        "min":   round(float(df[c].min()), 2),
-                        "max":   round(float(df[c].max()), 2),
+                        "sum":   safe_num(df[c].sum()),
+                        "avg":   safe_num(df[c].mean()),
+                        "min":   safe_num(df[c].min()),
+                        "max":   safe_num(df[c].max()),
                         "count": int(df[c].count()),
                     }
                 except: pass
