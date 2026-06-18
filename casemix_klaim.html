@@ -468,7 +468,7 @@ function fmtCell(raw, isNumCol){
   if(raw === '' || raw === null || raw === undefined) return '';
   const s = String(raw).trim();
   // pure digit string 7+ chars → Rupiah (contoh: 3005122300)
-  if(/^\d{7,}$/.test(s)) return fmtRupiah(parseFloat(s));
+  if(/^-?\d{6,}$/.test(s)) return fmtRupiah(parseFloat(s));
   if(!isNumCol) return escHtml(raw);
   const n = parseFloat(s.replace(/[^0-9.-]/g,''));
   if(isNaN(n)) return escHtml(raw);
