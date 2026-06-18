@@ -572,20 +572,6 @@ async function submitUpload() {
 let allDocs = [];
 let activeDocId = null;
 
-// ── Load Docs ─────────────────────────────────────────────────────────────────
-async function loadDocs() {
-  try {
-    const res = await fetch(`/casemix/api/files/${SECTION}`);
-    if (!res.ok) throw new Error(res.statusText);
-    const data = await res.json();
-    allDocs = data.files || [];
-    renderDocs(allDocs);
-  } catch {
-    allDocs = [];
-    renderDocs([]);
-  }
-}
-
 // ── Render Docs ───────────────────────────────────────────────────────────────
 function renderDocs(docs) {
   allDocs = docs;
@@ -643,7 +629,7 @@ function selectDoc(id) {
   const desc   = d.description || '';
   const date   = d.uploaded_at_display || d.uploaded_at?.slice(0, 10) || '—';
   const sz     = fmtSz(d.size || 0);
-  const url    = d.file_url || `/casemix/files/ur/${encodeURIComponent(fname)}`;
+  const url    = d.file_url || d.url || `/casemix/files/ur/${encodeURIComponent(fname)}`;
   const extUp  = fname.split('.').pop().toUpperCase() || '?';
 
   document.getElementById('dd-type-icon').textContent = extUp === 'PPTX' ? 'PPT' : extUp;
@@ -776,4 +762,32 @@ function confirmDel() {
         }
         renderDocs(allDocs);
       } else {
-        res.j
+        res.json().catch(() => ({})).then(data =>
+          showMsg(`❌ Gagal menghapus: ${data.error || res.statusText}`, 'error'));
+      }
+    })
+    .catch(e => showMsg(`❌ Gagal menghapus: ${e.message}`, 'error'));
+}
+// ── Load Docs ─────────────────────────────────────────────────────────────────
+async function loadDocs() {
+  try {
+    const res = await fetch(`/casemix/api/files/${SECTION}`);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    allDocs = data.files || [];
+    renderDocs(allDocs);
+  } catch {
+    allDocs = [];
+    renderDocs([]);
+  }
+}
+
+document.getElementById('btn-cancel').addEventListener('click', closeDel);
+document.getElementById('btn-confirm-delete').addEventListener('click', confirmDel);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeDel();
+});
+loadDocs();
+</script>
+</body>
+</html>

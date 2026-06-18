@@ -824,7 +824,7 @@ function selectDoc(id){
   const desc   = d.description || '';
   const date   = d.uploaded_at_display || (d.uploaded_at ? d.uploaded_at.slice(0,10) : '—');
   const sz     = fmtSz(d.size || 0);
-  const url    = d.file_url || `/casemix/files/${SECTION}/${encodeURIComponent(fname)}`;
+  const url    = d.file_url || d.url || `/casemix/files/${SECTION}/${encodeURIComponent(fname)}`;
   const extUp  = fname.split('.').pop().toUpperCase() || '?';
 
   const iconEl = document.getElementById('dd-type-icon');
@@ -969,4 +969,6 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
   if(e.target === e.currentTarget) closeDel();
 });
 loadDocs();
-</sc
+</script>
+</body>
+</html>
