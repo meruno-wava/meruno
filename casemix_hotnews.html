@@ -14,7 +14,7 @@
   --dark:#122830; --dark-2:#1e3d47;
   --gray:#6b8a92; --gray-light:#b8cdd2;
   --white:#fff; --red:#c0392b;
-  --radius:12px; --shadow:0 4px 20px rgba(18,40,48,.08);
+  --radius:14px; --shadow:0 4px 20px rgba(18,40,48,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito Sans',sans-serif;background:#f0ede8;color:var(--dark);min-height:100vh}
@@ -36,54 +36,24 @@ a{text-decoration:none;color:inherit}
 .nav-back{
   display:flex;align-items:center;gap:6px;
   background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-  color:white;padding:6px 14px;border-radius:50px;font-size:13px;font-weight:700;
-  transition:.2s;
+  color:white;padding:6px 14px;border-radius:50px;font-size:12px;font-weight:700;transition:.2s;
 }
 .nav-back:hover{background:rgba(255,255,255,.2)}
 
-/* ── Page Body ── */
-.page-body{padding:20px 24px}
+/* ── Page header (teal section) ── */
+.page-header{background:var(--teal-dark);padding:14px 24px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ph-left a.ph-back{color:rgba(255,255,255,.6);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;transition:.15s}
+.ph-left a.ph-back:hover{color:rgba(255,255,255,.9)}
+.ph-left h1{color:white;font-size:18px;font-weight:800;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ph-left .ph-desc{color:rgba(255,255,255,.6);font-size:11px}
+.upload-drawer-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:white;border-radius:10px;padding:9px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.2s;flex-shrink:0;white-space:nowrap}
+.upload-drawer-btn:hover{background:rgba(255,255,255,.2)}
+.upload-drawer-btn.open{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
 
-/* ── Two-column grid ── */
-.two-col{
-  display:grid;
-  grid-template-columns:1.55fr 1fr;
-  gap:16px;
-  align-items:start;
-  max-width:1200px;
-  margin:0 auto;
-}
-
-/* ── Card base ── */
-.card{
-  background:var(--white);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-/* ── Card header ── */
-.card-header{
-  background:var(--teal-dark);
-  color:white;
-  padding:14px 20px;
-  font-size:15px;
-  font-weight:800;
-  display:flex;align-items:center;gap:8px;
-}
-.card-header .count-badge{
-  background:rgba(255,255,255,.2);
-  color:white;
-  border-radius:50px;
-  padding:2px 10px;
-  font-size:12px;
-  font-family:'Space Mono',monospace;
-  font-weight:700;
-  margin-left:auto;
-}
-
-/* ── Card body ── */
-.card-body{padding:20px}
+/* ── Upload drawer ── */
+.upload-drawer{background:#f4f7f7;border-bottom:2px solid var(--cream-dark);overflow:hidden;max-height:0;transition:max-height .4s ease}
+.upload-drawer.open{max-height:900px}
+.ud-inner{padding:18px 24px 22px}
 
 /* ── Form fields ── */
 .form-group{margin-bottom:15px}
@@ -99,9 +69,7 @@ a{text-decoration:none;color:inherit}
   transition:.2s;
 }
 .form-group input[type=text]:focus,
-.form-group textarea:focus{
-  outline:none;border-color:var(--teal);background:white;
-}
+.form-group textarea:focus{outline:none;border-color:var(--teal);background:white}
 .form-group textarea{resize:vertical;min-height:96px;line-height:1.6}
 
 /* Image upload area */
@@ -111,22 +79,11 @@ a{text-decoration:none;color:inherit}
   transition:.2s;background:var(--cream);position:relative;
 }
 .img-upload-area:hover,.img-upload-area.drag-over{border-color:var(--orange);background:rgba(232,130,30,.06)}
-.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.img-upload-icon{font-size:26px;margin-bottom:5px;display:block}
-.img-upload-text{font-size:13px;color:var(--gray);font-weight:600}
-.img-upload-text strong{color:var(--orange)}
-.img-upload-hint{font-size:11px;color:var(--gray-light);margin-top:3px}
-
-.img-preview-wrap{
-  display:none;margin-top:10px;border-radius:8px;overflow:hidden;
-  border:1.5px solid var(--cream-dark);position:relative;
-}
+.img-upload-placeholder{font-size:13px;color:var(--gray);font-weight:600;cursor:pointer}
+.img-preview-wrap{display:none;margin-top:10px;border-radius:8px;overflow:hidden;border:1.5px solid var(--cream-dark);position:relative}
 .img-preview-wrap.show{display:block}
 .img-preview-wrap img{width:100%;max-height:180px;object-fit:cover;display:block}
-.img-preview-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--cream);padding:7px 12px;font-size:13px;
-}
+.img-preview-bar{display:flex;align-items:center;justify-content:space-between;background:var(--cream);padding:7px 12px;font-size:13px}
 .img-preview-name{font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
 .img-preview-size{font-size:11px;color:var(--gray)}
 .img-remove{background:none;border:none;cursor:pointer;color:var(--red);font-size:17px;opacity:.7;transition:.2s;line-height:1}
@@ -135,79 +92,82 @@ a{text-decoration:none;color:inherit}
 /* Submit button */
 .submit-btn{
   margin-top:16px;width:100%;padding:12px;
-  background:var(--teal-dark);
-  color:white;border:none;border-radius:9px;
+  background:var(--teal-dark);color:white;border:none;border-radius:9px;
   font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;
-  cursor:pointer;transition:.2s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .submit-btn:hover{background:var(--teal)}
 .submit-btn:disabled{opacity:.45;cursor:not-allowed}
 
 /* Upload message */
-.upload-msg{
-  display:none;margin-top:10px;padding:9px 13px;
-  border-radius:8px;font-size:13px;font-weight:600;
-}
+.upload-msg{display:none;margin-top:10px;padding:9px 13px;border-radius:8px;font-size:13px;font-weight:600}
 .upload-msg.show{display:block}
 .upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
 .upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
 
-/* Divider */
-.divider{border:none;border-top:1.5px solid var(--cream-dark);margin:18px 0}
-
 /* Sync button */
 .btn-sync-news{
   width:100%;padding:10px 16px;
-  border:2px solid var(--teal-dark);
-  background:transparent;
-  color:var(--teal-dark);
-  border-radius:8px;
-  font-size:13px;font-family:'Nunito Sans',sans-serif;font-weight:700;
-  cursor:pointer;transition:.2s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
+  border:2px solid var(--teal-dark);background:transparent;color:var(--teal-dark);
+  border-radius:8px;font-size:13px;font-family:'Nunito Sans',sans-serif;font-weight:700;
+  cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;
 }
 .btn-sync-news:hover{background:var(--teal-dark);color:white}
 .btn-sync-news.loading{opacity:.6;cursor:not-allowed}
 
-.sync-info{
-  margin-top:8px;font-size:11px;color:var(--gray);
-  text-align:center;line-height:1.5;
-}
+.sync-info{margin-top:6px;font-size:11px;color:var(--gray)}
 
-/* ── News feed (right column) ── */
-.news-feed-wrap{
-  max-height:80vh;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.news-feed-wrap::-webkit-scrollbar{width:5px}
-.news-feed-wrap::-webkit-scrollbar-track{background:transparent}
-.news-feed-wrap::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:4px}
+/* ── Page body ── */
+.page-body{padding:20px 24px 60px}
 
-/* Empty state */
-.news-empty{
-  text-align:center;padding:40px 16px;color:var(--gray);
-  border:1.5px dashed var(--cream-dark);border-radius:10px;
-}
-.news-empty .ei{font-size:40px;margin-bottom:10px;display:block;opacity:.45}
-.news-empty p{font-size:14px;font-weight:700;margin-bottom:5px}
-.news-empty small{font-size:12px;opacity:.65}
+/* ── Main card ── */
+.klaim-main-card{background:white;border-radius:14px;box-shadow:0 4px 20px rgba(18,40,48,.08);overflow:hidden}
 
-/* News card */
-.news-card{
-  background:var(--cream);border-radius:10px;
-  border:1.5px solid var(--cream-dark);
-  padding:16px;
-  transition:border-color .2s, box-shadow .2s;
-  opacity:0;transform:translateY(10px);
-}
-.news-card.revealed{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease}
-.news-card:hover{border-color:var(--orange-light);box-shadow:0 4px 18px rgba(232,130,30,.1)}
+/* ── Stats bar ── */
+.stats-bar{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1.5px solid var(--cream-dark)}
+.stat-cell{padding:12px 20px;text-align:center;border-right:1px solid var(--cream-dark)}
+.stat-cell:last-child{border-right:none}
+.stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-dark)}
+.stat-k{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+/* ── Content 2-column ── */
+.klaim-content{display:grid;grid-template-columns:240px 1fr;min-height:500px}
+.klaim-file-col{border-right:1.5px solid var(--cream-dark);display:flex;flex-direction:column;background:#f7f9f9}
+.klaim-file-col-head{padding:10px 14px 8px;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--cream-dark);flex-shrink:0}
+.klaim-file-list{flex:1;overflow-y:auto}
+.file-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background .15s}
+.file-item:last-child{border-bottom:none}
+.file-item:hover{background:rgba(9,78,88,.04)}
+.file-item.active{background:#e8f5f4;border-left:3px solid var(--teal-dark)}
+.file-item.active .fi-name{color:var(--teal-dark)}
+.fi-icon{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(232,130,30,.1)}
+.fi-info{flex:1;min-width:0}
+.fi-name{font-size:11px;font-weight:700;color:var(--dark-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.fi-meta{font-size:10px;color:var(--gray)}
+.file-empty{padding:28px 16px;text-align:center;color:var(--gray-light);font-size:12px}
+
+/* ── Viewer col (kanan) ── */
+.klaim-viewer-col{display:flex;flex-direction:column;min-width:0}
+
+/* ── Empty state ── */
+.klaim-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;color:var(--gray)}
+.klaim-empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.klaim-empty p{font-size:14px;font-weight:700;margin-bottom:4px}
+.klaim-empty small{font-size:12px;color:var(--gray-light)}
+
+/* ── News detail ── */
+.news-detail{flex:1;display:flex;flex-direction:column;min-width:0;overflow-y:auto}
+.nd-inner{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.nd-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.nd-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nd-date{font-size:11px;color:var(--gray);font-weight:600}
+.nd-img-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--cream-dark)}
+.nd-img-wrap img{width:100%;max-height:280px;object-fit:cover;display:block}
+.nd-title{font-size:16px;font-weight:800;color:var(--dark);line-height:1.35}
+.nd-content{font-size:13px;color:var(--gray);line-height:1.7;white-space:pre-line}
+.nd-footer{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--cream-dark);gap:8px;flex-wrap:wrap}
+
+/* ── Badges ── */
 .hot-badge{
   display:inline-flex;align-items:center;gap:4px;
   background:rgba(244,164,74,.15);border:1px solid rgba(244,164,74,.3);
@@ -215,168 +175,52 @@ a{text-decoration:none;color:inherit}
   padding:2px 10px;font-size:11px;font-weight:800;
   letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;
 }
-.card-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
-.card-date{font-size:11px;color:var(--gray);font-weight:600;white-space:nowrap}
 .source-badge{
   font-size:10px;font-weight:700;
   background:rgba(13,110,122,.1);color:var(--teal);
   border-radius:50px;padding:2px 8px;white-space:nowrap;
 }
-
-.card-img-top{
-  margin-bottom:10px;border-radius:8px;overflow:hidden;
-  border:1px solid var(--cream-dark);
-  aspect-ratio:16/9;
-}
-.card-img-top img{
-  width:100%;height:100%;object-fit:cover;
-  display:block;transition:.3s;
-}
-.card-img-top img:hover{transform:scale(1.01)}
-
-.card-title{
-  font-size:14px;font-weight:800;color:var(--dark);line-height:1.35;
-  margin-bottom:7px;
-}
-
-.card-content{font-size:13px;color:var(--gray);line-height:1.6}
-.card-content.clamped{
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-.toggle-expand{
-  background:none;border:none;cursor:pointer;
-  color:var(--teal);font-size:12px;font-weight:700;
-  padding:0;margin-top:5px;font-family:'Nunito Sans',sans-serif;
-  transition:.15s;display:block;
-}
-.toggle-expand:hover{color:var(--teal-dark)}
-
-.card-footer{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:12px;padding-top:10px;
-  border-top:1px solid var(--cream-dark);
-  gap:8px;flex-wrap:wrap;
-}
-.source-link{
-  font-size:12px;color:var(--teal);font-weight:700;
-  transition:.15s;
-}
+.source-link{font-size:12px;color:var(--teal);font-weight:700;transition:.15s}
 .source-link:hover{color:var(--teal-dark)}
 
+/* ── Hapus button ── */
 .btn-hapus{
   display:flex;align-items:center;gap:5px;
   padding:5px 12px;border-radius:50px;
   background:rgba(192,57,43,.07);color:var(--red);
   border:none;cursor:pointer;font-size:12px;font-weight:700;
-  font-family:'Nunito Sans',sans-serif;transition:.2s;
-  white-space:nowrap;
+  font-family:'Nunito Sans',sans-serif;transition:.2s;white-space:nowrap;
 }
 .btn-hapus:hover{background:rgba(192,57,43,.15)}
 
 /* ── Delete Modal ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(18,40,48,.5);z-index:200;
-  align-items:center;justify-content:center;
-}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(18,40,48,.5);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal{
-  background:white;border-radius:var(--radius);padding:26px;
-  max-width:380px;width:90%;
-  box-shadow:0 20px 60px rgba(0,0,0,.22);
-  animation:modal-in .2s ease;
-}
+.modal{background:white;border-radius:var(--radius);padding:26px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.22);animation:modal-in .2s ease}
 @keyframes modal-in{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 .modal h3{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:8px}
-.modal .modal-news-title{
-  font-size:13px;font-style:italic;color:var(--teal-dark);
-  background:var(--cream);border-radius:8px;padding:9px 13px;
-  margin-bottom:14px;line-height:1.4;border-left:3px solid var(--orange);
-}
+.modal .modal-news-title{font-size:13px;font-style:italic;color:var(--teal-dark);background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;line-height:1.4;border-left:3px solid var(--orange)}
 .modal p.modal-warn{font-size:13px;color:var(--gray);margin-bottom:18px}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end}
-.btn-cancel{
-  padding:9px 18px;border-radius:50px;
-  border:1.5px solid var(--cream-dark);background:var(--cream);
-  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
-  color:var(--gray);cursor:pointer;transition:.2s;
-}
+.btn-cancel{padding:9px 18px;border-radius:50px;border:1.5px solid var(--cream-dark);background:var(--cream);font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;color:var(--gray);cursor:pointer;transition:.2s}
 .btn-cancel:hover{border-color:var(--gray-light);color:var(--dark)}
-.btn-confirm-delete{
-  padding:9px 18px;border-radius:50px;
-  background:var(--red);color:white;border:none;
-  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;transition:.2s;
-}
+.btn-confirm-delete{padding:9px 18px;border-radius:50px;background:var(--red);color:white;border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-confirm-delete:hover{background:#a93226}
 .btn-confirm-delete:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── Back button ── */
-.back-btn-casemix {
-  display: inline-block;
-  color: var(--teal-dark, #094e58);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.back-btn-casemix:hover { opacity: 1; }
-
-/* ── Mobile upload toggle ── */
-.mobile-upload-toggle {
-  display: none;
-}
-@media (max-width: 768px) {
-  .mobile-upload-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #094e58;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .mobile-upload-toggle .toggle-arrow {
-    transition: transform 0.25s;
-    font-style: normal;
-  }
-  .mobile-upload-toggle.collapsed .toggle-arrow {
-    transform: rotate(-90deg);
-  }
-  .upload-collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 2000px;
-  }
-  .upload-collapsible.collapsed {
-    max-height: 0;
-  }
-}
-
 /* ── Responsive ── */
 @media(max-width:768px){
-  .page-body{padding:14px 12px}
-  .two-col{grid-template-columns:1fr}
-  .news-feed-wrap{max-height:none}
-  .nav-breadcrumb{display:none}
+  .page-header{padding:12px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .upload-drawer-btn{width:100%;justify-content:center}
+  .ud-inner{padding:14px 16px 18px}
+  .page-body{padding:14px 14px 60px}
+  .klaim-content{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .klaim-file-col{border-right:none;border-bottom:1.5px solid var(--cream-dark)}
+  .klaim-file-list{max-height:220px}
+  .nd-inner{padding:14px 16px}
 }
-@media(max-width:480px){
-  .modal-actions{flex-direction:column-reverse}
-  .btn-cancel,.btn-confirm-delete{width:100%;text-align:center;min-height:44px}
-  .card-top{flex-wrap:wrap}
-  .card-footer{flex-direction:column;align-items:flex-start}
-  .btn-hapus{align-self:flex-end}
-}
+@media(max-width:600px){.navbar{padding:0 4%}.nav-breadcrumb{display:none}}
+@media(max-width:480px){.modal-actions{flex-direction:column-reverse}.btn-cancel,.btn-confirm-delete{width:100%;text-align:center;min-height:44px}}
 </style>
 </head>
 <body>
@@ -394,78 +238,87 @@ a{text-decoration:none;color:inherit}
   <a href="/casemix" class="nav-back">← Casemix</a>
 </nav>
 
-<!-- Page Body -->
-<div class="page-body">
-  <a href="/casemix" class="back-btn-casemix">← Dashboard Casemix</a>
-  <div class="two-col">
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="ph-left">
+    <a href="/casemix" class="ph-back">← Dashboard Casemix</a>
+    <h1>📰 Hot News</h1>
+    <p class="ph-desc">Berita dan pengumuman terkini Instalasi Casemix</p>
+  </div>
+  <button class="upload-drawer-btn" id="uploadDrawerBtn" onclick="toggleUploadDrawer()">✍️ Tambah Berita</button>
+</div>
 
-    <!-- LEFT: News form card -->
-    <div class="card">
-      <div class="card-header">✍️ Tambah Berita</div>
-      <div class="card-body">
-        <button class="mobile-upload-toggle" onclick="toggleUpload(this)" id="uploadToggle">
-          <span>✏️ Tambah Berita</span>
-          <i class="toggle-arrow">▼</i>
-        </button>
-        <div class="upload-collapsible" id="uploadCollapsible">
-
-        <form id="news-form" novalidate>
-          <div class="form-group">
-            <label for="inp-title">Judul <span class="req">*</span></label>
-            <input type="text" id="inp-title" name="title" placeholder="Contoh: Sosialisasi Regulasi BPJS Terbaru" autocomplete="off">
-          </div>
-
-          <div class="form-group">
-            <label for="inp-content">Isi / Konten <span class="req">*</span></label>
-            <textarea id="inp-content" name="content" rows="4" placeholder="Tulis isi pengumuman atau berita di sini..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Foto <span class="opt">(opsional)</span></label>
-            <div class="img-upload-area" id="img-upload-area">
-              <input type="file" id="inp-image" name="image" accept=".jpg,.jpeg,.png,.webp,.gif">
-              <span class="img-upload-icon">🖼️</span>
-              <div class="img-upload-text"><strong>Pilih foto</strong> atau seret ke sini</div>
-              <div class="img-upload-hint">JPG, JPEG, PNG, WEBP, GIF</div>
-            </div>
-            <div class="img-preview-wrap" id="img-preview-wrap">
-              <img id="img-preview" src="" alt="Preview">
-              <div class="img-preview-bar">
-                <span class="img-preview-name" id="img-preview-name">—</span>
-                <span class="img-preview-size" id="img-preview-size">—</span>
-                <button type="button" class="img-remove" id="img-remove" title="Hapus foto">✕</button>
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn" id="submit-btn">🔥 Tambah Berita</button>
-          <div class="upload-msg" id="upload-msg"></div>
-        </form>
-
-        <hr class="divider">
-
-        <button type="button" class="btn-sync-news" id="btn-sync-news" onclick="syncNews()">
-          🔄 Sinkronisasi dari wavahusada.com
-        </button>
-        <div class="sync-info">Berita dari wavahusada.com akan disinkronkan otomatis</div>
-
-        </div><!-- /upload-collapsible -->
+<!-- FORM DRAWER (collapsible) -->
+<div class="upload-drawer" id="uploadDrawer">
+  <div class="ud-inner">
+    <form id="news-form" novalidate style="max-width:600px">
+      <div class="form-group">
+        <label for="inp-title">Judul Berita <span class="req">*</span></label>
+        <input type="text" id="inp-title" placeholder="Tulis judul berita..." required autocomplete="off">
       </div>
+      <div class="form-group">
+        <label for="inp-content">Isi Berita <span class="req">*</span></label>
+        <textarea id="inp-content" rows="4" placeholder="Tulis isi berita..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="inp-image">Gambar <span class="opt">(opsional)</span></label>
+        <div class="img-upload-area" id="img-upload-area">
+          <input type="file" id="inp-image" name="image" accept="image/*" style="display:none">
+          <div class="img-upload-placeholder" id="img-placeholder" onclick="document.getElementById('inp-image').click()">
+            📸 Klik untuk pilih gambar
+          </div>
+          <div class="img-preview-wrap" id="img-preview-wrap" style="display:none">
+            <img id="img-preview" src="" alt="">
+            <div class="img-preview-bar">
+              <span class="img-preview-name" id="img-preview-name">—</span>
+              <span class="img-preview-size" id="img-preview-size">—</span>
+              <button type="button" class="img-remove" id="img-remove" title="Hapus foto">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn" id="submit-btn">
+        📤 Kirim Berita
+      </button>
+      <div class="upload-msg" id="upload-msg"></div>
+    </form>
+    <hr style="border:none;border-top:1.5px solid var(--cream-dark);margin:16px 0;max-width:600px">
+    <div style="max-width:600px">
+      <button type="button" class="btn-sync-news" id="btn-sync-news" onclick="syncNews()">
+        🔄 Sinkronisasi dari wavahusada.com
+      </button>
+      <div class="sync-info">Berita dari wavahusada.com akan disinkronkan otomatis</div>
     </div>
+  </div>
+</div>
 
-    <!-- RIGHT: News feed card -->
-    <div class="card">
-      <div class="card-header">
-        📰 Berita Terkini
-        <span class="count-badge" id="feed-count">0</span>
+<!-- PAGE BODY -->
+<div class="page-body">
+  <div class="klaim-main-card">
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-v" id="stat-count">—</div><div class="stat-k">Berita</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-last">—</div><div class="stat-k">Terakhir Ditambah</div></div>
+    </div>
+    <div class="klaim-content">
+      <!-- LEFT 240px: news list -->
+      <div class="klaim-file-col">
+        <div class="klaim-file-col-head">📋 Daftar Berita</div>
+        <div class="klaim-file-list" id="news-list">
+          <div class="file-empty">Belum ada berita</div>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="news-feed-wrap" id="news-feed">
-          <!-- cards rendered by JS -->
+      <!-- RIGHT 1fr: news detail -->
+      <div class="klaim-viewer-col">
+        <div class="klaim-empty" id="news-empty">
+          <span class="ei">📰</span>
+          <p>Pilih berita di sebelah kiri</p>
+          <small>atau tambah berita baru</small>
+        </div>
+        <div class="news-detail" id="news-detail" style="display:none">
+          <!-- filled by selectNews() -->
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -500,117 +353,42 @@ function fmtSize(bytes){
   if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
   return (bytes/(1024*1024)).toFixed(1) + ' MB';
 }
+function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+function sizeNotice(orig,comp){
+  if(!orig||!comp) return '';
+  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
+  return pct>1
+    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
+}
 
 /* ── State ── */
+let allNews = [];
+let activeNewsId = null;
 let pendingDeleteId = null;
 let pendingDeleteTitle = '';
 
-/* ── Load News ── */
-async function loadNews(){
-  try{
-    const r = await fetch('/casemix/api/news');
-    if(!r.ok) throw new Error('Server error: ' + r.status);
-    const data = await r.json();
-    renderFeed(data.news || [], data.count || 0);
-  } catch(e){
-    document.getElementById('news-feed').innerHTML =
-      '<div class="news-empty"><span class="ei">⚠️</span><p>Gagal memuat berita</p><small>Pastikan server berjalan dan coba reload</small></div>';
-  }
+/* ── Upload Drawer ── */
+function toggleUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn = document.getElementById('uploadDrawerBtn');
+  const isOpen = drawer.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = isOpen ? '✕ Tutup' : '✍️ Tambah Berita';
 }
-
-/* ── Render Feed ── */
-function renderFeed(news, count){
-  document.getElementById('feed-count').textContent = count;
-
-  const feed = document.getElementById('news-feed');
-
-  if(!news.length){
-    feed.innerHTML = '<div class="news-empty"><span class="ei">📢</span><p>Belum ada berita</p><small>Tambahkan berita pertama menggunakan form di sebelah kiri</small></div>';
-    return;
-  }
-
-  feed.innerHTML = news.map(n => buildCard(n)).join('');
-
-  /* reveal animation */
-  const cards = feed.querySelectorAll('.news-card');
-  cards.forEach((card, i) => {
-    setTimeout(() => card.classList.add('revealed'), i * 80);
-  });
-
-  /* attach expand/collapse */
-  feed.querySelectorAll('.toggle-expand').forEach(btn => {
-    btn.addEventListener('click', handleExpand);
-  });
-
-  /* attach delete */
-  feed.querySelectorAll('.btn-hapus').forEach(btn => {
-    btn.addEventListener('click', () => {
-      openDeleteModal(btn.dataset.id, btn.dataset.title);
-    });
-  });
-}
-
-function buildCard(n){
-  const longContent = n.content && n.content.length > 150;
-  const contentHtml = longContent
-    ? `<div class="card-content clamped" id="content-${escAttr(n.id)}">${escHtml(n.content)}</div>
-       <button class="toggle-expand" data-id="${escAttr(n.id)}" data-expanded="false">Selengkapnya ▾</button>`
-    : `<div class="card-content">${escHtml(n.content)}</div>`;
-
-  const imgHtml = n.img_url
-    ? `<div class="card-img-top"><img src="${escHtml(n.img_url)}" alt="${escAttr(n.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
-    : '';
-
-  const sourceLinkHtml = n.source_url
-    ? `<a class="source-link" href="${escHtml(n.source_url)}" target="_blank" rel="noopener noreferrer">Lihat sumber →</a>`
-    : '<span></span>';
-
-  const sourceBadge = n.source_url
-    ? `<span class="source-badge">wavahusada.com</span>`
-    : '';
-
-  return `
-<article class="news-card" data-id="${escAttr(n.id)}">
-  <div class="card-top">
-    <span class="hot-badge">🔥 HOT</span>
-    <div class="card-meta">
-      <span class="card-date">${escHtml(n.published_at_display || '')}</span>
-      ${sourceBadge}
-    </div>
-  </div>
-  ${imgHtml}
-  <div class="card-title">${escHtml(n.title)}</div>
-  ${contentHtml}
-  <div class="card-footer">
-    ${sourceLinkHtml}
-    <button class="btn-hapus" data-id="${escAttr(n.id)}" data-title="${escAttr(n.title)}">🗑️ Hapus</button>
-  </div>
-</article>`.trim();
-}
-
-/* ── Expand / Collapse ── */
-function handleExpand(e){
-  const btn = e.currentTarget;
-  const id = btn.dataset.id;
-  const expanded = btn.dataset.expanded === 'true';
-  const contentEl = document.getElementById('content-' + id);
-  if(!contentEl) return;
-
-  if(expanded){
-    contentEl.classList.add('clamped');
-    btn.dataset.expanded = 'false';
-    btn.textContent = 'Selengkapnya ▾';
-  } else {
-    contentEl.classList.remove('clamped');
-    btn.dataset.expanded = 'true';
-    btn.textContent = 'Sembunyikan ▴';
-  }
+function closeUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn = document.getElementById('uploadDrawerBtn');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = '✍️ Tambah Berita';
 }
 
 /* ── Image Preview ── */
 const inpImage = document.getElementById('inp-image');
 const imgUploadArea = document.getElementById('img-upload-area');
 const imgPreviewWrap = document.getElementById('img-preview-wrap');
+const imgPlaceholder = document.getElementById('img-placeholder');
 const imgPreview = document.getElementById('img-preview');
 const imgPreviewName = document.getElementById('img-preview-name');
 const imgPreviewSize = document.getElementById('img-preview-size');
@@ -628,18 +406,20 @@ function showImgPreview(file){
     imgPreview.src = e.target.result;
     imgPreviewName.textContent = file.name;
     imgPreviewSize.textContent = fmtSize(file.size);
-    imgPreviewWrap.classList.add('show');
-    imgUploadArea.style.display = 'none';
+    imgPreviewWrap.style.display = 'block';
+    imgPlaceholder.style.display = 'none';
   };
   reader.readAsDataURL(file);
 }
 
-imgRemove.addEventListener('click', () => {
+function removeImage(){
   inpImage.value = '';
   imgPreview.src = '';
-  imgPreviewWrap.classList.remove('show');
-  imgUploadArea.style.display = '';
-});
+  imgPreviewWrap.style.display = 'none';
+  imgPlaceholder.style.display = '';
+}
+
+imgRemove.addEventListener('click', removeImage);
 
 /* drag-over visual */
 imgUploadArea.addEventListener('dragover', e => { e.preventDefault(); imgUploadArea.classList.add('drag-over'); });
@@ -672,7 +452,7 @@ newsForm.addEventListener('submit', async e => {
     return;
   }
   if(!content){
-    showMsg('error', '⚠️ Konten berita wajib diisi.');
+    showMsg('error', '⚠️ Isi berita wajib diisi.');
     document.getElementById('inp-content').focus();
     return;
   }
@@ -694,7 +474,8 @@ newsForm.addEventListener('submit', async e => {
       const imgNote = imageFile ? sizeNotice(data.original_size, data.compressed_size) : '';
       showMsg('success', '✅ Berita berhasil dipublikasikan!' + imgNote);
       newsForm.reset();
-      imgRemove.click();
+      removeImage();
+      setTimeout(closeUploadDrawer, 1200);
       await loadNews();
     } else {
       showMsg('error', '❌ Gagal: ' + (data.error || r.statusText || 'Terjadi kesalahan'));
@@ -703,18 +484,10 @@ newsForm.addEventListener('submit', async e => {
     showMsg('error', '❌ Koneksi gagal. Pastikan server berjalan.');
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = '🔥 Tambah Berita';
+    submitBtn.innerHTML = '📤 Kirim Berita';
   }
 });
 
-function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
-function sizeNotice(orig,comp){
-  if(!orig||!comp) return '';
-  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
-  return pct>1
-    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
-    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
-}
 function showMsg(type, text){
   uploadMsg.innerHTML = text;
   uploadMsg.className = 'upload-msg show ' + type;
@@ -723,6 +496,107 @@ function showMsg(type, text){
 function hideMsg(){
   uploadMsg.className = 'upload-msg';
   uploadMsg.innerHTML = '';
+}
+
+/* ── Load News ── */
+async function loadNews(){
+  try{
+    const r = await fetch('/casemix/api/news');
+    if(!r.ok) throw new Error('Server error: ' + r.status);
+    const data = await r.json();
+    renderFeed(data);
+  } catch(e){
+    document.getElementById('news-list').innerHTML =
+      '<div class="file-empty">⚠️ Gagal memuat berita</div>';
+  }
+}
+
+/* ── Render Feed ── */
+function renderFeed(data){
+  const news = Array.isArray(data) ? data : (data.news || []);
+  const count = data.count != null ? data.count : news.length;
+  allNews = news;
+
+  document.getElementById('stat-count').textContent = count || '—';
+  const latestDate = news.length ? (news[0].published_at_display || news[0].published_at?.slice(0,10) || '—') : '—';
+  document.getElementById('stat-last').textContent = news.length ? latestDate : '—';
+
+  const listEl = document.getElementById('news-list');
+  if(!news.length){
+    listEl.innerHTML = '<div class="file-empty">Belum ada berita</div>';
+    document.getElementById('news-empty').style.display = '';
+    document.getElementById('news-detail').style.display = 'none';
+    activeNewsId = null;
+    return;
+  }
+
+  function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;'); }
+  function eh(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  listEl.innerHTML = news.map(n => {
+    const isActive = n.id === activeNewsId;
+    const icon = n.source_url ? '🌐' : '🔥';
+    const dateStr = n.published_at_display || n.published_at?.slice(0,10) || '';
+    const sourceMeta = n.source_url ? ' · wavahusada.com' : '';
+    return `<div class="file-item${isActive ? ' active' : ''}" id="nitem-${esc(n.id)}" onclick="selectNews('${esc(n.id)}')">
+      <div class="fi-icon">${icon}</div>
+      <div class="fi-info">
+        <div class="fi-name" title="${esc(n.title)}">${eh(n.title)}</div>
+        <div class="fi-meta">${eh(dateStr)}${sourceMeta}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  /* Staggered reveal */
+  listEl.querySelectorAll('.file-item').forEach((el, i) => {
+    el.style.opacity = '0';
+    setTimeout(() => { el.style.transition = 'opacity .3s ease'; el.style.opacity = '1'; }, i * 40);
+  });
+
+  if(activeNewsId && news.find(n => n.id === activeNewsId)) selectNews(activeNewsId);
+  else if(news.length) selectNews(news[0].id);
+}
+
+/* ── Select News ── */
+function selectNews(id){
+  activeNewsId = id;
+  document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nitem-' + id)?.classList.add('active');
+
+  const n = allNews.find(x => x.id === id);
+  if(!n) return;
+
+  function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;'); }
+  function eh(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  const imgHtml = n.img_url
+    ? `<div class="nd-img-wrap"><img src="${esc(n.img_url)}" alt="${esc(n.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
+    : '';
+  const sourceBadge = n.source_url ? `<span class="source-badge">wavahusada.com</span>` : '';
+  const sourceLink = n.source_url
+    ? `<a class="source-link" href="${esc(n.source_url)}" target="_blank" rel="noopener noreferrer">Lihat sumber →</a>`
+    : '<span></span>';
+
+  document.getElementById('news-detail').innerHTML = `
+    <div class="nd-inner">
+      <div class="nd-top">
+        <span class="hot-badge">🔥 HOT</span>
+        <div class="nd-meta">
+          <span class="nd-date">${eh(n.published_at_display || n.published_at?.slice(0,10) || '')}</span>
+          ${sourceBadge}
+        </div>
+      </div>
+      ${imgHtml}
+      <div class="nd-title">${eh(n.title)}</div>
+      <div class="nd-content">${eh(n.content || '')}</div>
+      <div class="nd-footer">
+        ${sourceLink}
+        <button class="btn-hapus" onclick="openDeleteModal('${esc(n.id)}','${esc(n.title)}')">🗑️ Hapus</button>
+      </div>
+    </div>`;
+
+  document.getElementById('news-empty').style.display = 'none';
+  document.getElementById('news-detail').style.display = 'flex';
 }
 
 /* ── Delete Modal ── */
@@ -756,13 +630,19 @@ document.addEventListener('keydown', e => {
 
 btnConfirmDelete.addEventListener('click', async () => {
   if(!pendingDeleteId) return;
+  const deletedId = pendingDeleteId;
   btnConfirmDelete.disabled = true;
   btnConfirmDelete.textContent = '⏳ Menghapus...';
 
   try{
-    const r = await fetch('/casemix/delete/hotnews/' + pendingDeleteId, { method:'DELETE' });
+    const r = await fetch('/casemix/delete/hotnews/' + deletedId, { method:'DELETE' });
     const data = await r.json();
     if(data.ok){
+      if(deletedId === activeNewsId){
+        activeNewsId = null;
+        document.getElementById('news-empty').style.display = '';
+        document.getElementById('news-detail').style.display = 'none';
+      }
       closeModal();
       await loadNews();
     } else {
@@ -795,7 +675,7 @@ async function syncNews(){
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Gagal sync');
     showToast(`✅ ${data.added} berita baru ditambahkan dari wavahusada.com`);
-    loadNews();
+    await loadNews();
   } catch(e){
     showToast('❌ ' + e.message, 'error');
   } finally {
@@ -807,12 +687,6 @@ async function syncNews(){
 
 /* ── Init ── */
 loadNews();
-
-/* ── Mobile Upload Toggle ── */
-function toggleUpload(btn) {
-  btn.classList.toggle('collapsed');
-  document.getElementById('uploadCollapsible').classList.toggle('collapsed');
-}
 </script>
 </body>
 </html>

@@ -15,7 +15,7 @@
   --gray:#6b8a92; --gray-light:#b8cdd2;
   --white:#fff;
   --red:#c0392b; --blue:#2980b9;
-  --radius:12px; --shadow:0 2px 12px rgba(18,40,48,.08);
+  --radius:14px; --shadow:0 4px 20px rgba(18,40,48,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito Sans',sans-serif;background:#f0ede8;color:var(--dark);min-height:100vh}
@@ -43,72 +43,69 @@ a{text-decoration:none;color:inherit}
 }
 .nav-back:hover{background:rgba(255,255,255,.2)}
 
-/* ── Page Body ── */
-.page-body{padding:20px 24px}
+/* ── Page header (teal section) ── */
+.page-header{
+  background:var(--teal-dark);
+  padding:14px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+}
+.ph-left a.ph-back{
+  color:rgba(255,255,255,.6);font-size:12px;font-weight:600;
+  display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;
+  transition:.15s;
+}
+.ph-left a.ph-back:hover{color:rgba(255,255,255,.9)}
+.ph-left h1{
+  color:white;font-size:18px;font-weight:800;
+  font-family:'Playfair Display',serif;
+  display:flex;align-items:center;gap:8px;margin-bottom:3px;
+}
+.ph-left .ph-desc{color:rgba(255,255,255,.6);font-size:11px}
+.upload-drawer-btn{
+  background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.25);
+  color:white;border-radius:10px;
+  padding:9px 18px;font-family:'Nunito Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:.2s;flex-shrink:0;white-space:nowrap;
+}
+.upload-drawer-btn:hover{background:rgba(255,255,255,.2)}
+.upload-drawer-btn.open{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
 
-/* ── Two-column Grid ── */
-.two-col{
-  display:grid;
-  grid-template-columns:1.55fr 1fr;
-  gap:16px;
-  align-items:start;
-  max-width:1280px;
-  margin:0 auto;
+/* ── Upload drawer ── */
+.upload-drawer{
+  background:#f4f7f7;
+  border-bottom:2px solid var(--cream-dark);
+  overflow:hidden;max-height:0;
+  transition:max-height .35s ease;
 }
-
-/* ── Card Base ── */
-.card{
-  background:var(--white);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-/* ── Card Header ── */
-.card-header{
-  background:#094e58;
-  padding:14px 18px;
-  display:flex;align-items:center;gap:8px;
-}
-.card-header-title{
-  font-size:15px;font-weight:800;color:white;
-  display:flex;align-items:center;gap:8px;
-}
-.card-header-sub{
-  margin-left:auto;
-  display:flex;align-items:center;gap:8px;
-}
-.doc-count{
-  background:rgba(255,255,255,.2);color:white;
-  border-radius:50px;padding:2px 10px;
-  font-size:12px;font-weight:700;font-family:'Space Mono',monospace;
-}
-
-/* ── Card Body ── */
-.card-body{padding:18px}
+.upload-drawer.open{max-height:700px}
+.ud-inner{padding:18px 24px 22px}
+.ud-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
 
 /* ── Drop Zone ── */
 .drop-zone{
   border:2px dashed var(--gray-light);border-radius:10px;
-  padding:28px;text-align:center;cursor:pointer;
-  transition:.2s;background:#f8f9fa;position:relative;
+  padding:24px 16px;text-align:center;cursor:pointer;
+  background:white;transition:.2s;position:relative;
 }
-.drop-zone:hover,.drop-zone.drag-over{border-color:#094e58;background:#f0f9fb}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.03)}
 .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:32px;margin-bottom:8px;display:block}
+.drop-icon{font-size:28px;margin-bottom:6px;display:block}
 .drop-text{font-size:13px;color:var(--gray);font-weight:600}
 .drop-text strong{color:var(--teal);cursor:pointer}
-.drop-hint{font-size:12px;color:var(--gray-light);margin-top:4px}
+.drop-hint{font-size:11px;color:var(--gray-light);margin-top:4px}
 
 /* ── File Preview Row ── */
 .file-preview{
-  margin-top:12px;
+  display:none;margin-top:10px;
   background:var(--cream);border:1px solid var(--cream-dark);
-  border-radius:8px;padding:10px 14px;
-  display:none;align-items:center;gap:10px;
+  border-radius:8px;padding:10px 13px;align-items:center;gap:10px;
 }
 .file-preview.show{display:flex}
-.fp-icon{font-size:22px;flex-shrink:0}
+.fp-icon{font-size:20px;flex-shrink:0}
 .fp-info{flex:1;min-width:0}
 .fp-name{font-weight:700;font-size:13px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fp-size{font-size:11px;color:var(--gray);margin-top:2px}
@@ -120,13 +117,13 @@ a{text-decoration:none;color:inherit}
 .fp-remove:hover{opacity:1}
 
 /* ── Form Fields ── */
-.form-group{margin-top:14px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--dark-2);margin-bottom:5px}
 .form-group input,.form-group textarea{
-  width:100%;padding:9px 13px;
+  width:100%;padding:9px 12px;
   border:1.5px solid var(--cream-dark);border-radius:8px;
   font-family:'Nunito Sans',sans-serif;font-size:13px;
-  background:var(--cream);color:var(--dark);
-  transition:.2s;
+  background:white;color:var(--dark);transition:.2s;
 }
 .form-group input:focus,.form-group textarea:focus{
   outline:none;border-color:var(--teal);background:white;
@@ -136,9 +133,9 @@ a{text-decoration:none;color:inherit}
 
 /* ── Upload Button ── */
 .upload-btn{
-  margin-top:14px;width:100%;padding:10px;
-  background:#094e58;color:white;border:none;
-  border-radius:8px;font-family:'Nunito Sans',sans-serif;
+  width:100%;padding:11px;
+  background:var(--teal-dark);color:white;border:none;
+  border-radius:10px;font-family:'Nunito Sans',sans-serif;
   font-size:14px;font-weight:800;cursor:pointer;
   transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
@@ -163,117 +160,161 @@ a{text-decoration:none;color:inherit}
 .upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
 .upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
 
-/* ── File List Card ── */
-.file-list-scroll{
-  max-height:70vh;overflow-y:auto;
-  padding:4px 0;
-}
-.file-list-scroll::-webkit-scrollbar{width:4px}
-.file-list-scroll::-webkit-scrollbar-track{background:transparent}
-.file-list-scroll::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:4px}
+/* ── Page body ── */
+.page-body{padding:20px 24px 60px}
 
-/* ── File Items ── */
-.file-list{display:flex;flex-direction:column;gap:0}
-.fitem{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:13px 18px;
-  border-bottom:1px solid #f0f0f0;
-  transition:background .15s;
-  cursor:default;
+/* ── Main card ── */
+.klaim-main-card{
+  background:white;border-radius:14px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+
+/* ── Stats bar ── */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-bottom:1.5px solid var(--cream-dark);
+}
+.stat-cell{
+  padding:12px 20px;text-align:center;
+  border-right:1px solid var(--cream-dark);
+}
+.stat-cell:last-child{border-right:none}
+.stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-dark)}
+.stat-k{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+
+/* ── Content 2-column (file list kiri, viewer kanan) ── */
+.klaim-content{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:400px;
+}
+.klaim-file-col{
+  border-right:1.5px solid var(--cream-dark);
+  display:flex;flex-direction:column;
+  background:#f7f9f9;
+}
+.klaim-file-col-head{
+  padding:10px 14px 8px;
+  font-size:11px;font-weight:700;
+  color:var(--gray);
+  text-transform:uppercase;letter-spacing:.4px;
+  border-bottom:1px solid var(--cream-dark);
+  flex-shrink:0;
+}
+.klaim-file-list{flex:1;overflow-y:auto}
+.file-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;
+  border-bottom:1px solid var(--cream-dark);
+  cursor:pointer;transition:background .15s;
   position:relative;
 }
-.fitem:last-child{border-bottom:none}
-.fitem:hover{background:#f9fbfc}
-.fitem:hover .pen-btn{opacity:1}
-
-/* ── File Type Icon ── */
-.ftype-icon{
-  width:36px;height:36px;border-radius:7px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:800;font-family:'Space Mono',monospace;
-  letter-spacing:.5px;margin-top:1px;
+.file-item:last-child{border-bottom:none}
+.file-item:hover{background:rgba(9,78,88,.04)}
+.file-item.active{background:#e8f5f4;border-left:3px solid var(--teal-dark)}
+.file-item.active .fi-name{color:var(--teal-dark)}
+.fi-icon{
+  width:34px;height:34px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
 }
-.ftype-pdf{background:#fce8e8;color:#c0392b}
-.ftype-docx{background:#e8f0fe;color:#1565c0}
-.ftype-pptx{background:#fff3e0;color:#e65100}
-.ftype-xlsx{background:#e8f5e9;color:#2e7d32}
-.ftype-default{background:#f5f5f5;color:#555}
-
-/* ── File Info ── */
-.fitem-info{flex:1;min-width:0}
-.fitem-name-row{display:flex;align-items:center;gap:4px;position:relative}
-.fitem-name{
-  font-size:13px;font-weight:700;color:#1a2e35;
+.fi-icon.fi-pdf{background:#fce8e8}
+.fi-icon.fi-doc{background:#e8f0fe}
+.fi-icon.fi-default{background:#f0f4f5}
+.fi-info{flex:1;min-width:0}
+.fi-name{
+  font-size:12px;font-weight:700;color:var(--dark-2);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:calc(100% - 28px);
+  margin-bottom:2px;
 }
-.pen-btn{
-  flex-shrink:0;background:none;border:none;cursor:pointer;
-  color:var(--gray);opacity:0;transition:opacity .15s;
-  padding:2px;font-size:13px;line-height:1;
+.fi-meta{font-size:10px;color:var(--gray)}
+.fi-del{
+  color:var(--gray-light);font-size:16px;line-height:1;
+  opacity:0;transition:opacity .15s;flex-shrink:0;
+  background:none;border:none;cursor:pointer;padding:2px 4px;
 }
-.pen-btn:hover{color:var(--teal)}
-.fname-input{
-  display:none;font-size:13px;font-weight:700;
-  border:1px solid var(--teal);border-radius:5px;
-  padding:2px 6px;font-family:'Nunito Sans',sans-serif;
-  color:#1a2e35;background:white;width:100%;
-}
-.fitem-desc{
-  font-size:11px;color:var(--gray);margin-top:4px;
-  line-height:1.4;cursor:pointer;
-}
-.fitem-desc.empty{color:var(--gray-light);font-style:italic}
-.fdesc-input{
-  display:none;font-size:11px;border:1px solid var(--gray-light);
-  border-radius:5px;padding:4px 8px;width:100%;resize:none;
-  font-family:'Nunito Sans',sans-serif;color:var(--dark);
-  background:white;margin-top:4px;line-height:1.4;
-}
-.fitem-meta{
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-  margin-top:5px;font-size:11px;color:#aaa;
-}
-.fmeta-sep{opacity:.4}
-.ftype-badge{
-  background:#e8eef2;color:#6b8a92;
-  border-radius:4px;padding:1px 6px;
-  font-size:10px;font-weight:700;font-family:'Space Mono',monospace;
+.file-item:hover .fi-del{opacity:1}
+.fi-del:hover{color:var(--red)!important}
+.file-empty{
+  padding:28px 16px;text-align:center;color:var(--gray-light);font-size:12px;
 }
 
-/* ── File Actions ── */
-.fitem-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
-.fact-dl{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:5px 10px;border-radius:6px;
-  background:#094e58;color:white;
-  font-size:11px;font-weight:700;
-  transition:background .15s;white-space:nowrap;
+/* ── Viewer col (kanan) ── */
+.klaim-viewer-col{
+  display:flex;flex-direction:column;min-width:0;
 }
-.fact-dl:hover{background:var(--teal)}
-.fact-view{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:5px 10px;border-radius:6px;
-  border:1.5px solid #094e58;color:#094e58;
-  font-size:11px;font-weight:700;
-  transition:.15s;white-space:nowrap;background:none;
-}
-.fact-view:hover{background:#f0f9fb}
-.fact-del{
-  background:none;border:1px solid #e0e0e0;
-  border-radius:6px;padding:5px 7px;
-  cursor:pointer;color:#c0392b;font-size:13px;
-  transition:.15s;line-height:1;
-}
-.fact-del:hover{background:#fce8e8;border-color:#f5c6c6}
 
-/* ── Empty State ── */
-.doc-empty{
+/* ── Empty state ── */
+.klaim-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   padding:48px 24px;text-align:center;color:var(--gray);
 }
-.doc-empty .empty-icon{font-size:38px;margin-bottom:12px;display:block;opacity:.5}
-.doc-empty p{font-size:14px;font-weight:700}
-.doc-empty small{font-size:12px;opacity:.7;display:block;margin-top:4px}
+.klaim-empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.klaim-empty p{font-size:14px;font-weight:700;margin-bottom:4px}
+.klaim-empty small{font-size:12px;color:var(--gray-light)}
+
+/* ── Doc detail panel ── */
+.doc-detail{flex:1;padding:24px;display:flex;flex-direction:column;gap:16px}
+.dd-header{display:flex;align-items:flex-start;gap:14px}
+.dd-type-icon{
+  width:48px;height:48px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;font-family:'Space Mono',monospace;
+}
+.dd-type-pdf{background:#fce8e8;color:#c0392b}
+.dd-type-doc{background:#e8f0fe;color:#1565c0}
+.dd-type-ppt{background:#fff3e0;color:#e65100}
+.dd-type-default{background:#f0f4f5;color:var(--gray)}
+.dd-title-area{flex:1;min-width:0}
+.dd-title{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:4px;word-break:break-word}
+.dd-title-input{
+  display:none;font-size:15px;font-weight:800;color:var(--dark);
+  border:1.5px solid var(--teal);border-radius:6px;
+  padding:4px 8px;font-family:'Nunito Sans',sans-serif;width:100%;
+}
+.dd-desc{font-size:12px;color:var(--gray);cursor:pointer;line-height:1.5}
+.dd-desc.empty{color:var(--gray-light);font-style:italic}
+.dd-desc-input{
+  display:none;width:100%;font-size:12px;color:var(--dark);
+  border:1.5px solid var(--teal);border-radius:6px;
+  padding:5px 8px;font-family:'Nunito Sans',sans-serif;
+  resize:none;margin-top:4px;
+}
+.dd-meta{
+  display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--gray);
+  background:var(--cream);border-radius:8px;padding:10px 14px;
+}
+.dd-meta-item{display:flex;align-items:center;gap:4px}
+.dd-meta-item strong{color:var(--dark-2)}
+.dd-actions{display:flex;gap:10px;flex-wrap:wrap}
+.dd-btn-dl{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;
+  background:var(--teal-dark);color:white;
+  font-size:13px;font-weight:700;transition:background .15s;
+}
+.dd-btn-dl:hover{background:var(--teal)}
+.dd-btn-open{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;
+  border:1.5px solid var(--teal-dark);color:var(--teal-dark);
+  font-size:13px;font-weight:700;background:none;transition:.15s;
+}
+.dd-btn-open:hover{background:rgba(9,78,88,.05)}
+.dd-btn-del{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;
+  background:none;border:1.5px solid #e0e0e0;color:var(--red);
+  font-size:13px;font-weight:700;cursor:pointer;transition:.15s;
+  font-family:'Nunito Sans',sans-serif;
+}
+.dd-btn-del:hover{background:#fce8e8;border-color:#f5c6c6}
+.dd-rename-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--gray-light);font-size:13px;
+  padding:2px 5px;transition:color .15s;margin-left:4px;
+}
+.dd-rename-btn:hover{color:var(--teal)}
 
 /* ── Delete Confirm Modal ── */
 .modal-overlay{
@@ -307,74 +348,26 @@ a{text-decoration:none;color:inherit}
 }
 .btn-confirm-delete:hover{background:#a93226}
 
-/* ── Reveal animation ── */
-.fitem{opacity:0;transform:translateY(8px)}
-.fitem.revealed{opacity:1;transform:none;transition:opacity .35s ease,transform .35s ease}
-
-/* ── Back Button ── */
-.back-btn-casemix {
-  display: inline-block;
-  color: var(--teal-dark, #094e58);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.back-btn-casemix:hover { opacity: 1; }
-
-/* Mobile upload toggle */
-.mobile-upload-toggle {
-  display: none;
-}
-@media (max-width: 768px) {
-  .mobile-upload-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #094e58;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .mobile-upload-toggle .toggle-arrow {
-    transition: transform 0.25s;
-    font-style: normal;
-  }
-  .mobile-upload-toggle.collapsed .toggle-arrow {
-    transform: rotate(-90deg);
-  }
-  .upload-collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 2000px;
-  }
-  .upload-collapsible.collapsed {
-    max-height: 0;
-  }
-}
-
 /* ── Responsive ── */
+@media(max-width:900px){
+  .ud-grid{grid-template-columns:1fr}
+  .klaim-content{grid-template-columns:200px 1fr}
+}
 @media(max-width:768px){
-  .two-col{grid-template-columns:1fr}
-  .page-body{padding:14px 14px}
+  .page-header{padding:12px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .upload-drawer-btn{width:100%;justify-content:center}
+  .ud-inner{padding:14px 16px 18px}
+  .page-body{padding:14px 14px 60px}
+  .klaim-content{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .klaim-file-col{border-right:none;border-bottom:1.5px solid var(--cream-dark)}
+  .klaim-file-list{max-height:200px}
+  .doc-detail{padding:16px}
 }
 @media(max-width:600px){
   .navbar{padding:0 4%}
   .nav-breadcrumb{display:none}
-  .fitem{flex-wrap:wrap}
-  .fitem-actions{width:100%;justify-content:flex-end;margin-top:8px}
 }
 @media(max-width:480px){
-  .upload-btn{font-size:13px;padding:10px}
-  .modal{padding:22px 18px}
   .modal-actions{flex-direction:column-reverse}
   .btn-cancel,.btn-confirm-delete{width:100%;text-align:center}
 }
@@ -397,83 +390,112 @@ a{text-decoration:none;color:inherit}
   </div>
 </nav>
 
-<!-- Page Body -->
-<div class="page-body">
-  <a href="/casemix" class="back-btn-casemix">← Dashboard Casemix</a>
-  <div class="two-col">
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="ph-left">
+    <a href="/casemix" class="ph-back">← Dashboard Casemix</a>
+    <h1 id="ph-title">📂 Dokumen</h1>
+    <p class="ph-desc" id="ph-desc">Perpustakaan dokumen Casemix</p>
+  </div>
+  <button class="upload-drawer-btn" id="uploadDrawerBtn" onclick="toggleUploadDrawer()">⬆️ Upload Dokumen</button>
+</div>
 
-    <!-- LEFT: Upload Card -->
-    <div class="col-left">
-    <button class="mobile-upload-toggle" onclick="toggleUpload(this)" id="uploadToggle">
-      <span>⬆️ Form Upload</span>
-      <i class="toggle-arrow">▼</i>
-    </button>
-    <div class="upload-collapsible" id="uploadCollapsible">
-    <div class="card" id="upload-card">
-      <div class="card-header">
-        <div class="card-header-title">
-          <span id="card-icon">📂</span>
-          <span id="card-title">Upload Dokumen</span>
+<!-- UPLOAD DRAWER (collapsible, closed by default) -->
+<div class="upload-drawer" id="uploadDrawer">
+  <div class="ud-inner">
+    <div class="ud-grid">
+      <!-- LEFT: dropzone -->
+      <div>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" name="file" accept=".pdf,.docx,.doc">
+          <span class="drop-icon">📁</span>
+          <div class="drop-text">Seret file ke sini atau <strong>klik untuk browse</strong></div>
+          <div class="drop-hint" id="accept-hint">Format: PDF, DOCX, DOC</div>
         </div>
-      </div>
-      <div class="card-body">
-        <form id="upload-form" enctype="multipart/form-data">
-          <div class="drop-zone" id="drop-zone">
-            <input type="file" id="file-input" name="file" accept=".pdf,.docx,.doc">
-            <span class="drop-icon">📁</span>
-            <div class="drop-text">Seret file ke sini atau <strong>klik untuk browse</strong></div>
-            <div class="drop-hint" id="accept-hint">Format: PDF, DOCX, DOC</div>
+        <div class="file-preview" id="file-preview">
+          <span class="fp-icon" id="fp-icon">📄</span>
+          <div class="fp-info">
+            <div class="fp-name" id="fp-name"></div>
+            <div class="fp-size" id="fp-size"></div>
           </div>
-
-          <div class="file-preview" id="file-preview">
-            <span class="fp-icon" id="fp-icon">📄</span>
-            <div class="fp-info">
-              <div class="fp-name" id="fp-name"></div>
-              <div class="fp-size" id="fp-size"></div>
-            </div>
-            <button type="button" class="fp-remove" id="fp-remove" title="Hapus pilihan">✕</button>
-          </div>
-
-          <div class="form-group">
-            <input type="text" id="title-input" name="title" placeholder="Judul dokumen (opsional)">
-          </div>
-
-          <div class="form-group">
-            <textarea id="desc-input" name="description" rows="2" placeholder="Keterangan singkat tentang dokumen ini..."></textarea>
-          </div>
-
-          <button type="submit" class="upload-btn" id="upload-btn" disabled>
-            📤 Upload Dokumen
-          </button>
-        </form>
-
-        <div class="upload-progress" id="upload-progress">
-          <div class="upload-progress-bar" id="progress-bar"></div>
+          <button type="button" class="fp-remove" id="fp-remove" title="Hapus pilihan">✕</button>
         </div>
         <div class="upload-msg" id="upload-msg"></div>
       </div>
-    </div>
-    </div><!-- /.upload-collapsible -->
-    </div><!-- /.col-left -->
-
-    <!-- RIGHT: File List Card -->
-    <div class="card" id="file-list-card">
-      <div class="card-header">
-        <div class="card-header-title">📚 Dokumen Tersimpan</div>
-        <div class="card-header-sub">
-          <span class="doc-count" id="doc-count">0</span>
+      <!-- RIGHT: form fields -->
+      <div>
+        <div class="form-group">
+          <label for="title-input">Judul Dokumen <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+          <input type="text" id="title-input" name="title" placeholder="Judul dokumen">
+        </div>
+        <div class="form-group">
+          <label for="desc-input">Keterangan <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+          <textarea id="desc-input" name="description" rows="2" placeholder="Keterangan singkat tentang dokumen ini..."></textarea>
+        </div>
+        <button type="button" class="upload-btn" id="upload-btn" onclick="handleUpload()" disabled>
+          📤 Upload Dokumen
+        </button>
+        <div class="upload-progress" id="upload-progress">
+          <div class="upload-progress-bar" id="progress-bar"></div>
         </div>
       </div>
-      <div class="file-list-scroll">
-        <div id="doc-empty" class="doc-empty">
-          <span class="empty-icon">📂</span>
-          <p>Belum ada dokumen</p>
-          <small>Upload dokumen menggunakan form di sebelah kiri</small>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+  <div class="klaim-main-card">
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-v" id="stat-count">—</div><div class="stat-k">Dokumen</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-last">—</div><div class="stat-k">Upload Terakhir</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-size">—</div><div class="stat-k">Total Ukuran</div></div>
+    </div>
+    <!-- 2-col content -->
+    <div class="klaim-content">
+      <div class="klaim-file-col">
+        <div class="klaim-file-col-head">📁 Daftar Dokumen</div>
+        <div class="klaim-file-list" id="file-list">
+          <div class="file-empty">Belum ada dokumen</div>
         </div>
-        <div class="file-list" id="doc-cards" style="display:none"></div>
+      </div>
+      <div class="klaim-viewer-col">
+        <div class="klaim-empty" id="doc-empty-state">
+          <span class="ei">📂</span>
+          <p>Pilih dokumen di sebelah kiri</p>
+          <small>atau upload dokumen baru</small>
+        </div>
+        <div class="doc-detail" id="doc-detail" style="display:none">
+          <div class="dd-header">
+            <div class="dd-type-icon dd-type-default" id="dd-type-icon">?</div>
+            <div class="dd-title-area">
+              <div style="display:flex;align-items:center;gap:4px">
+                <span class="dd-title" id="dd-title">—</span>
+                <button class="dd-rename-btn" onclick="startRenameDD()" title="Ubah judul">✏️</button>
+              </div>
+              <input class="dd-title-input" id="dd-title-input" type="text"
+                onkeydown="if(event.key==='Enter')saveRenameDD();else if(event.key==='Escape')cancelRenameDD();"
+                onblur="saveRenameDD()">
+              <div class="dd-desc empty" id="dd-desc" onclick="startDescDD()">Tambah keterangan...</div>
+              <textarea class="dd-desc-input" id="dd-desc-input" rows="2"
+                onkeydown="if(event.key==='Escape')cancelDescDD();"
+                onblur="saveDescDD()"></textarea>
+            </div>
+          </div>
+          <div class="dd-meta">
+            <span class="dd-meta-item">📅 <strong id="dd-date">—</strong></span>
+            <span class="dd-meta-item">📦 <strong id="dd-size">—</strong></span>
+            <span class="dd-meta-item">🗂️ <strong id="dd-ext">—</strong></span>
+          </div>
+          <div class="dd-actions">
+            <a class="dd-btn-dl" id="dd-btn-dl" href="#">↓ Unduh</a>
+            <a class="dd-btn-open" id="dd-btn-open" href="#" target="_blank">↗ Buka</a>
+            <button class="dd-btn-del" onclick="openDelCurrent()">🗑 Hapus</button>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -494,67 +516,57 @@ a{text-decoration:none;color:inherit}
 const SECTION = window.location.pathname.split('/').filter(Boolean).pop() || 'regulasi';
 
 const SECTION_META = {
-  regulasi:         { title:'Pedoman & Regulasi',       icon:'📜', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
-  spo:              { title:'SPO',                       icon:'📋', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
-  pengorganisasian: { title:'Pedoman Pengorganisasian', icon:'🏛️', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
-  pelayanan:        { title:'Pedoman Pelayanan',         icon:'💊', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
-  kebijakan:        { title:'Kebijakan Layanan',         icon:'⚖️', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  regulasi:         { label:'Pedoman & Regulasi',       icon:'📜', desc:'Pedoman dan regulasi Casemix', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  spo:              { label:'SPO',                       icon:'📋', desc:'Standar Prosedur Operasional',  accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  pengorganisasian: { label:'Pedoman Pengorganisasian', icon:'🏛️', desc:'Pedoman pengorganisasian unit', accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  pelayanan:        { label:'Pedoman Pelayanan',         icon:'💊', desc:'Pedoman pelayanan medis',       accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
+  kebijakan:        { label:'Kebijakan Layanan',         icon:'⚖️', desc:'Kebijakan layanan Casemix',    accept:'.pdf,.docx,.doc', hint:'PDF, DOCX, DOC' },
 };
 
-const meta = SECTION_META[SECTION] || { title: SECTION, icon: '📂', accept: '.pdf,.docx,.doc', hint: 'PDF, DOCX, DOC' };
+const meta = SECTION_META[SECTION] || { label: SECTION, icon: '📂', desc: 'Perpustakaan dokumen Casemix', accept: '.pdf,.docx,.doc', hint: 'PDF, DOCX, DOC' };
 
 // Set page titles & section-specific info
-document.title = `${meta.title} — Casemix RS. Wava Husada`;
+document.title = `${meta.label} — Casemix RS. Wava Husada`;
 document.getElementById('page-title').textContent = document.title;
-document.getElementById('nav-section-title').textContent = meta.title;
-document.getElementById('card-icon').textContent = meta.icon;
-document.getElementById('card-title').textContent = meta.title;
+document.getElementById('nav-section-title').textContent = meta.label;
+document.getElementById('ph-title').innerHTML = meta.icon + ' ' + meta.label;
+document.getElementById('ph-desc').textContent = meta.desc;
 document.getElementById('accept-hint').textContent = `Format: ${meta.hint}`;
 document.getElementById('file-input').setAttribute('accept', meta.accept);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
-function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;') }
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;') }
 
-function fmtSize(bytes){
-  if(!bytes||bytes<1024) return bytes?bytes+' B':'';
-  if(bytes<1024*1024) return (bytes/1024).toFixed(0)+' KB';
-  return (bytes/1024/1024).toFixed(1)+' MB';
+function fmtSz(b){
+  if(!b) return '—';
+  if(b < 1024) return b + ' B';
+  if(b < 1048576) return (b/1024).toFixed(0) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
 }
+
 function fileIconChar(name){
-  const ext=(name||'').split('.').pop().toLowerCase();
-  if(ext==='pdf')  return '📕';
+  const ext = (name||'').split('.').pop().toLowerCase();
+  if(ext === 'pdf')  return '📕';
   if(['docx','doc'].includes(ext)) return '📘';
   if(['pptx','ppt'].includes(ext)) return '📙';
   if(['xlsx','xls'].includes(ext)) return '📗';
   return '📄';
 }
-function ftypeClass(name){
-  const ext=(name||'').split('.').pop().toLowerCase();
-  if(ext==='pdf')  return 'ftype-pdf';
-  if(['docx','doc'].includes(ext)) return 'ftype-docx';
-  if(['pptx','ppt'].includes(ext)) return 'ftype-pptx';
-  if(['xlsx','xls'].includes(ext)) return 'ftype-xlsx';
-  return 'ftype-default';
+
+function sizeNotice(orig, comp){
+  if(!orig || !comp) return '';
+  const pct = orig > comp ? Math.round((1 - comp/orig) * 100) : 0;
+  return pct > 1
+    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
 }
-function ftypeLabel(name){
-  if(!name) return 'FILE';
-  const ext=name.split('.').pop().toUpperCase();
-  if(ext==='DOC')  return 'DOC';
-  if(ext==='DOCX') return 'DOC';
-  if(ext==='PPT')  return 'PPT';
-  if(ext==='PPTX') return 'PPT';
-  if(ext==='XLS')  return 'XLS';
-  if(ext==='XLSX') return 'XLS';
-  return ext||'FILE';
-}
-function ftypeShort(name){
-  if(!name) return 'FILE';
-  const e=name.split('.').pop().toUpperCase();
-  if(['DOC','DOCX'].includes(e)) return 'DOC';
-  if(['PPT','PPTX'].includes(e)) return 'PPT';
-  if(['XLS','XLSX'].includes(e)) return 'XLS';
-  return e||'FILE';
+
+function showMsg(text, type){
+  const el = document.getElementById('upload-msg');
+  el.innerHTML = text;
+  el.className = `upload-msg show ${type}`;
+  setTimeout(() => { el.className = 'upload-msg'; el.innerHTML = ''; }, 5000);
 }
 
 // ── File Input & Drop Zone ────────────────────────────────────────────────────
@@ -568,7 +580,7 @@ function setFile(file){
   selectedFile = file;
   document.getElementById('fp-icon').textContent = fileIconChar(file.name);
   document.getElementById('fp-name').textContent = file.name;
-  document.getElementById('fp-size').textContent = fmtSize(file.size);
+  document.getElementById('fp-size').textContent = fmtSz(file.size);
   filePreview.classList.add('show');
   uploadBtn.disabled = false;
 }
@@ -592,13 +604,11 @@ dropZone.addEventListener('drop', e => {
   if(file){ fileInput.files = e.dataTransfer.files; setFile(file); }
 });
 
-// ── Upload Form ───────────────────────────────────────────────────────────────
+// ── Upload Handler ────────────────────────────────────────────────────────────
 const uploadProgress = document.getElementById('upload-progress');
 const progressBar    = document.getElementById('progress-bar');
-const uploadMsg      = document.getElementById('upload-msg');
 
-document.getElementById('upload-form').addEventListener('submit', async e => {
-  e.preventDefault();
+async function handleUpload(){
   if(!selectedFile) return;
 
   const fd = new FormData();
@@ -611,12 +621,11 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
   uploadBtn.disabled = true;
   uploadBtn.innerHTML = '⏳ Mengupload...';
   uploadProgress.classList.add('show');
-  uploadMsg.className = 'upload-msg';
 
   let p = 0;
   const pInterval = setInterval(() => {
-    p = Math.min(p + Math.random()*15, 85);
-    progressBar.style.width = p+'%';
+    p = Math.min(p + Math.random() * 15, 85);
+    progressBar.style.width = p + '%';
   }, 150);
 
   try {
@@ -630,9 +639,10 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
       document.getElementById('title-input').value = '';
       document.getElementById('desc-input').value  = '';
       setTimeout(() => { progressBar.style.width='0%'; uploadProgress.classList.remove('show'); }, 1000);
-      loadDocs();
+      await loadDocs();
+      setTimeout(closeUploadDrawer, 1200);
     } else {
-      const err = await res.json().catch(() => ({}));
+      const err = await res.json().catch(()=>({}));
       showMsg(`❌ Gagal: ${err.error||res.statusText}`, 'error');
       progressBar.style.width = '0%';
       uploadProgress.classList.remove('show');
@@ -646,24 +656,27 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
 
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '📤 Upload Dokumen';
-});
-
-function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
-function sizeNotice(orig,comp){
-  if(!orig||!comp) return '';
-  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
-  return pct>1
-    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
-    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
 }
-function showMsg(text, type){
-  uploadMsg.innerHTML = text;
-  uploadMsg.className = `upload-msg show ${type}`;
-  setTimeout(() => { uploadMsg.className = 'upload-msg'; uploadMsg.innerHTML=''; }, 5000);
+
+// ── Upload Drawer ─────────────────────────────────────────────────────────────
+function toggleUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  const isOpen = drawer.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = isOpen ? '✕ Tutup' : '⬆️ Upload Dokumen';
+}
+function closeUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = '⬆️ Upload Dokumen';
 }
 
 // ── Load & Render Documents ───────────────────────────────────────────────────
 let allDocs = [];
+let activeDocId = null;
 
 async function loadDocs(){
   try {
@@ -679,126 +692,147 @@ async function loadDocs(){
 }
 
 function renderDocs(docs){
-  const empty  = document.getElementById('doc-empty');
-  const cards  = document.getElementById('doc-cards');
-  const count  = document.getElementById('doc-count');
+  allDocs = docs;
+  const totalSize = docs.reduce((s,d) => s + (d.size||0), 0);
+  const latest    = docs.length ? (docs[0].uploaded_at_display || (docs[0].uploaded_at ? docs[0].uploaded_at.slice(0,10) : '—')) : '—';
 
-  count.textContent = docs.length;
+  document.getElementById('stat-count').textContent = docs.length || '—';
+  document.getElementById('stat-last').textContent  = docs.length ? latest : '—';
+  document.getElementById('stat-size').textContent  = docs.length ? fmtSz(totalSize) : '—';
 
-  if(docs.length === 0){
-    empty.style.display = '';
-    cards.style.display = 'none';
-    cards.innerHTML = '';
+  const listEl = document.getElementById('file-list');
+
+  if(!docs.length){
+    listEl.innerHTML = '<div class="file-empty">Belum ada dokumen</div>';
+    document.getElementById('doc-empty-state').style.display = '';
+    document.getElementById('doc-detail').style.display = 'none';
+    activeDocId = null;
     return;
   }
 
-  empty.style.display = 'none';
-  cards.style.display = 'flex';
-
-  cards.innerHTML = docs.map((d, i) => {
-    const fname = d.original_name || d.filename || '';
-    const ext   = fname.split('.').pop().toLowerCase();
-    const url   = d.file_url || `/casemix/files/${SECTION}/${escAttr(fname)}`;
-    const dlUrl = d.file_url || `/casemix/files/${SECTION}/${encodeURIComponent(fname)}`;
-    const date  = d.uploaded_at_display || (d.uploaded_at ? d.uploaded_at.slice(0,10) : '—');
-    const size  = fmtSize(d.size);
-    const title = d.title || fname;
-    const desc  = d.description || '';
-    const typCls  = ftypeClass(fname);
-    const typLbl  = ftypeShort(fname);
-
-    return `
-    <div class="fitem" data-id="${escAttr(d.id)}" style="transition-delay:${i*40}ms">
-      <div class="ftype-icon ${typCls}">${typLbl}</div>
-      <div class="fitem-info">
-        <div class="fitem-name-row">
-          <span class="fitem-name" id="fn${i}">${escHtml(title)}</span>
-          <button class="pen-btn" id="pen${i}" onclick="startRename(${i})" title="Ubah judul">✏️</button>
-          <input class="fname-input" id="fni${i}" type="text"
-            onkeydown="if(event.key==='Enter')saveRename(${i});else if(event.key==='Escape')cancelRename(${i});"
-            onblur="saveRename(${i})">
-        </div>
-        <div class="fitem-desc${desc?'':' empty'}" id="fd${i}"
-          data-raw="${escAttr(desc)}"
-          onclick="startDesc(${i})">${desc ? escHtml(desc) : 'Tambah keterangan...'}</div>
-        <textarea class="fdesc-input" id="fdi${i}" rows="2"
-          onkeydown="if(event.key==='Escape')cancelDesc(${i});"
-          onblur="saveDesc(${i})"></textarea>
-        <div class="fitem-meta">
-          <span>${date}</span>
-          ${size ? `<span class="fmeta-sep">·</span><span>${size}</span>` : ''}
-          <span class="fmeta-sep">·</span>
-          <span class="ftype-badge">${typLbl}</span>
-        </div>
+  listEl.innerHTML = docs.map(d => {
+    const fname    = d.original_name || d.filename || '';
+    const ext      = fname.split('.').pop().toLowerCase();
+    const iconClass = ext==='pdf' ? 'fi-pdf' : ['docx','doc'].includes(ext) ? 'fi-doc' : 'fi-default';
+    const iconChar  = ext==='pdf' ? '📕' : ['docx','doc'].includes(ext) ? '📘' : '📄';
+    const title    = d.title || fname;
+    const date     = d.uploaded_at_display || (d.uploaded_at ? d.uploaded_at.slice(0,10) : '—');
+    const sz       = d.size ? fmtSz(d.size) : '';
+    const safeId   = escAttr(String(d.id));
+    return `<div class="file-item${String(d.id)===String(activeDocId)?' active':''}" id="fitem-${safeId}" onclick="selectDoc('${safeId}')">
+      <div class="fi-icon ${iconClass}">${iconChar}</div>
+      <div class="fi-info">
+        <div class="fi-name" title="${escAttr(title)}">${escHtml(title)}</div>
+        <div class="fi-meta">${date}${sz ? ' · '+sz : ''}</div>
       </div>
-      <div class="fitem-actions">
-        <a href="${dlUrl}" download class="fact-dl">↓ Unduh</a>
-        <a href="${url}" target="_blank" class="fact-view">↗ Buka</a>
-        <button class="fact-del" onclick="openDel('${escAttr(d.id)}','${escAttr(title)}')" title="Hapus">🗑</button>
-      </div>
+      <button class="fi-del" title="Hapus" onclick="event.stopPropagation();openDel('${safeId}','${escAttr(title)}')">×</button>
     </div>`;
   }).join('');
 
-  requestAnimationFrame(() => {
-    cards.querySelectorAll('.fitem').forEach((item, i) => {
-      setTimeout(() => item.classList.add('revealed'), i*50);
-    });
-  });
+  if(activeDocId && docs.find(d => String(d.id) === String(activeDocId))){
+    selectDoc(activeDocId);
+  } else if(docs.length){
+    selectDoc(String(docs[0].id));
+  }
 }
 
-// ── Inline Rename ─────────────────────────────────────────────────────────────
-function startRename(n){
-  var sp  = document.getElementById('fn'+n);
-  var inp = document.getElementById('fni'+n);
-  inp.value = sp.textContent.trim();
-  sp.style.display  = 'none';
-  inp.style.display = 'inline-block';
+// ── Select Document ───────────────────────────────────────────────────────────
+function selectDoc(id){
+  activeDocId = String(id);
+  document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('fitem-' + id)?.classList.add('active');
+
+  const d = allDocs.find(x => String(x.id) === String(id));
+  if(!d) return;
+
+  const fname  = d.original_name || d.filename || '';
+  const ext    = fname.split('.').pop().toLowerCase();
+  const title  = d.title || fname;
+  const desc   = d.description || '';
+  const date   = d.uploaded_at_display || (d.uploaded_at ? d.uploaded_at.slice(0,10) : '—');
+  const sz     = fmtSz(d.size || 0);
+  const url    = d.file_url || `/casemix/files/${SECTION}/${encodeURIComponent(fname)}`;
+  const extUp  = fname.split('.').pop().toUpperCase() || '?';
+
+  const iconEl = document.getElementById('dd-type-icon');
+  iconEl.textContent = ['DOCX','DOC'].includes(extUp) ? 'DOC' : ['PPTX','PPT'].includes(extUp) ? 'PPT' : extUp;
+  iconEl.className   = 'dd-type-icon dd-type-' + (ext==='pdf' ? 'pdf' : ['docx','doc'].includes(ext) ? 'doc' : ['pptx','ppt'].includes(ext) ? 'ppt' : 'default');
+
+  const titleEl = document.getElementById('dd-title');
+  titleEl.textContent = title;
+  titleEl.style.display = 'inline';
+  document.getElementById('dd-title-input').style.display = 'none';
+
+  const descEl = document.getElementById('dd-desc');
+  descEl.textContent   = desc || 'Tambah keterangan...';
+  descEl.dataset.raw   = desc;
+  descEl.className     = 'dd-desc' + (desc ? '' : ' empty');
+  document.getElementById('dd-desc-input').style.display = 'none';
+
+  document.getElementById('dd-date').textContent = date;
+  document.getElementById('dd-size').textContent = sz || '—';
+  document.getElementById('dd-ext').textContent  = extUp;
+  document.getElementById('dd-btn-dl').href      = url;
+  document.getElementById('dd-btn-dl').setAttribute('download', fname);
+  document.getElementById('dd-btn-open').href    = url;
+
+  document.getElementById('doc-empty-state').style.display = 'none';
+  document.getElementById('doc-detail').style.display      = 'flex';
+}
+
+// ── Inline Rename (Detail Panel) ──────────────────────────────────────────────
+function startRenameDD(){
+  const title = document.getElementById('dd-title');
+  const inp   = document.getElementById('dd-title-input');
+  inp.value = title.textContent;
+  title.style.display = 'none';
+  inp.style.display   = 'block';
   inp.focus(); inp.select();
 }
-function saveRename(n){
-  var sp  = document.getElementById('fn'+n);
-  var inp = document.getElementById('fni'+n);
+function saveRenameDD(){
+  const inp = document.getElementById('dd-title-input');
   if(inp.style.display === 'none') return;
-  if(inp.value.trim()) sp.textContent = inp.value.trim();
-  sp.style.display  = 'inline';
+  const v = inp.value.trim();
+  if(v){
+    document.getElementById('dd-title').textContent = v;
+    const d = allDocs.find(x => String(x.id) === String(activeDocId));
+    if(d) d.title = v;
+    const fiName = document.querySelector(`#fitem-${CSS.escape(String(activeDocId))} .fi-name`);
+    if(fiName) fiName.textContent = v;
+  }
+  document.getElementById('dd-title').style.display = 'inline';
   inp.style.display = 'none';
 }
-function cancelRename(n){
-  var sp  = document.getElementById('fn'+n);
-  var inp = document.getElementById('fni'+n);
-  sp.style.display  = 'inline';
-  inp.style.display = 'none';
+function cancelRenameDD(){
+  document.getElementById('dd-title').style.display     = 'inline';
+  document.getElementById('dd-title-input').style.display = 'none';
 }
 
-// ── Inline Description Edit ───────────────────────────────────────────────────
-function startDesc(n){
-  var sp  = document.getElementById('fd'+n);
-  var inp = document.getElementById('fdi'+n);
+// ── Inline Description Edit (Detail Panel) ────────────────────────────────────
+function startDescDD(){
+  const sp  = document.getElementById('dd-desc');
+  const inp = document.getElementById('dd-desc-input');
   inp.value = sp.dataset.raw || '';
   sp.style.display  = 'none';
   inp.style.display = 'block';
   inp.focus();
 }
-function saveDesc(n){
-  var sp  = document.getElementById('fd'+n);
-  var inp = document.getElementById('fdi'+n);
+function saveDescDD(){
+  const sp  = document.getElementById('dd-desc');
+  const inp = document.getElementById('dd-desc-input');
   if(inp.style.display === 'none') return;
-  sp.dataset.raw = inp.value.trim();
-  if(inp.value.trim()){
-    sp.textContent = inp.value.trim();
-    sp.classList.remove('empty');
-  } else {
-    sp.textContent = 'Tambah keterangan...';
-    sp.classList.add('empty');
-  }
+  const v = inp.value.trim();
+  sp.dataset.raw   = v;
+  sp.textContent   = v || 'Tambah keterangan...';
+  sp.className     = 'dd-desc' + (v ? '' : ' empty');
+  const d = allDocs.find(x => String(x.id) === String(activeDocId));
+  if(d) d.description = v;
   sp.style.display  = 'block';
   inp.style.display = 'none';
 }
-function cancelDesc(n){
-  var sp  = document.getElementById('fd'+n);
-  var inp = document.getElementById('fdi'+n);
-  sp.style.display  = 'block';
-  inp.style.display = 'none';
+function cancelDescDD(){
+  document.getElementById('dd-desc').style.display      = 'block';
+  document.getElementById('dd-desc-input').style.display = 'none';
 }
 
 // ── Delete Modal ──────────────────────────────────────────────────────────────
@@ -814,7 +848,11 @@ function closeDel(){
   document.getElementById('modal-overlay').classList.remove('show');
   pendingDeleteId = null;
 }
-function confirmDel(){ /* alias — actual handler below */ }
+function openDelCurrent(){
+  if(!activeDocId) return;
+  const d = allDocs.find(x => String(x.id) === String(activeDocId));
+  if(d) openDel(String(d.id), d.title || d.original_name || 'Dokumen');
+}
 
 document.getElementById('btn-cancel').addEventListener('click', closeDel);
 
@@ -825,23 +863,22 @@ document.getElementById('btn-confirm-delete').addEventListener('click', async ()
   try {
     const res = await fetch(`/casemix/delete/${SECTION}/${id}`, { method:'DELETE' });
     if(res.ok){
-      allDocs = allDocs.filter(d => d.id !== id);
+      allDocs = allDocs.filter(d => String(d.id) !== String(id));
+      if(String(activeDocId) === String(id)){
+        activeDocId = null;
+        document.getElementById('doc-empty-state').style.display = '';
+        document.getElementById('doc-detail').style.display      = 'none';
+      }
       renderDocs(allDocs);
     }
   } catch(err){
-    alert('Gagal menghapus: '+err.message);
+    alert('Gagal menghapus: ' + err.message);
   }
 });
 
 document.getElementById('modal-overlay').addEventListener('click', e => {
   if(e.target === e.currentTarget) closeDel();
 });
-
-// ── Mobile Upload Toggle ──────────────────────────────────────────────────────
-function toggleUpload(btn) {
-  btn.classList.toggle('collapsed');
-  document.getElementById('uploadCollapsible').classList.toggle('collapsed');
-}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadDocs();

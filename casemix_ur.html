@@ -14,7 +14,7 @@
   --dark:#122830; --dark-2:#1e3d47;
   --gray:#6b8a92; --gray-light:#b8cdd2;
   --white:#fff; --red:#c0392b; --blue:#2980b9;
-  --radius:12px; --shadow:0 2px 12px rgba(18,40,48,.08);
+  --radius:14px; --shadow:0 4px 20px rgba(18,40,48,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito Sans',sans-serif;background:#f0ede8;color:var(--dark);min-height:100vh}
@@ -23,8 +23,7 @@ a{text-decoration:none;color:inherit}
 /* ── Navbar ── */
 .navbar{
   position:sticky;top:0;z-index:100;
-  background:var(--teal-dark);
-  padding:0 5%;height:48px;
+  background:var(--teal-dark);padding:0 5%;height:48px;
   display:flex;align-items:center;justify-content:space-between;
   box-shadow:0 2px 12px rgba(0,0,0,.2);
 }
@@ -33,7 +32,6 @@ a{text-decoration:none;color:inherit}
 .nav-breadcrumb a{color:rgba(255,255,255,.7);transition:.2s}.nav-breadcrumb a:hover{color:white}
 .nav-breadcrumb .sep{opacity:.4}
 .nav-breadcrumb .current{color:var(--orange-light);font-weight:700}
-.nav-right{display:flex;align-items:center}
 .nav-back{
   display:flex;align-items:center;gap:6px;
   background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
@@ -42,314 +40,184 @@ a{text-decoration:none;color:inherit}
 }
 .nav-back:hover{background:rgba(255,255,255,.2)}
 
-/* ── Page Body ── */
-.page-body{padding:20px 24px}
+/* ── Page Header ── */
+.page-header{background:var(--teal-dark);padding:14px 24px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ph-left a.ph-back{color:rgba(255,255,255,.6);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;transition:.15s}
+.ph-left a.ph-back:hover{color:rgba(255,255,255,.9)}
+.ph-left h1{color:white;font-size:18px;font-weight:800;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ph-left .ph-desc{color:rgba(255,255,255,.6);font-size:11px}
+.upload-drawer-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:white;border-radius:10px;padding:9px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.2s;flex-shrink:0;white-space:nowrap}
+.upload-drawer-btn:hover{background:rgba(255,255,255,.2)}
+.upload-drawer-btn.open{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
 
-/* ── Two-column Grid ── */
-.two-col{
-  display:grid;
-  grid-template-columns:1.55fr 1fr;
-  gap:16px;
-  align-items:start;
-}
+/* ── Upload Drawer ── */
+.upload-drawer{background:#f4f7f7;border-bottom:2px solid var(--cream-dark);overflow:hidden;max-height:0;transition:max-height .35s ease}
+.upload-drawer.open{max-height:700px}
+.ud-inner{padding:18px 24px 22px}
+.ud-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
 
-/* ── Card Shell ── */
-.card{
-  background:var(--white);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-.card-head{
-  background:var(--teal-dark);
-  padding:14px 18px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.card-head h2{font-size:14px;font-weight:800;color:white;display:flex;align-items:center;gap:8px}
-.doc-count{
-  background:rgba(255,255,255,.2);color:white;
-  border-radius:50px;padding:2px 10px;
-  font-size:11px;font-weight:700;font-family:'Space Mono',monospace;
-}
-.card-body{padding:18px}
-
-/* ── Drop Zone ── */
+/* Drop Zone */
 .drop-zone{
   border:2px dashed var(--gray-light);border-radius:10px;
-  padding:28px;text-align:center;cursor:pointer;
-  transition:.2s;background:var(--cream);position:relative;
+  padding:24px 16px;text-align:center;cursor:pointer;
+  background:white;transition:.2s;position:relative;
 }
-.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.04)}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.03)}
 .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:32px;margin-bottom:8px;display:block}
+.drop-icon{font-size:28px;margin-bottom:6px;display:block}
 .drop-text{font-size:13px;color:var(--gray);font-weight:600}
-.drop-text strong{color:var(--teal);cursor:pointer}
+.drop-text strong{color:var(--teal)}
 .drop-hint{font-size:11px;color:var(--gray-light);margin-top:4px}
 
-/* File selected preview inside drop zone */
+/* File Preview */
 .file-preview{
-  display:none;margin-top:12px;
+  display:none;margin-top:10px;
   background:var(--cream);border:1px solid var(--cream-dark);
-  border-radius:8px;padding:10px 14px;
-  align-items:center;gap:10px;
+  border-radius:8px;padding:10px 13px;align-items:center;gap:10px;
 }
 .file-preview.show{display:flex}
-.file-preview .fp-icon{font-size:22px}
-.file-preview .fp-name{font-weight:700;font-size:13px;color:var(--dark)}
-.file-preview .fp-size{font-size:11px;color:var(--gray)}
-.file-preview .fp-remove{margin-left:auto;cursor:pointer;color:var(--red);font-size:16px;opacity:.7;transition:.2s}
-.file-preview .fp-remove:hover{opacity:1}
+.fp-icon{font-size:22px}
+.fp-name{font-weight:700;font-size:13px;color:var(--dark)}
+.fp-size{font-size:11px;color:var(--gray)}
+.fp-remove{margin-left:auto;cursor:pointer;color:var(--red);font-size:16px;opacity:.7;transition:.2s}
+.fp-remove:hover{opacity:1}
 
-/* ── Form Fields ── */
-.form-group{margin-top:14px}
+/* Form */
+.form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:12px;font-weight:700;color:var(--dark-2);margin-bottom:5px}
 .form-group input,.form-group textarea{
   width:100%;padding:9px 12px;
   border:1.5px solid var(--cream-dark);border-radius:8px;
   font-family:'Nunito Sans',sans-serif;font-size:13px;
-  background:var(--cream);color:var(--dark);
-  transition:.2s;
+  background:white;color:var(--dark);transition:.2s;
 }
-.form-group input:focus,.form-group textarea:focus{
-  outline:none;border-color:var(--teal);background:white;
-}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--teal);background:white}
 .form-group textarea{resize:vertical;min-height:56px}
 
-/* ── Upload Button ── */
+/* Upload Button */
 .upload-btn{
-  margin-top:14px;width:100%;padding:11px;
+  width:100%;padding:11px;
   background:var(--teal-dark);color:white;border:none;
-  border-radius:8px;font-family:'Nunito Sans',sans-serif;
-  font-size:14px;font-weight:800;cursor:pointer;
-  transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:10px;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
 }
-.upload-btn:hover{background:var(--teal)}
-.upload-btn:disabled{opacity:.5;cursor:not-allowed}
+.upload-btn:hover{background:#0a6070}
+.upload-btn:disabled{opacity:.45;cursor:not-allowed}
 
-/* ── Progress & Message ── */
-.upload-progress{
-  display:none;margin-top:10px;
-  background:var(--cream);border-radius:8px;overflow:hidden;height:5px;
-}
+/* Progress & Message */
+.upload-progress{display:none;margin-top:10px;background:var(--cream-dark);border-radius:50px;height:6px;overflow:hidden}
 .upload-progress.show{display:block}
-.upload-progress-bar{
-  height:100%;background:linear-gradient(90deg,var(--teal),var(--green-light));
-  width:0%;transition:width .3s ease;border-radius:8px;
-}
-.upload-msg{
-  display:none;margin-top:10px;padding:9px 12px;
-  border-radius:8px;font-size:12px;font-weight:600;
-}
+.upload-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--green-light));width:0%;transition:width .3s ease;border-radius:50px}
+.upload-msg{display:none;margin-top:10px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:600}
 .upload-msg.show{display:block}
 .upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
 .upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
 
-/* ── Last Upload Stat ── */
-.stat-last-wrap{
-  display:none;margin-top:14px;padding:9px 14px;
-  background:rgba(9,78,88,.06);border:1px solid rgba(9,78,88,.12);
-  border-radius:8px;font-size:12px;color:var(--teal-dark);font-weight:600;
-}
-.stat-last-wrap span{font-family:'Space Mono',monospace;font-weight:700;color:var(--orange);margin-right:4px}
+/* ── Page Body ── */
+.page-body{padding:20px 24px 60px}
 
-/* ── File List (right column) ── */
-.file-list{display:flex;flex-direction:column;gap:8px;padding:14px}
+/* ── Main Card ── */
+.klaim-main-card{background:white;border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
 
-/* Empty state */
-.doc-empty{
-  padding:36px 18px;text-align:center;color:var(--gray);
-}
-.doc-empty .empty-icon{font-size:36px;margin-bottom:10px;display:block;opacity:.5}
-.doc-empty p{font-size:14px;font-weight:600}
-.doc-empty small{font-size:12px;opacity:.7}
+/* ── Stats Bar ── */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1.5px solid var(--cream-dark)}
+.stat-cell{padding:12px 20px;text-align:center;border-right:1px solid var(--cream-dark)}
+.stat-cell:last-child{border-right:none}
+.stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-dark)}
+.stat-k{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 
-/* ── File Item ── */
-.fitem{
-  background:#fff;border:1px solid #e8eef2;
-  border-radius:10px;padding:12px 14px;
-  display:flex;gap:12px;align-items:flex-start;
-  box-shadow:0 1px 4px rgba(0,0,0,.05);
-  transition:border-color .18s,box-shadow .18s,transform .18s;
-  opacity:0;transform:translateY(10px);
-}
-.fitem.revealed{opacity:1;transform:none;transition:opacity .35s ease,transform .35s ease,border-color .18s,box-shadow .18s}
-.fitem:hover{border-color:var(--teal-dark);box-shadow:0 3px 10px rgba(9,78,88,.1)}
+/* ── Klaim Content 2-col ── */
+.klaim-content{display:grid;grid-template-columns:240px 1fr;min-height:400px}
+.klaim-file-col{border-right:1.5px solid var(--cream-dark);display:flex;flex-direction:column;background:#f7f9f9}
+.klaim-file-col-head{padding:10px 14px 8px;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--cream-dark);flex-shrink:0}
+.klaim-file-list{flex:1;overflow-y:auto}
+.file-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background .15s;position:relative}
+.file-item:last-child{border-bottom:none}
+.file-item:hover{background:rgba(9,78,88,.04)}
+.file-item.active{background:#e8f5f4;border-left:3px solid var(--teal-dark)}
+.file-item.active .fi-name{color:var(--teal-dark)}
+.fi-icon{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px}
+.fi-icon.fi-pdf{background:#fce8e8}
+.fi-icon.fi-ppt{background:#fff3e0}
+.fi-icon.fi-default{background:#f0f4f5}
+.fi-info{flex:1;min-width:0}
+.fi-name{font-size:12px;font-weight:700;color:var(--dark-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.fi-meta{font-size:10px;color:var(--gray)}
+.fi-del{color:var(--gray-light);font-size:16px;line-height:1;opacity:0;transition:opacity .15s;flex-shrink:0;background:none;border:none;cursor:pointer;padding:2px 4px}
+.file-item:hover .fi-del{opacity:1}
+.fi-del:hover{color:var(--red)!important}
+.file-empty{padding:28px 16px;text-align:center;color:var(--gray-light);font-size:12px}
 
-/* File type icon badge */
-.ftype-icon{
-  width:36px;height:36px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;
-  font-family:'Space Mono',monospace;letter-spacing:0;
-}
-.ftype-pdf{background:#fce8e8;color:#c0392b}
-.ftype-ppt{background:#fff3e0;color:#e65100}
-.ftype-default{background:#e8eef2;color:var(--gray)}
+/* ── Viewer Col ── */
+.klaim-viewer-col{display:flex;flex-direction:column;min-width:0}
+.klaim-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;color:var(--gray)}
+.klaim-empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.klaim-empty p{font-size:14px;font-weight:700;margin-bottom:4px}
+.klaim-empty small{font-size:12px;color:var(--gray-light)}
 
-/* File info */
-.finfo{flex:1;min-width:0}
-.fname-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.fname{
-  font-weight:700;color:var(--dark);font-size:13px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;
-  cursor:pointer;
-}
-.fname:hover{color:var(--teal)}
-.fname-input{
-  display:none;font-size:13px;font-weight:700;color:var(--dark);
-  border:1.5px solid var(--teal);border-radius:5px;padding:2px 7px;
-  font-family:'Nunito Sans',sans-serif;background:#fff;
-  width:200px;
-}
-.pencil-btn{
-  background:none;border:none;cursor:pointer;
-  color:var(--gray-light);font-size:13px;padding:0 2px;
-  transition:color .15s;opacity:0;
-}
-.fitem:hover .pencil-btn{opacity:1}
-.pencil-btn:hover{color:var(--teal)}
+/* ── Doc Detail ── */
+.doc-detail{flex:1;padding:24px;display:flex;flex-direction:column;gap:16px}
+.dd-header{display:flex;align-items:flex-start;gap:14px}
+.dd-type-icon{width:48px;height:48px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'Space Mono',monospace}
+.dd-type-pdf{background:#fce8e8;color:#c0392b}
+.dd-type-ppt{background:#fff3e0;color:#e65100}
+.dd-type-default{background:#f0f4f5;color:var(--gray)}
+.dd-title-area{flex:1;min-width:0}
+.dd-title{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:4px;word-break:break-word}
+.dd-title-input{display:none;font-size:15px;font-weight:800;color:var(--dark);border:1.5px solid var(--teal);border-radius:6px;padding:4px 8px;font-family:'Nunito Sans',sans-serif;width:100%}
+.dd-desc{font-size:12px;color:var(--gray);cursor:pointer;line-height:1.5}
+.dd-desc.empty{color:var(--gray-light);font-style:italic}
+.dd-desc-input{display:none;width:100%;font-size:12px;color:var(--dark);border:1.5px solid var(--teal);border-radius:6px;padding:5px 8px;font-family:'Nunito Sans',sans-serif;resize:none;margin-top:4px}
+.dd-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--gray);background:var(--cream);border-radius:8px;padding:10px 14px}
+.dd-meta-item{display:flex;align-items:center;gap:4px}
+.dd-meta-item strong{color:var(--dark-2)}
+.dd-actions{display:flex;gap:10px;flex-wrap:wrap}
+.dd-btn-dl{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;background:var(--teal-dark);color:white;font-size:13px;font-weight:700;transition:background .15s}
+.dd-btn-dl:hover{background:var(--teal)}
+.dd-btn-open{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;border:1.5px solid var(--teal-dark);color:var(--teal-dark);font-size:13px;font-weight:700;background:none;transition:.15s}
+.dd-btn-open:hover{background:rgba(9,78,88,.05)}
+.dd-btn-del{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;background:none;border:1.5px solid #e0e0e0;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;transition:.15s;font-family:'Nunito Sans',sans-serif}
+.dd-btn-del:hover{background:#fce8e8;border-color:#f5c6c6}
+.dd-rename-btn{background:none;border:none;cursor:pointer;color:var(--gray-light);font-size:13px;padding:2px 5px;transition:color .15s;margin-left:4px}
+.dd-rename-btn:hover{color:var(--teal)}
 
-.fdesc{
-  font-size:11px;color:var(--gray);margin-top:4px;line-height:1.4;
-  cursor:pointer;min-height:16px;
-}
-.fdesc.empty{color:var(--gray-light);font-style:italic}
-.fdesc:hover{color:var(--teal)}
-.fdesc-input{
-  display:none;width:100%;font-size:11px;color:var(--dark);
-  border:1.5px solid var(--teal);border-radius:5px;padding:3px 7px;
-  font-family:'Nunito Sans',sans-serif;background:#fff;
-  resize:none;margin-top:4px;
-}
-
-.fmeta{font-size:11px;color:#aaa;margin-top:5px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.ftype-badge{
-  font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;
-  font-family:'Space Mono',monospace;
-}
-.ftype-badge.pdf{background:#fce8e8;color:#c0392b}
-.ftype-badge.ppt{background:#fff3e0;color:#e65100}
-.ftype-badge.default{background:#e8eef2;color:var(--gray)}
-
-/* Actions */
-.factions{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-top:1px}
-.fbtn-dl{
-  font-size:11px;padding:5px 10px;
-  background:var(--teal-dark);color:#fff;border-radius:6px;
-  text-decoration:none;font-weight:700;white-space:nowrap;
-  transition:background .15s;display:flex;align-items:center;gap:4px;
-}
-.fbtn-dl:hover{background:var(--teal)}
-.fbtn-open{
-  font-size:11px;padding:5px 10px;
-  background:#e8f4f6;color:var(--teal-dark);border-radius:6px;
-  text-decoration:none;font-weight:700;white-space:nowrap;
-  transition:background .15s;display:flex;align-items:center;gap:4px;border:1px solid #c8dde1;
-}
-.fbtn-open:hover{background:#d0eaee}
-.fbtn-del{
-  background:none;border:1px solid #e0e0e0;
-  border-radius:6px;padding:5px 7px;
-  cursor:pointer;color:var(--red);font-size:13px;
-  transition:background .15s;
-}
-.fbtn-del:hover{background:#fdecea;border-color:#f5c0bb}
-
-/* ── Delete Confirm Modal ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(18,40,48,.5);z-index:200;
-  align-items:center;justify-content:center;
-}
+/* ── Delete Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(18,40,48,.5);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal{
-  background:white;border-radius:16px;
-  padding:26px;max-width:360px;width:90%;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
-  animation:modal-in .2s ease;
-}
+.modal{background:white;border-radius:16px;padding:26px;max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modal-in .2s ease}
 @keyframes modal-in{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 .modal h3{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:8px}
 .modal p{font-size:13px;color:var(--gray);margin-bottom:18px;line-height:1.5}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end}
-.btn-cancel{
-  padding:8px 18px;border-radius:50px;
-  border:1.5px solid var(--cream-dark);background:var(--cream);
-  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
-  color:var(--gray);cursor:pointer;transition:.2s;
-}
+.btn-cancel{padding:8px 18px;border-radius:50px;border:1.5px solid var(--cream-dark);background:var(--cream);font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;color:var(--gray);cursor:pointer;transition:.2s}
 .btn-cancel:hover{border-color:var(--gray-light);color:var(--dark)}
-.btn-confirm-delete{
-  padding:8px 18px;border-radius:50px;
-  background:var(--red);color:white;border:none;
-  font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;transition:.2s;
-}
+.btn-confirm-delete{padding:8px 18px;border-radius:50px;background:var(--red);color:white;border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-confirm-delete:hover{background:#a93226}
 
-/* ── Back Button ── */
-.back-btn-casemix {
-  display: inline-block;
-  color: var(--teal-dark, #094e58);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.back-btn-casemix:hover { opacity: 1; }
-
-/* Mobile upload toggle */
-.mobile-upload-toggle {
-  display: none;
-}
-@media (max-width: 768px) {
-  .mobile-upload-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #094e58;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .mobile-upload-toggle .toggle-arrow {
-    transition: transform 0.25s;
-    font-style: normal;
-  }
-  .mobile-upload-toggle.collapsed .toggle-arrow {
-    transform: rotate(-90deg);
-  }
-  .upload-collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 2000px;
-  }
-  .upload-collapsible.collapsed {
-    max-height: 0;
-  }
-}
-
 /* ── Responsive ── */
+@media(max-width:900px){
+  .ud-grid{grid-template-columns:1fr}
+  .klaim-content{grid-template-columns:200px 1fr}
+}
 @media(max-width:768px){
-  .two-col{grid-template-columns:1fr}
-  .page-body{padding:14px 16px}
+  .page-header{padding:12px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .upload-drawer-btn{width:100%;justify-content:center}
+  .ud-inner{padding:14px 16px 18px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .stat-cell:nth-child(2){border-right:none}
+  .stat-cell:nth-child(1),.stat-cell:nth-child(2){border-bottom:1px solid var(--cream-dark)}
+  .page-body{padding:14px 14px 60px}
+  .klaim-content{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .klaim-file-col{border-right:none;border-bottom:1.5px solid var(--cream-dark)}
+  .klaim-file-list{max-height:200px}
+  .doc-detail{padding:16px}
 }
 @media(max-width:600px){
   .navbar{padding:0 4%}
   .nav-breadcrumb{display:none}
-  .fitem{flex-wrap:wrap}
-  .factions{width:100%;justify-content:flex-end;margin-top:8px}
 }
 @media(max-width:480px){
-  .upload-btn{font-size:13px;padding:10px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
   .modal-actions{flex-direction:column-reverse}
   .btn-cancel,.btn-confirm-delete{width:100%;text-align:center}
 }
@@ -372,91 +240,121 @@ a{text-decoration:none;color:inherit}
   </div>
 </nav>
 
-<!-- Page Body -->
-<div class="page-body">
-  <a href="/casemix" class="back-btn-casemix">← Dashboard Casemix</a>
-  <div class="two-col">
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="ph-left">
+    <a href="/casemix" class="ph-back">← Dashboard Casemix</a>
+    <h1>📊 Utilization Review</h1>
+    <p class="ph-desc">Laporan UR — dokumen PPTX dan PDF sesi review</p>
+  </div>
+  <button class="upload-drawer-btn" id="uploadDrawerBtn" onclick="toggleUploadDrawer()">⬆️ Upload UR</button>
+</div>
 
-    <!-- LEFT: Upload Card -->
-    <div class="col-left">
-    <button class="mobile-upload-toggle" onclick="toggleUpload(this)" id="uploadToggle">
-      <span>⬆️ Form Upload</span>
-      <i class="toggle-arrow">▼</i>
-    </button>
-    <div class="upload-collapsible" id="uploadCollapsible">
-    <div class="card">
-      <div class="card-head">
-        <h2>📤 Upload UR (PPTX/PDF)</h2>
+<!-- UPLOAD DRAWER -->
+<div class="upload-drawer" id="uploadDrawer">
+  <div class="ud-inner">
+    <div class="ud-grid">
+      <!-- Left: drop zone + preview -->
+      <div>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" name="file" accept=".pdf,.pptx,.ppt">
+          <span class="drop-icon">📊</span>
+          <div class="drop-text">Seret file ke sini atau <strong>klik untuk browse</strong></div>
+          <div class="drop-hint">Format: PPTX, PPT, PDF</div>
+        </div>
+        <div class="file-preview" id="file-preview">
+          <span class="fp-icon" id="fp-icon">📄</span>
+          <div>
+            <div class="fp-name" id="fp-name"></div>
+            <div class="fp-size" id="fp-size"></div>
+          </div>
+          <span class="fp-remove" id="fp-remove" title="Hapus pilihan">✕</span>
+        </div>
+        <div class="upload-msg" id="upload-msg"></div>
       </div>
-      <div class="card-body">
-        <form id="upload-form" enctype="multipart/form-data">
-
-          <div class="drop-zone" id="drop-zone">
-            <input type="file" id="file-input" name="file" accept=".pdf,.pptx,.ppt">
-            <span class="drop-icon">📊</span>
-            <div class="drop-text">Seret file ke sini atau <strong>klik untuk browse</strong></div>
-            <div class="drop-hint">Format: PPTX, PPT, PDF</div>
-          </div>
-
-          <div class="file-preview" id="file-preview">
-            <span class="fp-icon" id="fp-icon">📄</span>
-            <div>
-              <div class="fp-name" id="fp-name"></div>
-              <div class="fp-size" id="fp-size"></div>
-            </div>
-            <span class="fp-remove" id="fp-remove" title="Hapus pilihan">✕</span>
-          </div>
-
-          <div class="form-group">
-            <label for="title-input">Judul <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
-            <input type="text" id="title-input" name="title" placeholder="Judul dokumen UR (opsional)">
-          </div>
-
-          <div class="form-group">
-            <label for="desc-input">Deskripsi <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
-            <textarea id="desc-input" name="description" rows="2" placeholder="Keterangan singkat..."></textarea>
-          </div>
-
-          <button type="submit" class="upload-btn" id="upload-btn" disabled>
-            📤 Upload Dokumen UR
-          </button>
-
-        </form>
-
+      <!-- Right: title, desc, button, progress -->
+      <div>
+        <div class="form-group">
+          <label for="title-input">Judul <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+          <input type="text" id="title-input" name="title" placeholder="Judul dokumen UR (opsional)">
+        </div>
+        <div class="form-group">
+          <label for="desc-input">Deskripsi <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+          <textarea id="desc-input" name="description" rows="2" placeholder="Keterangan singkat..."></textarea>
+        </div>
+        <button type="button" class="upload-btn" id="upload-btn" disabled onclick="submitUpload()">
+          📤 Upload Dokumen UR
+        </button>
         <div class="upload-progress" id="upload-progress">
           <div class="upload-progress-bar" id="progress-bar"></div>
         </div>
-        <div class="upload-msg" id="upload-msg"></div>
-
-        <!-- Last upload stat -->
-        <div class="stat-last-wrap" id="stat-last-wrap">
-          Upload terakhir: <span id="stat-last">—</span>
-        </div>
-
       </div>
     </div>
-    </div><!-- /.upload-collapsible -->
-    </div><!-- /.col-left -->
+  </div>
+</div>
 
-    <!-- RIGHT: File List Card -->
-    <div class="card">
-      <div class="card-head">
-        <h2>📋 Dokumen UR</h2>
-        <span class="doc-count" id="doc-count">0</span>
-      </div>
+<!-- PAGE BODY -->
+<div class="page-body">
+  <div class="klaim-main-card">
 
-      <div id="doc-container">
-        <div class="doc-empty" id="doc-empty">
-          <span class="empty-icon">📊</span>
-          <p>Belum ada dokumen UR</p>
-          <small>Upload laporan UR menggunakan form di sebelah kiri</small>
-        </div>
-        <div class="file-list" id="file-list" style="display:none"></div>
-      </div>
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-v" id="stat-count">—</div><div class="stat-k">Dokumen UR</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-last">—</div><div class="stat-k">Upload Terakhir</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-size">—</div><div class="stat-k">Total Ukuran</div></div>
     </div>
 
-  </div><!-- .two-col -->
-</div><!-- .page-body -->
+    <!-- 2-column: file list kiri | viewer kanan -->
+    <div class="klaim-content">
+
+      <!-- LEFT 240px: file list -->
+      <div class="klaim-file-col">
+        <div class="klaim-file-col-head">📋 Daftar Dokumen UR</div>
+        <div class="klaim-file-list" id="file-list">
+          <div class="file-empty">Belum ada dokumen UR</div>
+        </div>
+      </div>
+
+      <!-- RIGHT 1fr: detail viewer -->
+      <div class="klaim-viewer-col">
+        <div class="klaim-empty" id="doc-empty-state">
+          <span class="ei">📊</span>
+          <p>Pilih dokumen di sebelah kiri</p>
+          <small>atau upload dokumen UR baru</small>
+        </div>
+        <div class="doc-detail" id="doc-detail" style="display:none">
+          <div class="dd-header">
+            <div class="dd-type-icon dd-type-default" id="dd-type-icon">?</div>
+            <div class="dd-title-area">
+              <div style="display:flex;align-items:center;gap:4px">
+                <span class="dd-title" id="dd-title">—</span>
+                <button class="dd-rename-btn" onclick="startRenameDD()" title="Ubah judul">✏️</button>
+              </div>
+              <input class="dd-title-input" id="dd-title-input" type="text"
+                onkeydown="if(event.key==='Enter')saveRenameDD();else if(event.key==='Escape')cancelRenameDD();"
+                onblur="saveRenameDD()">
+              <div class="dd-desc empty" id="dd-desc" onclick="startDescDD()">Tambah keterangan...</div>
+              <textarea class="dd-desc-input" id="dd-desc-input" rows="2"
+                onkeydown="if(event.key==='Escape')cancelDescDD();"
+                onblur="saveDescDD()"></textarea>
+            </div>
+          </div>
+          <div class="dd-meta">
+            <span class="dd-meta-item">📅 <strong id="dd-date">—</strong></span>
+            <span class="dd-meta-item">📦 <strong id="dd-size">—</strong></span>
+            <span class="dd-meta-item">🗂️ <strong id="dd-ext">—</strong></span>
+          </div>
+          <div class="dd-actions">
+            <a class="dd-btn-dl" id="dd-btn-dl" href="#">↓ Unduh</a>
+            <a class="dd-btn-open" id="dd-btn-open" href="#" target="_blank">↗ Buka</a>
+            <button class="dd-btn-del" onclick="openDelCurrent()">🗑 Hapus</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Delete Confirm Modal -->
 <div class="modal-overlay" id="modal-overlay">
@@ -475,34 +373,58 @@ const SECTION = 'ur';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function escHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function escAttr(s) {
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/'/g,'&#39;')
-    .replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
 function fmtSize(bytes) {
   if (!bytes || bytes < 1024) return bytes ? bytes + ' B' : '';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
   return (bytes / 1024 / 1024).toFixed(1) + ' MB';
 }
-function fileExt(name) {
-  return (name || '').split('.').pop().toLowerCase();
+function fmtSz(b) {
+  if (!b) return '—';
+  if (b < 1048576) return (b / 1024).toFixed(0) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
+function sizeNotice(orig, comp) {
+  if (!orig || !comp) return '';
+  const pct = orig > comp ? Math.round((1 - comp / orig) * 100) : 0;
+  return pct > 1
+    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
+    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
+}
+function showMsg(text, type) {
+  const el = document.getElementById('upload-msg');
+  el.innerHTML = text;
+  el.className = `upload-msg show ${type}`;
+  setTimeout(() => { el.className = 'upload-msg'; el.innerHTML = ''; }, 5000);
 }
 function fileIcon(name) {
-  const ext = fileExt(name);
+  const ext = (name || '').split('.').pop().toLowerCase();
   if (ext === 'pdf') return '📕';
-  if (['pptx','ppt'].includes(ext)) return '📊';
+  if (['pptx', 'ppt'].includes(ext)) return '📊';
   return '📄';
 }
 
-// ── File Input Handling ───────────────────────────────────────────────────────
+// ── Upload Drawer ─────────────────────────────────────────────────────────────
+function toggleUploadDrawer() {
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  const isOpen = drawer.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = isOpen ? '✕ Tutup' : '⬆️ Upload UR';
+}
+function closeUploadDrawer() {
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = '⬆️ Upload UR';
+}
+
+// ── File Input ────────────────────────────────────────────────────────────────
 const dropZone    = document.getElementById('drop-zone');
 const fileInput   = document.getElementById('file-input');
 const filePreview = document.getElementById('file-preview');
@@ -526,8 +448,6 @@ function clearFile() {
 
 fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
 document.getElementById('fp-remove').addEventListener('click', clearFile);
-
-// Drag & Drop
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
@@ -537,13 +457,8 @@ dropZone.addEventListener('drop', e => {
   if (file) { fileInput.files = e.dataTransfer.files; setFile(file); }
 });
 
-// ── Upload Form ───────────────────────────────────────────────────────────────
-const uploadProgress = document.getElementById('upload-progress');
-const progressBar    = document.getElementById('progress-bar');
-const uploadMsg      = document.getElementById('upload-msg');
-
-document.getElementById('upload-form').addEventListener('submit', async e => {
-  e.preventDefault();
+// ── Upload ────────────────────────────────────────────────────────────────────
+async function submitUpload() {
   if (!selectedFile) return;
 
   const fd = new FormData();
@@ -555,8 +470,9 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
 
   uploadBtn.disabled = true;
   uploadBtn.innerHTML = '⏳ Mengupload...';
-  uploadProgress.classList.add('show');
-  uploadMsg.className = 'upload-msg';
+  const progressEl = document.getElementById('upload-progress');
+  const progressBar = document.getElementById('progress-bar');
+  progressEl.classList.add('show');
 
   let p = 0;
   const pInterval = setInterval(() => {
@@ -575,176 +491,187 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
       clearFile();
       document.getElementById('title-input').value = '';
       document.getElementById('desc-input').value = '';
-      setTimeout(() => { progressBar.style.width = '0%'; uploadProgress.classList.remove('show'); }, 1000);
-      loadDocs();
+      setTimeout(() => { progressBar.style.width = '0%'; progressEl.classList.remove('show'); }, 1000);
+      await loadDocs();
+      setTimeout(closeUploadDrawer, 1200);
     } else {
       const err = await res.json().catch(() => ({}));
       showMsg(`❌ Gagal: ${err.error || res.statusText}`, 'error');
       progressBar.style.width = '0%';
-      uploadProgress.classList.remove('show');
+      progressEl.classList.remove('show');
     }
   } catch (err) {
     clearInterval(pInterval);
     showMsg(`❌ Error jaringan: ${err.message}`, 'error');
     progressBar.style.width = '0%';
-    uploadProgress.classList.remove('show');
+    progressEl.classList.remove('show');
   }
 
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '📤 Upload Dokumen UR';
-});
-
-function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
-function sizeNotice(orig,comp){
-  if(!orig||!comp) return '';
-  const pct = orig>comp ? Math.round((1-comp/orig)*100) : 0;
-  return pct>1
-    ? `<br><small style="opacity:.7;font-size:11px">📦 ${fmtSz(orig)} → ${fmtSz(comp)} (hemat ${pct}%)</small>`
-    : `<br><small style="opacity:.7;font-size:11px">📦 Ukuran: ${fmtSz(comp)}</small>`;
-}
-function showMsg(text, type) {
-  uploadMsg.innerHTML = text;
-  uploadMsg.className = `upload-msg show ${type}`;
-  setTimeout(() => { uploadMsg.className = 'upload-msg'; uploadMsg.innerHTML=''; }, 5000);
 }
 
-// ── Inline Rename ─────────────────────────────────────────────────────────────
-function startRename(n) {
-  var sp  = document.getElementById('fn' + n);
-  var inp = document.getElementById('fni' + n);
-  inp.value = sp.textContent.trim();
-  sp.style.display  = 'none';
-  inp.style.display = 'inline-block';
-  inp.focus(); inp.select();
-}
-function saveRename(n) {
-  var sp  = document.getElementById('fn' + n);
-  var inp = document.getElementById('fni' + n);
-  if (inp.value.trim()) sp.textContent = inp.value.trim();
-  sp.style.display  = 'inline';
-  inp.style.display = 'none';
-}
+// ── State ─────────────────────────────────────────────────────────────────────
+let allDocs = [];
+let activeDocId = null;
 
-// ── Inline Description ────────────────────────────────────────────────────────
-function startDesc(n) {
-  var sp  = document.getElementById('fd' + n);
-  var inp = document.getElementById('fdi' + n);
-  inp.value = sp.dataset.raw || '';
-  sp.style.display  = 'none';
-  inp.style.display = 'block';
-  inp.focus();
-}
-function saveDesc(n) {
-  var sp  = document.getElementById('fd' + n);
-  var inp = document.getElementById('fdi' + n);
-  sp.dataset.raw = inp.value.trim();
-  if (inp.value.trim()) {
-    sp.textContent = inp.value.trim();
-    sp.classList.remove('empty');
-  } else {
-    sp.textContent = 'Tambah keterangan...';
-    sp.classList.add('empty');
+// ── Render Docs ───────────────────────────────────────────────────────────────
+function renderDocs(docs) {
+  allDocs = docs;
+  const totalSize = docs.reduce((s, d) => s + (d.size || 0), 0);
+  const latest = docs.length ? (docs[0].uploaded_at_display || docs[0].uploaded_at?.slice(0, 10) || '—') : '—';
+  document.getElementById('stat-count').textContent = docs.length || '—';
+  document.getElementById('stat-last').textContent  = docs.length ? latest : '—';
+  document.getElementById('stat-size').textContent  = docs.length ? fmtSz(totalSize) : '—';
+
+  const listEl = document.getElementById('file-list');
+  if (!docs.length) {
+    listEl.innerHTML = '<div class="file-empty">Belum ada dokumen UR</div>';
+    document.getElementById('doc-empty-state').style.display = '';
+    document.getElementById('doc-detail').style.display = 'none';
+    activeDocId = null;
+    return;
   }
-  sp.style.display  = 'block';
-  inp.style.display = 'none';
+
+  listEl.innerHTML = docs.map(d => {
+    const fname     = d.original_name || d.filename || '';
+    const ext       = fname.split('.').pop().toLowerCase();
+    const iconClass = ext === 'pdf' ? 'fi-pdf' : ['pptx', 'ppt'].includes(ext) ? 'fi-ppt' : 'fi-default';
+    const iconChar  = ext === 'pdf' ? '📕' : ['pptx', 'ppt'].includes(ext) ? '📊' : '📄';
+    const title     = d.title || fname;
+    const date      = d.uploaded_at_display || d.uploaded_at?.slice(0, 10) || '—';
+    const sz        = fmtSz(d.size || 0);
+    const safeId    = escAttr(String(d.id));
+    return `<div class="file-item${String(d.id) === String(activeDocId) ? ' active' : ''}" id="fitem-${safeId}" onclick="selectDoc('${safeId}')">
+      <div class="fi-icon ${iconClass}">${iconChar}</div>
+      <div class="fi-info"><div class="fi-name" title="${escAttr(title)}">${escHtml(title)}</div><div class="fi-meta">${date}${sz && sz !== '—' ? ' · ' + sz : ''}</div></div>
+      <button class="fi-del" onclick="event.stopPropagation();openDel('${safeId}','${escAttr(title)}')">×</button>
+    </div>`;
+  }).join('');
+
+  if (activeDocId && docs.find(d => String(d.id) === String(activeDocId))) {
+    selectDoc(activeDocId);
+  } else if (docs.length) {
+    selectDoc(String(docs[0].id));
+  }
+}
+
+// ── Select Doc ────────────────────────────────────────────────────────────────
+function selectDoc(id) {
+  activeDocId = String(id);
+  document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('fitem-' + id)?.classList.add('active');
+
+  const d = allDocs.find(x => String(x.id) === String(id));
+  if (!d) return;
+
+  const fname  = d.original_name || d.filename || '';
+  const ext    = fname.split('.').pop().toLowerCase();
+  const title  = d.title || fname;
+  const desc   = d.description || '';
+  const date   = d.uploaded_at_display || d.uploaded_at?.slice(0, 10) || '—';
+  const sz     = fmtSz(d.size || 0);
+  const url    = d.file_url || `/casemix/files/ur/${encodeURIComponent(fname)}`;
+  const extUp  = fname.split('.').pop().toUpperCase() || '?';
+
+  document.getElementById('dd-type-icon').textContent = extUp === 'PPTX' ? 'PPT' : extUp;
+  document.getElementById('dd-type-icon').className = 'dd-type-icon dd-type-' + (ext === 'pdf' ? 'pdf' : ['pptx', 'ppt'].includes(ext) ? 'ppt' : 'default');
+
+  const titleEl = document.getElementById('dd-title');
+  titleEl.textContent = title;
+  titleEl.style.display = 'inline';
+  document.getElementById('dd-title-input').style.display = 'none';
+
+  const descEl = document.getElementById('dd-desc');
+  descEl.textContent = desc || 'Tambah keterangan...';
+  descEl.dataset.raw = desc;
+  descEl.className = 'dd-desc' + (desc ? '' : ' empty');
+  document.getElementById('dd-desc-input').style.display = 'none';
+
+  document.getElementById('dd-date').textContent = date;
+  document.getElementById('dd-size').textContent = sz || '—';
+  document.getElementById('dd-ext').textContent  = extUp;
+
+  const dlBtn = document.getElementById('dd-btn-dl');
+  dlBtn.href = url;
+  dlBtn.setAttribute('download', fname);
+  document.getElementById('dd-btn-open').href = url;
+
+  document.getElementById('doc-empty-state').style.display = 'none';
+  document.getElementById('doc-detail').style.display = 'flex';
+}
+
+// ── Inline Rename (detail panel) ──────────────────────────────────────────────
+function startRenameDD() {
+  const t = document.getElementById('dd-title');
+  const i = document.getElementById('dd-title-input');
+  i.value = t.textContent;
+  t.style.display = 'none';
+  i.style.display = 'block';
+  i.focus(); i.select();
+}
+function saveRenameDD() {
+  const i = document.getElementById('dd-title-input');
+  if (i.style.display === 'none') return;
+  const v = i.value.trim();
+  if (v) {
+    document.getElementById('dd-title').textContent = v;
+    const d = allDocs.find(x => String(x.id) === String(activeDocId));
+    if (d) d.title = v;
+    try { document.querySelector(`#fitem-${CSS.escape(activeDocId)} .fi-name`).textContent = v; } catch (e) {}
+  }
+  document.getElementById('dd-title').style.display = 'inline';
+  i.style.display = 'none';
+}
+function cancelRenameDD() {
+  document.getElementById('dd-title').style.display = 'inline';
+  document.getElementById('dd-title-input').style.display = 'none';
+}
+
+// ── Inline Desc (detail panel) ────────────────────────────────────────────────
+function startDescDD() {
+  const sp = document.getElementById('dd-desc');
+  const i  = document.getElementById('dd-desc-input');
+  i.value = sp.dataset.raw || '';
+  sp.style.display = 'none';
+  i.style.display = 'block';
+  i.focus();
+}
+function saveDescDD() {
+  const sp = document.getElementById('dd-desc');
+  const i  = document.getElementById('dd-desc-input');
+  if (i.style.display === 'none') return;
+  const v = i.value.trim();
+  sp.dataset.raw = v;
+  sp.textContent = v || 'Tambah keterangan...';
+  sp.className = 'dd-desc' + (v ? '' : ' empty');
+  const d = allDocs.find(x => String(x.id) === String(activeDocId));
+  if (d) d.description = v;
+  sp.style.display = 'block';
+  i.style.display = 'none';
+}
+function cancelDescDD() {
+  document.getElementById('dd-desc').style.display = 'block';
+  document.getElementById('dd-desc-input').style.display = 'none';
+}
+
+// ── Open delete from detail panel ─────────────────────────────────────────────
+function openDelCurrent() {
+  if (!activeDocId) return;
+  const d = allDocs.find(x => String(x.id) === String(activeDocId));
+  if (d) openDel(String(d.id), d.title || d.original_name || 'Dokumen');
 }
 
 // ── Load Documents ────────────────────────────────────────────────────────────
-let allDocs = [];
-
 async function loadDocs() {
   try {
     const res = await fetch(`/casemix/api/files/${SECTION}`);
     if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
-    allDocs = data.files || [];
-    renderDocs(allDocs);
+    renderDocs(data.files || []);
   } catch {
-    allDocs = [];
     renderDocs([]);
   }
-}
-
-function renderDocs(docs) {
-  const empty    = document.getElementById('doc-empty');
-  const listEl   = document.getElementById('file-list');
-  const countEl  = document.getElementById('doc-count');
-  const statWrap = document.getElementById('stat-last-wrap');
-  const statLast = document.getElementById('stat-last');
-
-  countEl.textContent = docs.length;
-
-  // Last upload date
-  if (docs.length > 0) {
-    const latest = docs.reduce((a, b) => (a.uploaded_at > b.uploaded_at ? a : b));
-    statLast.textContent = latest.uploaded_at_display || (latest.uploaded_at || '').slice(0, 10) || '—';
-    statWrap.style.display = '';
-  } else {
-    statWrap.style.display = 'none';
-  }
-
-  if (docs.length === 0) {
-    empty.style.display   = '';
-    listEl.style.display  = 'none';
-    listEl.innerHTML      = '';
-    return;
-  }
-
-  empty.style.display  = 'none';
-  listEl.style.display = 'flex';
-
-  listEl.innerHTML = docs.map((d, i) => {
-    const fname = d.original_name || d.filename || '';
-    const ext   = fileExt(fname);
-    const isPdf = ext === 'pdf';
-    const isPpt = ['pptx','ppt'].includes(ext);
-
-    const typeClass  = isPdf ? 'ftype-pdf' : isPpt ? 'ftype-ppt' : 'ftype-default';
-    const typeLabel  = fname.split('.').pop().toUpperCase() || '—';
-    const badgeCls   = isPdf ? 'pdf' : isPpt ? 'ppt' : 'default';
-
-    const displayTitle = escHtml(d.title || fname);
-    const desc         = d.description || '';
-    const date         = d.uploaded_at_display || (d.uploaded_at || '').slice(0, 10) || '—';
-    const size         = fmtSize(d.size);
-    const url          = d.file_url || `/casemix/files/ur/${escAttr(fname)}`;
-    const itemId       = escAttr(String(d.id || ''));
-    const delTitle     = escAttr(d.title || fname);
-
-    return `<div class="fitem" data-id="${itemId}" style="transition-delay:${i * 50}ms">
-  <div class="ftype-icon ${typeClass}">${typeLabel}</div>
-  <div class="finfo">
-    <div class="fname-row">
-      <span class="fname" id="fn${i}" onclick="startRename(${i})" title="Klik untuk rename">${displayTitle}</span>
-      <input class="fname-input" id="fni${i}" onblur="saveRename(${i})" onkeydown="if(event.key==='Enter')saveRename(${i});if(event.key==='Escape')saveRename(${i})">
-      <button class="pencil-btn" onclick="startRename(${i})" title="Rename">✏️</button>
-    </div>
-    <div class="fdesc ${desc ? '' : 'empty'}" id="fd${i}" data-raw="${escAttr(desc)}"
-         onclick="startDesc(${i})">${desc ? escHtml(desc) : 'Tambah keterangan...'}</div>
-    <textarea class="fdesc-input" id="fdi${i}" rows="2"
-              onblur="saveDesc(${i})"
-              onkeydown="if(event.key==='Escape')saveDesc(${i})"></textarea>
-    <div class="fmeta">
-      <span>📅 ${date}</span>
-      ${size ? `<span>·</span><span>${size}</span>` : ''}
-      <span>·</span>
-      <span class="ftype-badge ${badgeCls}">${typeLabel}</span>
-    </div>
-  </div>
-  <div class="factions">
-    <a href="${url}" download class="fbtn-dl">⬇ Unduh</a>
-    <a href="${url}" target="_blank" class="fbtn-open">↗ Buka</a>
-    <button class="fbtn-del" onclick="openDel('${itemId}','${delTitle}')" title="Hapus">🗑</button>
-  </div>
-</div>`;
-  }).join('');
-
-  // Reveal animation
-  requestAnimationFrame(() => {
-    listEl.querySelectorAll('.fitem').forEach((item, i) => {
-      setTimeout(() => item.classList.add('revealed'), i * 60);
-    });
-  });
 }
 
 // ── Delete ────────────────────────────────────────────────────────────────────
@@ -765,28 +692,28 @@ document.getElementById('btn-cancel').addEventListener('click', closeDel);
 
 document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
   if (!pendingDeleteId) return;
+  const deletedId = pendingDeleteId;
   document.getElementById('modal-overlay').classList.remove('show');
+  pendingDeleteId = null;
   try {
-    const res = await fetch(`/casemix/delete/${SECTION}/${pendingDeleteId}`, { method: 'DELETE' });
+    const res = await fetch(`/casemix/delete/${SECTION}/${deletedId}`, { method: 'DELETE' });
     if (res.ok) {
-      allDocs = allDocs.filter(d => String(d.id) !== String(pendingDeleteId));
+      allDocs = allDocs.filter(d => String(d.id) !== String(deletedId));
+      if (String(deletedId) === String(activeDocId)) {
+        activeDocId = null;
+        document.getElementById('doc-empty-state').style.display = '';
+        document.getElementById('doc-detail').style.display = 'none';
+      }
       renderDocs(allDocs);
     }
   } catch (err) {
     alert('Gagal menghapus: ' + err.message);
   }
-  pendingDeleteId = null;
 });
 
 document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeDel();
 });
-
-// ── Mobile Upload Toggle ──────────────────────────────────────────────────────
-function toggleUpload(btn) {
-  btn.classList.toggle('collapsed');
-  document.getElementById('uploadCollapsible').classList.toggle('collapsed');
-}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadDocs();

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galeri & Memory — Casemix RS. Wava Husada</title>
+<title>Galeri &amp; Memory — Casemix RS. Wava Husada</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -42,51 +42,22 @@ a{text-decoration:none;color:inherit}
 }
 .nav-back:hover{background:rgba(255,255,255,.2)}
 
-/* ── Page Body ── */
-.page-body{padding:20px 24px}
+/* ── Page header ── */
+.page-header{background:var(--teal-dark);padding:14px 24px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ph-left a.ph-back{color:rgba(255,255,255,.6);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;transition:.15s}
+.ph-left a.ph-back:hover{color:rgba(255,255,255,.9)}
+.ph-left h1{color:white;font-size:18px;font-weight:800;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ph-left .ph-desc{color:rgba(255,255,255,.6);font-size:11px}
+.upload-drawer-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:white;border-radius:10px;padding:9px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.2s;flex-shrink:0;white-space:nowrap}
+.upload-drawer-btn:hover{background:rgba(255,255,255,.2)}
+.upload-drawer-btn.open{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
 
-/* ── Two-column grid ── */
-.two-col{
-  display:grid;
-  grid-template-columns:1.55fr 1fr;
-  gap:16px;
-  align-items:start;
-  max-width:1200px;
-  margin:0 auto;
-}
+/* ── Upload drawer ── */
+.upload-drawer{background:#f4f7f7;border-bottom:2px solid var(--cream-dark);overflow:hidden;max-height:0;transition:max-height .4s ease}
+.upload-drawer.open{max-height:600px}
+.ud-inner{padding:18px 24px 22px;max-width:560px}
 
-/* ── Card base ── */
-.card{
-  background:var(--white);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-/* ── Card header ── */
-.card-header{
-  background:var(--teal-dark);
-  color:white;
-  padding:14px 20px;
-  font-size:15px;
-  font-weight:800;
-  display:flex;align-items:center;gap:8px;
-}
-.card-header .count-badge{
-  background:rgba(255,255,255,.2);
-  color:white;
-  border-radius:50px;
-  padding:2px 10px;
-  font-size:12px;
-  font-family:'Space Mono',monospace;
-  font-weight:700;
-  margin-left:auto;
-}
-
-/* ── Card body ── */
-.card-body{padding:20px}
-
-/* ── Upload zone ── */
+/* ── Drop zone ── */
 .drop-zone{
   border:2px dashed var(--gray-light);border-radius:10px;
   padding:28px 20px;text-align:center;cursor:pointer;
@@ -103,7 +74,7 @@ a{text-decoration:none;color:inherit}
   position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
 }
 
-/* Preview thumbnail */
+/* ── Preview row ── */
 .preview-row{
   display:flex;align-items:center;gap:12px;
   background:var(--cream);border-radius:10px;padding:12px;
@@ -122,7 +93,7 @@ a{text-decoration:none;color:inherit}
 }
 .preview-clear:hover{color:var(--red);background:rgba(192,57,43,.08)}
 
-/* Caption input */
+/* ── Form group ── */
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
 .form-group input{
@@ -132,7 +103,7 @@ a{text-decoration:none;color:inherit}
 }
 .form-group input:focus{border-color:var(--teal);background:white}
 
-/* Upload button */
+/* ── Upload button ── */
 .btn-upload{
   width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
   background:var(--teal-dark);
@@ -150,7 +121,7 @@ a{text-decoration:none;color:inherit}
 .btn-upload.loading .spinner{display:block}
 .btn-upload.loading .btn-label{display:none}
 
-/* Alert */
+/* ── Alerts ── */
 .alert{
   border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;
   margin-top:12px;display:none;align-items:center;gap:8px;
@@ -159,87 +130,62 @@ a{text-decoration:none;color:inherit}
 .alert-ok{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
 .alert-err{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.2)}
 
-/* ── Photo grid (right column) ── */
-.photo-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
+/* ── Page body ── */
+.page-body{padding:20px 24px 60px}
 
-/* Gallery item */
-.gallery-item{
-  background:var(--white);border-radius:8px;overflow:hidden;
-  border:1.5px solid var(--cream-dark);box-shadow:0 2px 8px rgba(18,40,48,.06);
-  opacity:0;transform:scale(0.97);
-  transition:opacity .35s ease, transform .35s ease, box-shadow .25s ease;
-  position:relative;cursor:pointer;
-}
-.gallery-item.revealed{opacity:1;transform:scale(1)}
-.gallery-item:hover{box-shadow:0 6px 24px rgba(18,40,48,.13)}
-.gallery-item:hover .gi-img{transform:scale(1.03)}
-.gallery-item:hover .btn-delete{opacity:1;transform:scale(1)}
+/* ── Main card ── */
+.klaim-main-card{background:white;border-radius:14px;box-shadow:0 4px 20px rgba(18,40,48,.08);overflow:hidden}
 
-.gi-img-wrap{
-  aspect-ratio:4/3;overflow:hidden;background:var(--cream-dark);
-  position:relative;
-}
-.gi-img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .3s ease;display:block;
-}
-.gi-img-placeholder{
-  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-  font-size:32px;color:var(--gray-light);
-}
-.btn-delete{
-  position:absolute;top:6px;right:6px;
-  background:rgba(192,57,43,.85);backdrop-filter:blur(4px);
-  border:none;border-radius:7px;
-  color:white;width:28px;height:28px;cursor:pointer;
-  font-size:12px;display:flex;align-items:center;justify-content:center;
-  opacity:0;transform:scale(0.8);
-  transition:opacity .2s ease, transform .2s ease, background .15s ease;
-  z-index:5;
-}
-.btn-delete:hover{background:var(--red)}
+/* ── Stats bar ── */
+.stats-bar{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1.5px solid var(--cream-dark)}
+.stat-cell{padding:12px 20px;text-align:center;border-right:1px solid var(--cream-dark)}
+.stat-cell:last-child{border-right:none}
+.stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-dark)}
+.stat-k{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 
-.gi-body{padding:8px 10px}
-.gi-caption{
-  font-size:12px;font-weight:700;color:var(--dark);
-  line-height:1.4;margin-bottom:4px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.gi-caption.empty{color:var(--gray-light);font-style:italic;font-weight:400}
-.gi-date{
-  font-size:10px;color:var(--gray);font-family:'Space Mono',monospace;
-  display:flex;align-items:center;gap:3px;
-}
+/* ── 2-column content ── */
+.klaim-content{display:grid;grid-template-columns:240px 1fr;min-height:500px}
+.klaim-file-col{border-right:1.5px solid var(--cream-dark);display:flex;flex-direction:column;background:#f7f9f9}
+.klaim-file-col-head{padding:10px 14px 8px;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--cream-dark);flex-shrink:0}
+.klaim-file-list{flex:1;overflow-y:auto}
 
-/* Empty state */
-.empty-state{
-  grid-column:1/-1;
-  text-align:center;padding:48px 16px;
-  border:2px dashed var(--cream-dark);border-radius:10px;
-}
-.empty-state .es-icon{font-size:40px;margin-bottom:12px;display:block}
-.empty-state .es-title{font-size:14px;font-weight:800;color:var(--gray);margin-bottom:5px}
-.empty-state .es-sub{font-size:12px;color:var(--gray-light)}
+/* ── Photo list items ── */
+.file-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background .15s;position:relative}
+.file-item:last-child{border-bottom:none}
+.file-item:hover{background:rgba(9,78,88,.04)}
+.file-item.active{background:#e8f5f4;border-left:3px solid var(--teal-dark)}
+.file-item.active .fi-name{color:var(--teal-dark)}
+.pi-thumb{width:44px;height:44px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--cream-dark)}
+.fi-info{flex:1;min-width:0}
+.fi-name{font-size:11px;font-weight:700;color:var(--dark-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.fi-meta{font-size:10px;color:var(--gray)}
+.fi-del{color:var(--gray-light);font-size:15px;line-height:1;opacity:0;transition:opacity .15s;flex-shrink:0;background:none;border:none;cursor:pointer;padding:2px 4px}
+.file-item:hover .fi-del{opacity:1}
+.fi-del:hover{color:var(--red)!important}
+.file-empty{padding:28px 16px;text-align:center;color:var(--gray-light);font-size:12px}
 
-/* Skeleton */
-.skeleton-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.skeleton-card{
-  background:var(--cream);border-radius:8px;overflow:hidden;
-  border:1.5px solid var(--cream-dark);
-}
+/* ── Viewer column ── */
+.klaim-viewer-col{display:flex;flex-direction:column;min-width:0}
+.klaim-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;color:var(--gray)}
+.klaim-empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.klaim-empty p{font-size:14px;font-weight:700;margin-bottom:4px}
+.klaim-empty small{font-size:12px;color:var(--gray-light)}
+
+/* ── Photo detail ── */
+.photo-detail{flex:1;display:flex;flex-direction:column;align-items:stretch;padding:16px;gap:12px;overflow-y:auto}
+.pd-img-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--cream-dark);cursor:zoom-in;position:relative;background:#f4f4f4}
+.pd-img{width:100%;max-height:380px;object-fit:contain;display:block}
+.pd-img-hint{position:absolute;bottom:8px;right:10px;font-size:10px;color:rgba(255,255,255,.85);background:rgba(0,0,0,.45);border-radius:50px;padding:2px 8px;pointer-events:none}
+.pd-info{background:var(--cream);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.pd-caption{font-size:14px;font-weight:700;color:var(--dark);line-height:1.4}
+.pd-caption.empty{color:var(--gray-light);font-style:italic;font-weight:400}
+.pd-date{font-size:11px;color:var(--gray)}
+.pd-size{font-size:11px;color:var(--gray)}
+.pd-btn-del{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;background:none;border:1.5px solid #e0e0e0;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;transition:.15s;font-family:'Nunito Sans',sans-serif}
+.pd-btn-del:hover{background:#fce8e8;border-color:#f5c6c6}
+
+/* ── Skeleton ── */
 .skel{background:linear-gradient(90deg, var(--cream-dark) 25%, var(--cream) 50%, var(--cream-dark) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
-.skel-img{aspect-ratio:4/3;width:100%}
-.skel-body{padding:10px;display:flex;flex-direction:column;gap:6px}
-.skel-line{height:11px;border-radius:6px;width:80%}
-.skel-line.short{width:50%;height:9px}
 
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -341,67 +287,19 @@ a{text-decoration:none;color:inherit}
 .btn-del.loading .del-spinner{display:block}
 .btn-del.loading .del-label{display:none}
 
-/* ── Back button ── */
-.back-btn-casemix {
-  display: inline-block;
-  color: var(--teal-dark, #094e58);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.back-btn-casemix:hover { opacity: 1; }
-
-/* ── Mobile upload toggle ── */
-.mobile-upload-toggle {
-  display: none;
-}
-@media (max-width: 768px) {
-  .mobile-upload-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #094e58;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .mobile-upload-toggle .toggle-arrow {
-    transition: transform 0.25s;
-    font-style: normal;
-  }
-  .mobile-upload-toggle.collapsed .toggle-arrow {
-    transform: rotate(-90deg);
-  }
-  .upload-collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 2000px;
-  }
-  .upload-collapsible.collapsed {
-    max-height: 0;
-  }
-}
-
 /* ── Responsive ── */
 @media(max-width:768px){
-  .page-body{padding:14px 12px}
-  .two-col{grid-template-columns:1fr}
-  .nav-breadcrumb{display:none}
+  .page-header{padding:12px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .upload-drawer-btn{width:100%;justify-content:center}
+  .ud-inner{padding:14px 16px 18px}
+  .page-body{padding:14px 14px 60px}
+  .klaim-content{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .klaim-file-col{border-right:none;border-bottom:1.5px solid var(--cream-dark)}
+  .klaim-file-list{max-height:220px}
+  .photo-detail{padding:12px}
 }
-@media(max-width:480px){
-  .photo-grid,.skeleton-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .modal-actions{flex-direction:column-reverse}
-  .btn-cancel,.btn-del{width:100%;justify-content:center}
-}
+@media(max-width:600px){.navbar{padding:0 4%}.nav-breadcrumb{display:none}}
+@media(max-width:480px){.modal-actions{flex-direction:column-reverse}.btn-cancel,.btn-del{width:100%;justify-content:center}}
 </style>
 </head>
 <body>
@@ -419,76 +317,96 @@ a{text-decoration:none;color:inherit}
   <a href="/casemix" class="nav-back">← Casemix</a>
 </nav>
 
+<!-- ── Page Header ── -->
+<div class="page-header">
+  <div class="ph-left">
+    <a href="/casemix" class="ph-back">← Dashboard Casemix</a>
+    <h1>🖼️ Galeri &amp; Memory</h1>
+    <p class="ph-desc">Foto dokumentasi kegiatan Instalasi Casemix</p>
+  </div>
+  <button class="upload-drawer-btn" id="uploadDrawerBtn" onclick="toggleUploadDrawer()">📷 Upload Foto</button>
+</div>
+
+<!-- ── Upload Drawer ── -->
+<div class="upload-drawer" id="uploadDrawer">
+  <div class="ud-inner">
+
+    <div class="drop-zone" id="dropZone">
+      <span class="dz-icon">🖼️</span>
+      <div class="dz-text">Drag &amp; drop foto di sini, atau klik untuk pilih</div>
+      <div class="dz-hint">JPG, PNG, GIF, WEBP · Maks 10 MB</div>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif,.webp">
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-row" id="previewRow" style="display:none">
+      <img class="preview-thumb" id="previewThumb" src="" alt="Preview">
+      <div class="preview-info">
+        <div class="preview-name" id="previewName"></div>
+        <div class="preview-size" id="previewSize"></div>
+      </div>
+      <button class="preview-clear" id="previewClear" title="Batal">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label for="captionInput">Caption / Keterangan</label>
+      <input type="text" id="captionInput" placeholder="Contoh: Rapat koordinasi tim casemix..." maxlength="200">
+    </div>
+
+    <button class="btn-upload" id="btnUpload" disabled>
+      <div class="spinner"></div>
+      <span class="btn-label">📷 Upload Foto</span>
+    </button>
+
+    <div class="alert alert-ok" id="alertOk">✅ <span id="alertOkMsg">Foto berhasil diupload!</span></div>
+    <div class="alert alert-err" id="alertErr">❌ <span id="alertErrMsg">Terjadi kesalahan.</span></div>
+
+  </div>
+</div>
+
 <!-- ── Page Body ── -->
 <div class="page-body">
-  <a href="/casemix" class="back-btn-casemix">← Dashboard Casemix</a>
-  <div class="two-col">
+  <div class="klaim-main-card">
 
-    <!-- LEFT: Upload card -->
-    <div class="card">
-      <div class="card-header">📤 Upload Foto</div>
-      <div class="card-body">
-        <button class="mobile-upload-toggle" onclick="toggleUpload(this)" id="uploadToggle">
-          <span>⬆️ Upload Foto</span>
-          <i class="toggle-arrow">▼</i>
-        </button>
-        <div class="upload-collapsible" id="uploadCollapsible">
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-v" id="stat-count">—</div><div class="stat-k">Foto</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-last">—</div><div class="stat-k">Upload Terakhir</div></div>
+    </div>
 
-        <div class="drop-zone" id="dropZone">
-          <span class="dz-icon">🖼️</span>
-          <div class="dz-text">Drag &amp; drop foto di sini, atau klik untuk pilih</div>
-          <div class="dz-hint">JPG, PNG, GIF, WEBP · Maks 10 MB</div>
-          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif,.webp">
+    <!-- 2-column content -->
+    <div class="klaim-content">
+
+      <!-- LEFT 240px: photo thumbnail list -->
+      <div class="klaim-file-col">
+        <div class="klaim-file-col-head">🖼️ Daftar Foto</div>
+        <div class="klaim-file-list" id="photo-list">
+          <div class="file-empty">Belum ada foto</div>
         </div>
+      </div>
 
-        <!-- Preview -->
-        <div class="preview-row" id="previewRow" style="display:none">
-          <img class="preview-thumb" id="previewThumb" src="" alt="Preview">
-          <div class="preview-info">
-            <div class="preview-name" id="previewName"></div>
-            <div class="preview-size" id="previewSize"></div>
+      <!-- RIGHT 1fr: photo detail -->
+      <div class="klaim-viewer-col">
+        <div class="klaim-empty" id="photo-empty">
+          <span class="ei">🖼️</span>
+          <p>Pilih foto di sebelah kiri</p>
+          <small>atau upload foto baru</small>
+        </div>
+        <div class="photo-detail" id="photo-detail" style="display:none">
+          <div class="pd-img-wrap" onclick="openLightboxFromDetail()">
+            <img class="pd-img" id="pd-img" src="" alt="">
+            <div class="pd-img-hint">Klik untuk tampilan penuh</div>
           </div>
-          <button class="preview-clear" id="previewClear" title="Batal">✕</button>
+          <div class="pd-info">
+            <div class="pd-caption" id="pd-caption"></div>
+            <div class="pd-date" id="pd-date"></div>
+            <div class="pd-size" id="pd-size"></div>
+            <button class="pd-btn-del" id="pd-btn-del">🗑️ Hapus Foto</button>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label for="captionInput">Caption / Keterangan</label>
-          <input type="text" id="captionInput" placeholder="Contoh: Rapat koordinasi tim casemix..." maxlength="200">
-        </div>
-
-        <button class="btn-upload" id="btnUpload" disabled>
-          <div class="spinner"></div>
-          <span class="btn-label">📷 Upload Foto</span>
-        </button>
-
-        <div class="alert alert-ok" id="alertOk">✅ <span id="alertOkMsg">Foto berhasil diupload!</span></div>
-        <div class="alert alert-err" id="alertErr">❌ <span id="alertErrMsg">Terjadi kesalahan.</span></div>
-        </div><!-- /upload-collapsible -->
       </div>
+
     </div>
-
-    <!-- RIGHT: Photo grid card -->
-    <div class="card">
-      <div class="card-header">
-        🖼️ Galeri Foto
-        <span class="count-badge" id="countBadge">0</span>
-      </div>
-      <div class="card-body">
-
-        <!-- Skeleton Loader -->
-        <div class="skeleton-grid" id="skeletonGrid">
-          <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div></div></div>
-          <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div></div></div>
-          <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div></div></div>
-          <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div></div></div>
-        </div>
-
-        <!-- Photo Grid -->
-        <div class="photo-grid" id="galleryGrid" style="display:none"></div>
-
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -530,6 +448,7 @@ let gallery = [];          // array of entry objects from API
 let currentIndex = -1;     // lightbox index
 let deleteTargetId = null; // id to delete
 let selectedFile = null;   // File object selected for upload
+let activePhotoId = null;  // id of currently selected photo in list
 
 /* ─────────────────────────────────────────────────────
    Helpers
@@ -542,13 +461,11 @@ function escAttr(str) {
   if (!str) return '';
   return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-
 function fmtBytes(b) {
   if (b < 1024) return b + ' B';
   if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
   return (b / 1048576).toFixed(1) + ' MB';
 }
-
 function fmtSz(b){ if(!b)return'—'; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
 function sizeNotice(orig,comp){
   if(!orig||!comp) return '';
@@ -574,16 +491,34 @@ function showAlert(type, msg) {
 }
 
 /* ─────────────────────────────────────────────────────
+   Upload Drawer
+───────────────────────────────────────────────────── */
+function toggleUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  const isOpen = drawer.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = isOpen ? '✕ Tutup' : '📷 Upload Foto';
+}
+function closeUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = '📷 Upload Foto';
+}
+
+/* ─────────────────────────────────────────────────────
    File Picker / Drag-Drop
 ───────────────────────────────────────────────────── */
-const fileInput   = document.getElementById('fileInput');
-const dropZone    = document.getElementById('dropZone');
-const previewRow  = document.getElementById('previewRow');
+const fileInput    = document.getElementById('fileInput');
+const dropZone     = document.getElementById('dropZone');
+const previewRow   = document.getElementById('previewRow');
 const previewThumb = document.getElementById('previewThumb');
-const previewName = document.getElementById('previewName');
-const previewSize = document.getElementById('previewSize');
+const previewName  = document.getElementById('previewName');
+const previewSize  = document.getElementById('previewSize');
 const previewClear = document.getElementById('previewClear');
-const btnUpload   = document.getElementById('btnUpload');
+const btnUpload    = document.getElementById('btnUpload');
 
 fileInput.addEventListener('change', () => {
   if (fileInput.files[0]) applyFile(fileInput.files[0]);
@@ -642,10 +577,11 @@ btnUpload.addEventListener('click', async () => {
 
     gallery.unshift(data.entry);
     renderGallery();
-    updateStats();
+    selectPhoto(gallery[0].id);
     clearFile();
     document.getElementById('captionInput').value = '';
     showAlert('ok', '✅ Foto berhasil diupload!' + sizeNotice(data.original_size, data.compressed_size));
+    setTimeout(closeUploadDrawer, 1200);
   } catch (e) {
     showAlert('err', e.message || 'Gagal upload. Coba lagi.');
   } finally {
@@ -667,77 +603,84 @@ async function loadGallery() {
     gallery = [];
     showAlert('err', 'Gagal memuat galeri: ' + e.message);
   }
-  document.getElementById('skeletonGrid').style.display = 'none';
-  document.getElementById('galleryGrid').style.display = 'grid';
   renderGallery();
-  updateStats();
 }
 
 /* ─────────────────────────────────────────────────────
-   Render Gallery
+   Render Gallery (list + stats)
 ───────────────────────────────────────────────────── */
 function renderGallery() {
-  const grid = document.getElementById('galleryGrid');
-  document.getElementById('countBadge').textContent = gallery.length;
+  // Stats
+  document.getElementById('stat-count').textContent = gallery.length || '—';
+  const latestDate = gallery.length
+    ? (gallery[0].uploaded_at_display || gallery[0].uploaded_at?.slice(0,10) || '—')
+    : '—';
+  document.getElementById('stat-last').textContent = gallery.length ? latestDate : '—';
 
-  if (gallery.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <span class="es-icon">📷</span>
-        <div class="es-title">Belum ada foto</div>
-        <div class="es-sub">Upload foto kegiatan Instalasi Casemix menggunakan form di sebelah kiri.</div>
-      </div>`;
+  const listEl = document.getElementById('photo-list');
+  if (!gallery.length) {
+    listEl.innerHTML = '<div class="file-empty">Belum ada foto</div>';
+    document.getElementById('photo-empty').style.display = '';
+    document.getElementById('photo-detail').style.display = 'none';
+    activePhotoId = null;
     return;
   }
 
-  grid.innerHTML = gallery.map((entry, idx) => {
-    const capText = entry.caption || '';
-    const capClass = capText ? '' : ' empty';
-    const capDisplay = capText || 'Tanpa keterangan';
-    return `
-    <div class="gallery-item" data-idx="${idx}" data-id="${escAttr(entry.id)}">
-      <div class="gi-img-wrap">
-        <img class="gi-img"
-          src="${escHtml(entry.img_url)}"
-          alt="${escAttr(capText || entry.original_name)}"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gi-img-placeholder" style="display:none">🖼️</div>
-        <button class="btn-delete" data-id="${escAttr(entry.id)}" data-name="${escAttr(entry.original_name)}" title="Hapus foto">🗑️</button>
+  listEl.innerHTML = gallery.map((entry) => {
+    const cap = entry.caption || '';
+    const date = entry.uploaded_at_display || entry.uploaded_at?.slice(0,10) || '';
+    const isActive = entry.id === activePhotoId;
+    return `<div class="file-item${isActive ? ' active' : ''}" id="pitem-${escAttr(entry.id)}" onclick="selectPhoto('${escAttr(entry.id)}')">
+      <img class="pi-thumb" src="${escAttr(entry.img_url || entry.url || '')}" alt="${escAttr(cap)}" loading="lazy" onerror="this.style.background='#e0e0e0'">
+      <div class="fi-info">
+        <div class="fi-name">${escHtml(cap || 'Tanpa keterangan')}</div>
+        <div class="fi-meta">${escHtml(date)}</div>
       </div>
-      <div class="gi-body">
-        <div class="gi-caption${capClass}">${escHtml(capDisplay)}</div>
-        <div class="gi-date">🕐 ${escHtml(entry.uploaded_at_display || '')}${entry.size ? `<span style="font-size:11px;opacity:0.5"> · ${fmtSz(entry.size)}</span>` : ''}</div>
-      </div>
+      <button class="fi-del" onclick="event.stopPropagation();openDeleteModal('${escAttr(entry.id)}','${escAttr(entry.original_name || entry.id)}')" title="Hapus">×</button>
     </div>`;
   }).join('');
 
-  // Staggered reveal animation
-  const items = grid.querySelectorAll('.gallery-item');
-  items.forEach((el, i) => {
-    setTimeout(() => el.classList.add('revealed'), i * 60);
-  });
-
-  // Click foto → lightbox
-  grid.querySelectorAll('.gallery-item').forEach(el => {
-    el.addEventListener('click', e => {
-      if (e.target.closest('.btn-delete')) return;
-      const idx = parseInt(el.dataset.idx, 10);
-      openLightbox(idx);
-    });
-  });
-
-  // Delete buttons
-  grid.querySelectorAll('.btn-delete').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      openDeleteModal(btn.dataset.id, btn.dataset.name);
-    });
-  });
+  if (activePhotoId && gallery.find(e => e.id === activePhotoId)) {
+    selectPhoto(activePhotoId);
+  } else if (gallery.length) {
+    selectPhoto(gallery[0].id);
+  }
 }
 
-function updateStats() {
-  document.getElementById('countBadge').textContent = gallery.length;
+/* ─────────────────────────────────────────────────────
+   Select Photo
+───────────────────────────────────────────────────── */
+function selectPhoto(id) {
+  activePhotoId = id;
+  document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('pitem-' + id)?.classList.add('active');
+
+  const entry = gallery.find(e => e.id === id);
+  if (!entry) return;
+
+  currentIndex = gallery.findIndex(e => e.id === id);
+
+  document.getElementById('pd-img').src = entry.img_url || entry.url || '';
+  document.getElementById('pd-img').alt = entry.caption || '';
+
+  const capEl = document.getElementById('pd-caption');
+  capEl.textContent = entry.caption || 'Tanpa keterangan';
+  capEl.className = 'pd-caption' + (entry.caption ? '' : ' empty');
+
+  document.getElementById('pd-date').textContent = '📅 ' + (entry.uploaded_at_display || entry.uploaded_at?.slice(0,10) || '');
+
+  const sz = entry.size ? fmtSz(entry.size) : '';
+  const szEl = document.getElementById('pd-size');
+  if (szEl) szEl.textContent = sz ? '📦 ' + sz : '';
+
+  document.getElementById('pd-btn-del').onclick = () => openDeleteModal(entry.id, entry.original_name || entry.id);
+
+  document.getElementById('photo-empty').style.display = 'none';
+  document.getElementById('photo-detail').style.display = 'flex';
+}
+
+function openLightboxFromDetail() {
+  if (typeof currentIndex === 'number' && currentIndex >= 0) openLightbox(currentIndex);
 }
 
 /* ─────────────────────────────────────────────────────
@@ -761,14 +704,13 @@ function openLightbox(idx) {
 function closeLightbox() {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
-  currentIndex = -1;
 }
 
 function updateLightbox() {
   if (currentIndex < 0 || currentIndex >= gallery.length) return;
   const entry = gallery[currentIndex];
-  lbImg.src = entry.img_url;
-  lbImg.alt = entry.caption || entry.original_name;
+  lbImg.src = entry.img_url || entry.url || '';
+  lbImg.alt = entry.caption || entry.original_name || '';
   lbCaption.textContent = entry.caption || '';
   lbDate.textContent = entry.uploaded_at_display || '';
   lbCounter.textContent = (currentIndex + 1) + ' / ' + gallery.length;
@@ -777,11 +719,9 @@ function updateLightbox() {
 }
 
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
-
 lightbox.addEventListener('click', e => {
   if (e.target === lightbox) closeLightbox();
 });
-
 lbPrev.addEventListener('click', e => {
   e.stopPropagation();
   if (currentIndex > 0) { currentIndex--; updateLightbox(); }
@@ -790,7 +730,6 @@ lbNext.addEventListener('click', e => {
   e.stopPropagation();
   if (currentIndex < gallery.length - 1) { currentIndex++; updateLightbox(); }
 });
-
 document.addEventListener('keydown', e => {
   if (!lightbox.classList.contains('open')) return;
   if (e.key === 'Escape') closeLightbox();
@@ -828,14 +767,19 @@ modalConfirm.addEventListener('click', async () => {
   modalConfirm.classList.add('loading');
   modalConfirm.disabled = true;
 
+  const deletedId = deleteTargetId;
   try {
-    const res = await fetch('/casemix/delete/galeri/' + deleteTargetId, { method: 'DELETE' });
+    const res = await fetch('/casemix/delete/galeri/' + deletedId, { method: 'DELETE' });
     const data = await res.json();
     if (!res.ok || !data.ok) throw new Error(data.error || 'Gagal menghapus');
 
-    gallery = gallery.filter(e => e.id !== deleteTargetId);
+    gallery = gallery.filter(e => e.id !== deletedId);
+    if (deletedId === activePhotoId) {
+      activePhotoId = null;
+      document.getElementById('photo-empty').style.display = '';
+      document.getElementById('photo-detail').style.display = 'none';
+    }
     renderGallery();
-    updateStats();
     closeDeleteModal();
     showAlert('ok', 'Foto berhasil dihapus.');
   } catch (e) {
@@ -851,14 +795,6 @@ modalConfirm.addEventListener('click', async () => {
    Init
 ───────────────────────────────────────────────────── */
 loadGallery();
-
-/* ─────────────────────────────────────────────────────
-   Mobile Upload Toggle
-───────────────────────────────────────────────────── */
-function toggleUpload(btn) {
-  btn.classList.toggle('collapsed');
-  document.getElementById('uploadCollapsible').classList.toggle('collapsed');
-}
 </script>
 </body>
 </html>
