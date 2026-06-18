@@ -7,6 +7,7 @@ GitHub: https://github.com/JIAkbar/meruno
 
 from flask import Flask, request, redirect, send_from_directory, jsonify, Response
 import os, json, re, datetime, math, io
+WIB = datetime.timezone(datetime.timedelta(hours=7))
 from pathlib import Path
 from io import BytesIO
 
@@ -133,10 +134,10 @@ def _rebuild_meta_from_storage(section):
                     dt = datetime.datetime.strptime(parts[0] + parts[1], '%Y%m%d%H%M%S')
                     uploaded_at = dt.isoformat()
                 except Exception:
-                    uploaded_at = datetime.datetime.now().isoformat()
+                    uploaded_at = datetime.datetime.now(WIB).isoformat()
             else:
                 orig = fname
-                uploaded_at = datetime.datetime.now().isoformat()
+                uploaded_at = datetime.datetime.now(WIB).isoformat()
             meta_info = f.get('metadata') or {}
             size = meta_info.get('size', 0)
             if section == 'galeri':
@@ -352,7 +353,7 @@ def save_archive(ftype, filename, doc_type, info="", doc_id="", sb_url=""):
         "id": doc_id,
         "type": ftype, "filename": filename,
         "doc_type": doc_type, "info": info,
-        "uploaded_at": datetime.datetime.now().isoformat(),
+        "uploaded_at": datetime.datetime.now(WIB).isoformat(),
     }
     if sb_url:
         entry["sb_url"] = sb_url
@@ -469,11 +470,11 @@ def process_excel(file):
         ana = simple_analysis(all_text, file.filename)
         ai  = ai_summarize(all_text[:3000], ana["doc_type"], file.filename)
 
-        doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        doc_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
         data = {
             "id":          doc_id,
             "filename":    file.filename,
-            "uploaded_at": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+            "uploaded_at": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
             "doc_type":    ana["doc_type"],
             "keywords":    ana["keywords"],
             "sheets":      sheets,
@@ -528,11 +529,11 @@ def process_pdf(file):
             first_lines = [l.strip() for l in full_text.split("\n") if l.strip()][:6]
             ai = "Cuplikan konten dokumen:\n" + "\n".join(f"• {l}" for l in first_lines)
 
-        doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        doc_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
         data = {
             "id":          doc_id,
             "filename":    file.filename,
-            "uploaded_at": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+            "uploaded_at": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
             "page_count":  len(pages),
             "doc_type":    ana["doc_type"],
             "keywords":    ana["keywords"],
@@ -882,7 +883,7 @@ def casemix_upload(section):
 def casemix_save_doc(file, section):
     section_dir = CASEMIX_DIR / section
     section_dir.mkdir(parents=True, exist_ok=True)
-    doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    doc_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
     fb = file.read()
@@ -909,8 +910,8 @@ def casemix_save_doc(file, section):
         "original_name":    file.filename,
         "description":      desc,
         "size":             len(fb),
-        "uploaded_at":      datetime.datetime.now().isoformat(),
-        "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "uploaded_at":      datetime.datetime.now(WIB).isoformat(),
+        "uploaded_at_display": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
         "file_url":         sb_url if sb_url else f"/casemix/files/{section}/{stored_name}",
         "section":          section,
     }
@@ -924,7 +925,7 @@ def casemix_save_doc(file, section):
 def casemix_save_galeri(file):
     section_dir = CASEMIX_DIR / "galeri"
     section_dir.mkdir(parents=True, exist_ok=True)
-    doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    doc_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
     safe_fn = re.sub(r'[^\w\-.]', '_', file.filename)
     stored_name = f"{doc_id}_{safe_fn}"
     fb = file.read()
@@ -944,8 +945,8 @@ def casemix_save_galeri(file):
         "caption":          caption,
         "filename":         stored_name,
         "original_name":    file.filename,
-        "uploaded_at":      datetime.datetime.now().isoformat(),
-        "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "uploaded_at":      datetime.datetime.now(WIB).isoformat(),
+        "uploaded_at_display": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
         "img_url":          sb_url if sb_url else f"/casemix/files/galeri/{stored_name}",
         "size":             len(fb),
     }
@@ -1007,13 +1008,13 @@ def casemix_process_klaim(file):
                 "numeric_cols": num_cols,
                 "col_stats":   col_stats,
             })
-        doc_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        doc_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
         entry = {
             "id":               doc_id,
             "title":            request.form.get("title", file.filename),
             "original_name":    file.filename,
-            "uploaded_at":      datetime.datetime.now().isoformat(),
-            "uploaded_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+            "uploaded_at":      datetime.datetime.now(WIB).isoformat(),
+            "uploaded_at_display": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
             "sheets":           sheets,
             "total_rows":       sum(s["row_count"] for s in sheets),
             "size":             original_size,
@@ -1033,15 +1034,15 @@ def casemix_add_news():
     content = request.form.get("content", "").strip()
     if not title:
         return jsonify({"error": "Judul wajib diisi"}), 400
-    news_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    news_id = datetime.datetime.now(WIB).strftime("%Y%m%d_%H%M%S")
     img_original_size = 0
     img_compressed_size = 0
     entry = {
         "id":                 news_id,
         "title":              title,
         "content":            content,
-        "published_at":       datetime.datetime.now().isoformat(),
-        "published_at_display": datetime.datetime.now().strftime("%d %B %Y, %H:%M"),
+        "published_at":       datetime.datetime.now(WIB).isoformat(),
+        "published_at_display": datetime.datetime.now(WIB).strftime("%d %B %Y, %H:%M"),
         "img_url":            None,
     }
     if "image" in request.files:
