@@ -757,7 +757,7 @@ function getFileTypeBadge(ext) {
 function renderSearchResults(docs, isDefault) {
   const container = document.getElementById('sdbResults');
   if (!container) return;
-  const shown = isDefault ? docs.slice(0, 5) : docs;
+  const shown = docs.slice(0, 5);
   if (shown.length === 0) {
     container.innerHTML = '<div class="search-empty">Tidak ada dokumen ditemukan.</div>';
     return;
@@ -774,8 +774,8 @@ function renderSearchResults(docs, isDefault) {
       </div>
       <span class="sri-badge">Casemix</span>
     </div>`).join('') +
-    (isDefault && docs.length > 5
-      ? `<div style="text-align:center;padding:10px 0;font-size:12px;color:rgba(255,255,255,.4)">Menampilkan 5 dari ${docs.length} dokumen — ketik untuk mencari semua</div>`
+    (docs.length > 5
+      ? `<div style="text-align:center;padding:10px 0;font-size:12px;color:rgba(255,255,255,.4)">${isDefault ? 'Menampilkan 5 dari '+docs.length+' dokumen — ketik untuk mencari semua' : '5 dari '+docs.length+' hasil — hapus filter untuk melihat semua'}</div>`
       : '');
 }
 
@@ -803,7 +803,8 @@ function filterSearch() {
     );
   }
 
-  renderSearchResults(results);
+  const isDefault = q.length <= 1;
+  renderSearchResults(results, isDefault);
 }
 
 function doDbSearch() { filterSearch(); }
