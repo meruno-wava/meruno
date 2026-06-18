@@ -463,6 +463,20 @@ let pendingDeleteId = null;
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') }
 function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') }
 function numFmt(n){ return Number(n||0).toLocaleString('id-ID') }
+function fmtRupiah(n){ return 'Rp ' + Math.round(n).toLocaleString('id-ID') }
+function fmtCell(raw, isNumCol){
+  if(!isNumCol) return escHtml(raw);
+  const n = parseFloat(String(raw).replace(/[^0-9.-]/g,''));
+  if(isNaN(n) || raw==='' || raw===null) return escHtml(raw);
+  return n >= 1000000 ? fmtRupiah(n) : numFmt(n);
+}
+function fmtRupiah(n){ return 'Rp ' + Math.round(n).toLocaleString('id-ID') }
+function fmtCell(raw, isNumCol){
+  if(!isNumCol) return escHtml(raw);
+  const n = parseFloat(String(raw).replace(/[^0-9.-]/g,''));
+  if(isNaN(n) || raw==='' || raw===null) return escHtml(raw);
+  return n >= 1000000 ? fmtRupiah(n) : numFmt(n);
+}
 function fmtSize(b){ if(!b||b===0) return '—'; if(b<1048576) return (b/1024).toFixed(0)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
 
 // ── Upload drawer ──────────────────────────────────────────────────────────────
@@ -670,9 +684,10 @@ function renderSheet(k, si){
   const numColIdx = s.headers.map((h,hi) => s.numeric_cols?.includes(h) ? hi : -1).filter(x => x >= 0);
   const headerHtml = s.headers.map(h => `<th>${escHtml(h)}</th>`).join('');
   const rowsHtml   = s.rows.slice(0,200).map(row =>
-    `<tr>${row.map((cell,ci) =>
-      `<td class="${numColIdx.includes(ci)?'numeric':''}" title="${escAttr(cell)}">${escHtml(cell)}</td>`
-    ).join('')}</tr>`
+    `<tr>${row.map((cell,ci) => {
+      const isNum = numColIdx.includes(ci);
+      return `<td class="${isNum?'numeric':''}" title="${escAttr(cell)}">${fmtCell(cell, isNum)}</td>`;
+    }).join('')}</tr>`
   ).join('');
   document.getElementById('table-content').innerHTML =
     `<table><thead><tr>${headerHtml}</tr></thead><tbody>${rowsHtml}</tbody></table>`;
@@ -733,16 +748,4 @@ loadKlaim();
 <script>
 function downloadCurrentFile(){
   const k = allKlaim.find(x => x.id === activeFileId);
-  if(!k || !k.sheets || k.sheets.length === 0) return;
-  const wb = XLSX.utils.book_new();
-  k.sheets.forEach(s => {
-    const aoa = [s.headers, ...s.rows];
-    const ws  = XLSX.utils.aoa_to_sheet(aoa);
-    XLSX.utils.book_append_sheet(wb, ws, s.name || 'Sheet1');
-  });
-  const fname = (k.original_name||k.title||'klaim').replace(/\.xlsx?$/i,'') + '.xlsx';
-  XLSX.writeFile(wb, fname);
-}
-</script>
-</body>
-</html>
+  if(!k || !k.sheets || k.sheets.length === 0)
