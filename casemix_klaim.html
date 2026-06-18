@@ -39,69 +39,83 @@ a{text-decoration:none;color:inherit}
 }
 .nav-back:hover{background:rgba(255,255,255,.2)}
 
-/* ── Page body ── */
-.page-body{padding:20px 24px 60px}
-
-/* ── Two-column grid ── */
-.two-col{
-  display:grid;
-  grid-template-columns:1.55fr 1fr;
-  gap:16px;
-  align-items:start;
-}
-
-/* ── Cards (shared) ── */
-.col-card{
-  background:var(--white);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-.col-card-head{
+/* ── Page header (teal section) ── */
+.page-header{
   background:var(--teal-dark);
-  color:white;
-  padding:14px 20px;
-  font-size:15px;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  gap:8px;
+  padding:14px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
 }
-.col-card-body{padding:20px}
+.ph-left a.ph-back{
+  color:rgba(255,255,255,.6);font-size:12px;font-weight:600;
+  display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;
+  transition:.15s;
+}
+.ph-left a.ph-back:hover{color:rgba(255,255,255,.9)}
+.ph-left h1{
+  color:white;font-size:18px;font-weight:800;
+  font-family:'Playfair Display',serif;
+  display:flex;align-items:center;gap:8px;margin-bottom:3px;
+}
+.ph-left .ph-desc{color:rgba(255,255,255,.6);font-size:11px}
+.upload-drawer-btn{
+  background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.25);
+  color:white;border-radius:10px;
+  padding:9px 18px;font-family:'Nunito Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:.2s;flex-shrink:0;white-space:nowrap;
+}
+.upload-drawer-btn:hover{background:rgba(255,255,255,.2)}
+.upload-drawer-btn.open{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
 
-/* ── Upload card ── */
+/* ── Upload drawer ── */
+.upload-drawer{
+  background:#f4f7f7;
+  border-bottom:2px solid var(--cream-dark);
+  overflow:hidden;max-height:0;
+  transition:max-height .35s ease;
+}
+.upload-drawer.open{max-height:700px}
+.ud-inner{padding:18px 24px 22px}
+.ud-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
 .drop-zone{
   border:2px dashed var(--gray-light);border-radius:10px;
   padding:24px 16px;text-align:center;cursor:pointer;
-  background:var(--cream);transition:.2s;position:relative;
+  background:white;transition:.2s;position:relative;
 }
-.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.04)}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:rgba(13,110,122,.03)}
 .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:30px;margin-bottom:6px;display:block}
+.drop-icon{font-size:28px;margin-bottom:6px;display:block}
 .drop-text{font-size:13px;color:var(--gray);font-weight:600}
 .drop-text strong{color:var(--teal)}
 .drop-hint{font-size:11px;color:var(--gray-light);margin-top:4px}
 .file-preview{
   display:none;margin-top:10px;
   background:var(--cream);border:1px solid var(--cream-dark);
-  border-radius:8px;padding:11px 14px;align-items:center;gap:10px;
+  border-radius:8px;padding:10px 13px;align-items:center;gap:10px;
 }
 .file-preview.show{display:flex}
 .fp-name{font-weight:700;font-size:13px;color:var(--dark)}
 .fp-size{font-size:11px;color:var(--gray)}
 .fp-remove{margin-left:auto;cursor:pointer;color:var(--red);font-size:16px;opacity:.7;transition:.2s}
 .fp-remove:hover{opacity:1}
-.form-group{margin-top:14px}
+.upload-msg{display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600}
+.upload-msg.show{display:block}
+.upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
+.upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
+.form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:12px;font-weight:700;color:var(--dark-2);margin-bottom:5px}
 .form-group input{
   width:100%;padding:9px 12px;
   border:1.5px solid var(--cream-dark);border-radius:8px;
   font-family:'Nunito Sans',sans-serif;font-size:13px;
-  background:var(--cream);color:var(--dark);transition:.2s;
+  background:white;color:var(--dark);transition:.2s;
 }
 .form-group input:focus{outline:none;border-color:var(--teal);background:white}
 .upload-btn{
-  margin-top:14px;width:100%;padding:11px;
+  width:100%;padding:11px;
   background:var(--teal-dark);color:white;border:none;
   border-radius:10px;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;
   cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
@@ -111,124 +125,141 @@ a{text-decoration:none;color:inherit}
 .progress-bar-wrap{display:none;margin-top:10px;background:var(--cream-dark);border-radius:50px;height:6px;overflow:hidden}
 .progress-bar-wrap.show{display:block}
 .progress-bar-fill{height:100%;background:var(--teal);width:0%;transition:width .3s}
-.upload-msg{display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600}
-.upload-msg.show{display:block}
-.upload-msg.success{background:rgba(31,144,104,.1);color:var(--green);border:1px solid rgba(31,144,104,.2)}
-.upload-msg.error{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.15)}
 .xls-note{
-  margin-top:12px;padding:9px 12px;
-  background:#fafafa;border:1px solid var(--cream-dark);border-radius:8px;
+  margin-top:10px;padding:8px 11px;
+  background:#fafafa;border:1px solid var(--cream-dark);border-radius:7px;
   font-size:11px;color:var(--gray);line-height:1.5;
 }
 .xls-note strong{color:var(--dark-2)}
 
-/* ── Right column — klaim list ── */
-.klaim-list-card{
-  background:var(--white);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  max-height:80vh;
-  display:flex;
-  flex-direction:column;
+/* ── Page body ── */
+.page-body{padding:20px 24px 60px}
+
+/* ── Main card ── */
+.klaim-main-card{
+  background:white;border-radius:14px;
+  box-shadow:var(--shadow);overflow:hidden;
 }
-.klaim-list-head{
-  background:var(--teal-dark);
-  color:white;
-  padding:14px 18px;
+
+/* ── Stats bar ── */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1.5px solid var(--cream-dark);
+}
+.stat-cell{
+  padding:12px 20px;text-align:center;
+  border-right:1px solid var(--cream-dark);
+}
+.stat-cell:last-child{border-right:none}
+.stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-dark)}
+.stat-k{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+
+/* ── Content 2-column (file list kiri, viewer kanan) ── */
+.klaim-content{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:400px;
+}
+.klaim-file-col{
+  border-right:1.5px solid var(--cream-dark);
+  display:flex;flex-direction:column;
+  background:#f7f9f9;
+}
+.klaim-file-col-head{
+  padding:10px 14px 8px;
+  font-size:11px;font-weight:700;
+  color:var(--gray);
+  text-transform:uppercase;letter-spacing:.4px;
+  border-bottom:1px solid var(--cream-dark);
   flex-shrink:0;
 }
-.klaim-list-head-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:4px;
+.klaim-file-list{flex:1;overflow-y:auto}
+.file-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;
+  border-bottom:1px solid var(--cream-dark);
+  cursor:pointer;transition:background .15s;
+  position:relative;
 }
-.klaim-list-head-top h2{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px}
-.klaim-count{
-  background:rgba(255,255,255,.15);
-  color:white;border-radius:50px;padding:2px 10px;
-  font-size:12px;font-weight:700;font-family:'Space Mono',monospace;
+.file-item:last-child{border-bottom:none}
+.file-item:hover{background:rgba(9,78,88,.04)}
+.file-item.active{background:#e8f5f4;border-left:3px solid var(--teal-dark)}
+.file-item.active .fi-name{color:var(--teal-dark)}
+.fi-icon{
+  width:34px;height:34px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
 }
-.klaim-list-desc{font-size:11px;color:rgba(255,255,255,.65);line-height:1.4}
-.klaim-list-scroll{overflow-y:auto;flex:1}
+.fi-info{flex:1;min-width:0}
+.fi-name{
+  font-size:12px;font-weight:700;color:var(--dark-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.fi-meta{font-size:10px;color:var(--gray)}
+.fi-del{
+  color:var(--gray-light);font-size:16px;line-height:1;
+  opacity:0;transition:opacity .15s;flex-shrink:0;
+  background:none;border:none;cursor:pointer;padding:2px 4px;
+}
+.file-item:hover .fi-del{opacity:1}
+.fi-del:hover{color:var(--red)!important}
+.file-empty{
+  padding:28px 16px;text-align:center;color:var(--gray-light);font-size:12px;
+}
+
+/* ── Viewer col (kanan) ── */
+.klaim-viewer-col{
+  display:flex;flex-direction:column;min-width:0;
+}
 
 /* ── Empty state ── */
 .klaim-empty{
-  padding:40px 24px;text-align:center;color:var(--gray);
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:48px 24px;text-align:center;color:var(--gray);
 }
-.klaim-empty .ei{font-size:36px;margin-bottom:10px;display:block;opacity:.5}
-.klaim-empty p{font-size:14px;font-weight:600}
+.klaim-empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.klaim-empty p{font-size:14px;font-weight:700;margin-bottom:4px}
 .klaim-empty small{font-size:12px;color:var(--gray-light)}
 
-/* ── Klaim Cards ── */
-.klaim-cards{display:flex;flex-direction:column}
-.klaim-card{
-  border-bottom:1px solid var(--cream-dark);
-  opacity:0;transform:translateY(10px);
-  transition:border-color .18s,box-shadow .18s,transform .3s,opacity .3s;
-}
-.klaim-card:last-child{border-bottom:none}
-.klaim-card.revealed{opacity:1;transform:none}
-.klaim-card.klaim-card-body-open{
-  background:#fafffe;
-}
-.klaim-card-header{
-  display:flex;align-items:center;gap:12px;
-  padding:13px 16px;cursor:pointer;
-  transition:background .15s;
-}
-.klaim-card-header:hover{background:rgba(9,78,88,.03)}
-.klaim-excel-icon{
-  width:38px;height:38px;border-radius:9px;flex-shrink:0;
-  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
-  display:flex;align-items:center;justify-content:center;
-  font-size:19px;
-}
-.klaim-card-info{flex:1;min-width:0}
-.klaim-card-title{
-  font-weight:700;color:#1a2e35;font-size:13px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  margin-bottom:3px;
-}
-.klaim-card-meta{font-size:11px;color:#888;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.klaim-card-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.btn-lihat{
-  display:flex;align-items:center;gap:4px;
-  font-size:11px;font-weight:700;
-  padding:5px 11px;border-radius:20px;
-  background:var(--teal-dark);color:#fff;border:none;cursor:pointer;
-  transition:background .15s;white-space:nowrap;
-}
-.btn-lihat:hover{background:#0a6070}
-.btn-lihat.open{background:#e1f5ee;color:#094e58}
-.btn-lihat.open:hover{background:#cceee3}
-.btn-delete-klaim{
-  background:none;border:1.5px solid #e0e0e0;
-  border-radius:7px;padding:5px 8px;
-  cursor:pointer;color:var(--red);font-size:13px;
-  transition:background .15s,border-color .15s;
-}
-.btn-delete-klaim:hover{background:#fdecea;border-color:#e57373}
-
-/* ── Data Viewer (expandable body) ── */
-.klaim-card-body{
+/* ── Sheet tabs ── */
+.sheet-tabs-bar{
   display:none;
-  border-top:1.5px solid var(--cream-dark);
-}
-.klaim-card-body.open{display:block}
-.sheet-tabs{
-  display:flex;gap:0;
   border-bottom:1.5px solid var(--cream-dark);
-  padding:0 16px;overflow-x:auto;
+  padding:0 16px;
+  overflow-x:auto;flex-shrink:0;
 }
+.sheet-tabs-bar.show{display:flex}
 .sheet-tab{
-  padding:8px 14px;font-size:12px;font-weight:700;
+  padding:9px 14px;font-size:12px;font-weight:700;
   color:var(--gray);cursor:pointer;
   border-bottom:2.5px solid transparent;
-  margin-bottom:-1.5px;white-space:nowrap;transition:.15s;
+  margin-bottom:-1.5px;white-space:nowrap;
+  transition:.15s;flex-shrink:0;
 }
 .sheet-tab:hover{color:var(--teal)}
-.sheet-tab.active{color:white;background:var(--teal);border-bottom-color:var(--teal)}
-.sheet-content{padding:14px 16px}
+.sheet-tab.active{color:var(--teal-dark);border-bottom-color:var(--teal-dark)}
+
+/* ── Table area ── */
+.table-area{display:none;padding:14px 18px 24px;flex:1;overflow:auto}
+.table-area.show{display:block}
+.table-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;gap:12px;flex-wrap:wrap;
+}
+.table-meta-text{font-size:12px;color:var(--gray);font-weight:600}
+.table-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-action{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:8px;
+  border:1.5px solid var(--cream-dark);background:white;
+  font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;
+  color:var(--gray);cursor:pointer;transition:.15s;
+}
+.btn-action:hover{border-color:var(--teal-light);color:var(--teal)}
+.btn-action.danger{color:var(--red)}
+.btn-action.danger:hover{border-color:var(--red);background:#fdecea}
 .sheet-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .sstat{
   background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;
@@ -237,14 +268,13 @@ a{text-decoration:none;color:inherit}
 .sstat strong{display:block;font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-dark);font-weight:700}
 .table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--cream-dark)}
 table{width:100%;border-collapse:collapse;font-size:12px}
-thead tr{background:var(--dark);color:white}
+thead tr{background:var(--teal-dark);color:white}
 thead th{padding:9px 11px;text-align:left;font-weight:700;white-space:nowrap;font-size:11px}
 tbody tr:nth-child(even){background:var(--cream)}
 tbody tr:hover{background:rgba(13,110,122,.05)}
-tbody td{padding:8px 11px;color:var(--dark);border-bottom:1px solid var(--cream-dark);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
-.table-footer{margin-top:6px;font-size:11px;color:var(--gray);text-align:right}
+tbody td{padding:8px 11px;color:var(--dark);border-bottom:1px solid var(--cream-dark);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.table-footer{margin-top:8px;font-size:11px;color:var(--gray);text-align:right}
 .numeric{text-align:right;font-family:'Space Mono',monospace}
-.col-sum-row{background:rgba(13,110,122,.06)!important;font-weight:700;font-family:'Space Mono',monospace;color:var(--teal-dark)}
 
 /* ── Modal Delete ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(18,40,48,.5);z-index:200;align-items:center;justify-content:center}
@@ -259,68 +289,29 @@ tbody td{padding:8px 11px;color:var(--dark);border-bottom:1px solid var(--cream-
 .btn-confirm-delete{padding:9px 20px;border-radius:50px;background:var(--red);color:white;border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-confirm-delete:hover{background:#a93226}
 
-/* ── Back button ── */
-.back-btn-casemix {
-  display: inline-block;
-  color: var(--teal-dark, #094e58);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.back-btn-casemix:hover { opacity: 1; }
-
-/* ── Mobile upload toggle ── */
-.mobile-upload-toggle {
-  display: none;
-}
-@media (max-width: 768px) {
-  .mobile-upload-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #094e58;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .mobile-upload-toggle .toggle-arrow {
-    transition: transform 0.25s;
-    font-style: normal;
-  }
-  .mobile-upload-toggle.collapsed .toggle-arrow {
-    transform: rotate(-90deg);
-  }
-  .upload-collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 2000px;
-  }
-  .upload-collapsible.collapsed {
-    max-height: 0;
-  }
-}
-
 /* ── Responsive ── */
+@media(max-width:900px){
+  .ud-grid{grid-template-columns:1fr}
+  .klaim-content{grid-template-columns:200px 1fr}
+}
 @media(max-width:768px){
+  .page-header{padding:12px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .upload-drawer-btn{width:100%;justify-content:center}
+  .ud-inner{padding:14px 16px 18px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .stat-cell:nth-child(2){border-right:none}
+  .stat-cell:nth-child(1),.stat-cell:nth-child(2){border-bottom:1px solid var(--cream-dark)}
   .page-body{padding:14px 14px 60px}
-  .two-col{grid-template-columns:1fr}
-  .klaim-list-card{max-height:none}
+  .klaim-content{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .klaim-file-col{border-right:none;border-bottom:1.5px solid var(--cream-dark)}
+  .klaim-file-list{max-height:200px}
 }
 @media(max-width:600px){
   .navbar{padding:0 4%}
   .nav-breadcrumb{display:none}
-  .klaim-card-header{gap:8px}
 }
 @media(max-width:480px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
   .modal-actions{flex-direction:column-reverse}
   .btn-cancel,.btn-confirm-delete{width:100%;text-align:center}
 }
@@ -340,72 +331,113 @@ tbody td{padding:8px 11px;color:var(--dark);border-bottom:1px solid var(--cream-
   <a href="/casemix" class="nav-back">← Casemix</a>
 </nav>
 
-<div class="page-body">
-  <a href="/casemix" class="back-btn-casemix">← Dashboard Casemix</a>
-  <div class="two-col">
+<!-- Page header -->
+<div class="page-header">
+  <div class="ph-left">
+    <a href="/casemix" class="ph-back">← Dashboard Casemix</a>
+    <h1>📋 Rekapitulasi Klaim</h1>
+    <p class="ph-desc">Data klaim BPJS per kategori pembayaran INACBGS, Non-INACBGS, Obat</p>
+  </div>
+  <button class="upload-drawer-btn" id="uploadDrawerBtn" onclick="toggleUploadDrawer()">
+    ⬆️ Upload Data Klaim
+  </button>
+</div>
 
-    <!-- ── LEFT: Upload Card ── -->
-    <div class="col-card">
-      <button class="mobile-upload-toggle" onclick="toggleUpload(this)" id="uploadToggle">
-        <span>⬆️ Upload Data Klaim</span>
-        <i class="toggle-arrow">▼</i>
-      </button>
-      <div class="upload-collapsible" id="uploadCollapsible">
-        <div class="col-card-head">⬆️ Upload Data Klaim</div>
-        <div class="col-card-body">
-          <form id="upload-form" enctype="multipart/form-data">
-            <div class="drop-zone" id="drop-zone">
-              <input type="file" id="file-input" name="file" accept=".xlsx">
-              <span class="drop-icon">📊</span>
-              <div class="drop-text">Drag &amp; drop file <strong>.xlsx</strong> ke sini atau <strong>klik untuk browse</strong></div>
-              <div class="drop-hint">File Excel (.xlsx) — data klaim BPJS</div>
-            </div>
-            <div class="file-preview" id="file-preview">
-              <span style="font-size:20px">📗</span>
-              <div>
-                <div class="fp-name" id="fp-name"></div>
-                <div class="fp-size" id="fp-size"></div>
-              </div>
-              <span class="fp-remove" id="fp-remove">✕</span>
-            </div>
-
-            <div class="form-group">
-              <label for="title-input">Judul / Keterangan <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
-              <input type="text" id="title-input" name="title" placeholder="Contoh: Rekapitulasi Klaim April 2026">
-            </div>
-            <button type="submit" class="upload-btn" id="upload-btn" disabled>
-              ⚡ Proses Data Klaim
-            </button>
-          </form>
-          <div class="progress-bar-wrap" id="progress-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
-          <div class="upload-msg" id="upload-msg"></div>
-          <div class="xls-note">
-            <strong>Format .xls (Excel lama) tidak didukung.</strong><br>
-            Buka file di Excel → Simpan Sebagai → pilih format <em>.xlsx</em> terlebih dahulu.
+<!-- Upload drawer -->
+<div class="upload-drawer" id="uploadDrawer">
+  <div class="ud-inner">
+    <div class="ud-grid">
+      <!-- Left: dropzone -->
+      <div>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" name="file" accept=".xlsx">
+          <span class="drop-icon">📊</span>
+          <div class="drop-text">Drag &amp; drop file <strong>.xlsx</strong> ke sini atau <strong>klik untuk browse</strong></div>
+          <div class="drop-hint">File Excel (.xlsx) — data klaim BPJS</div>
+        </div>
+        <div class="file-preview" id="file-preview">
+          <span style="font-size:20px">📗</span>
+          <div>
+            <div class="fp-name" id="fp-name"></div>
+            <div class="fp-size" id="fp-size"></div>
           </div>
+          <span class="fp-remove" id="fp-remove">✕</span>
+        </div>
+        <div class="upload-msg" id="upload-msg"></div>
+      </div>
+      <!-- Right: form + button -->
+      <div>
+        <div class="form-group">
+          <label for="title-input">Judul / Keterangan <span style="color:var(--gray);font-weight:400">(opsional)</span></label>
+          <input type="text" id="title-input" placeholder="Contoh: Rekapitulasi Klaim 2024">
+        </div>
+        <button type="button" class="upload-btn" id="upload-btn" disabled onclick="submitUpload()">
+          ⚡ Proses Data Klaim
+        </button>
+        <div class="progress-bar-wrap" id="progress-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+        <div class="xls-note">
+          <strong>Format .xls (Excel lama) tidak didukung.</strong><br>
+          Buka file di Excel → Simpan Sebagai → pilih format <em>.xlsx</em> terlebih dahulu.
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- ── RIGHT: Klaim Data List ── -->
-    <div class="klaim-list-card">
-      <div class="klaim-list-head">
-        <div class="klaim-list-head-top">
-          <h2>📋 Rekapitulasi Klaim <span class="klaim-count" id="klaim-count">0</span></h2>
+<!-- Page body -->
+<div class="page-body">
+  <div class="klaim-main-card">
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-v" id="stat-rows">—</div><div class="stat-k">Total Baris</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-sheets">—</div><div class="stat-k">Total Sheet</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-files">—</div><div class="stat-k">File Diupload</div></div>
+      <div class="stat-cell"><div class="stat-v" id="stat-size">—</div><div class="stat-k">Ukuran</div></div>
+    </div>
+
+    <!-- 2-column: file list kiri | viewer kanan -->
+    <div class="klaim-content">
+
+      <!-- Kiri: daftar file -->
+      <div class="klaim-file-col">
+        <div class="klaim-file-col-head">📁 Daftar File</div>
+        <div class="klaim-file-list" id="file-list">
+          <div class="file-empty" id="file-list-empty">Belum ada file</div>
         </div>
-        <div class="klaim-list-desc">Data klaim BPJS per kategori pembayaran INACBGS, Non-INACBGS, Obat</div>
       </div>
-      <div class="klaim-list-scroll" id="klaim-list-scroll">
+
+      <!-- Kanan: viewer -->
+      <div class="klaim-viewer-col">
+
+        <!-- Empty state (sebelum file dipilih) -->
         <div class="klaim-empty" id="klaim-empty">
           <span class="ei">💰</span>
-          <p>Belum ada data klaim</p>
-          <small>Upload file Excel untuk memulai</small>
+          <p>Pilih file di sebelah kiri</p>
+          <small>atau upload file baru untuk memulai</small>
         </div>
-        <div class="klaim-cards" id="klaim-cards" style="display:none"></div>
+
+        <!-- Sheet tabs -->
+        <div class="sheet-tabs-bar" id="sheet-tabs-bar"></div>
+
+        <!-- Table area -->
+        <div class="table-area" id="table-area">
+          <div class="table-meta">
+            <span class="table-meta-text" id="table-meta-text"></span>
+            <div class="table-actions">
+              <button class="btn-action" onclick="downloadCurrentFile()">↓ Unduh Excel</button>
+              <button class="btn-action danger" onclick="openDelCurrent()">🗑 Hapus</button>
+            </div>
+          </div>
+          <div class="sheet-stats" id="sheet-stats"></div>
+          <div class="table-wrap" id="table-content"></div>
+          <div class="table-footer" id="table-footer"></div>
+        </div>
+
       </div>
     </div>
 
-  </div><!-- .two-col -->
+  </div>
 </div>
 
 <!-- Delete Modal -->
@@ -421,19 +453,38 @@ tbody td{padding:8px 11px;color:var(--dark);border-bottom:1px solid var(--cream-
 </div>
 
 <script>
-// ── Vars ──────────────────────────────────────────────────────────────────────
+// ── State ──────────────────────────────────────────────────────────────────────
 let allKlaim = [];
-let openCards = {};
+let activeFileId = null;
+let activeSheetIdx = 0;
 let pendingDeleteId = null;
 
-// ── Escape helpers ─────────────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────────────────
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') }
 function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') }
+function numFmt(n){ return Number(n||0).toLocaleString('id-ID') }
+function fmtSize(b){ if(!b||b===0) return '—'; if(b<1048576) return (b/1024).toFixed(0)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
 
-// ── File Input ─────────────────────────────────────────────────────────────────
-const dropZone   = document.getElementById('drop-zone');
-const fileInput  = document.getElementById('file-input');
-const uploadBtn  = document.getElementById('upload-btn');
+// ── Upload drawer ──────────────────────────────────────────────────────────────
+function toggleUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  const isOpen = drawer.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = isOpen ? '✕ Tutup' : '⬆️ Upload Data Klaim';
+}
+function closeUploadDrawer(){
+  const drawer = document.getElementById('uploadDrawer');
+  const btn    = document.getElementById('uploadDrawerBtn');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = '⬆️ Upload Data Klaim';
+}
+
+// ── File input ─────────────────────────────────────────────────────────────────
+const dropZone  = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const uploadBtn = document.getElementById('upload-btn');
 let selectedFile = null;
 
 function fileSizeStr(b){ return b<1048576?`${(b/1024).toFixed(1)} KB`:`${(b/1048576).toFixed(1)} MB` }
@@ -465,21 +516,17 @@ dropZone.addEventListener('drop', e => {
 // ── Upload ─────────────────────────────────────────────────────────────────────
 const uploadMsg = document.getElementById('upload-msg');
 function showMsg(text, type){
-  uploadMsg.textContent = text;
+  uploadMsg.innerHTML = text;
   uploadMsg.className = `upload-msg show ${type}`;
-  setTimeout(() => uploadMsg.className='upload-msg', 5000);
+  setTimeout(() => uploadMsg.className = 'upload-msg', 5000);
 }
 
-document.getElementById('upload-form').addEventListener('submit', async e => {
-  e.preventDefault();
+async function submitUpload(){
   if(!selectedFile) return;
-
-  // Client-side .xls guard
   if(selectedFile.name.toLowerCase().endsWith('.xls')){
     showMsg('❌ Format .xls tidak didukung — simpan file sebagai .xlsx terlebih dahulu.', 'error');
     return;
   }
-
   const fd = new FormData();
   fd.append('file', selectedFile);
   const t = document.getElementById('title-input').value.trim();
@@ -489,20 +536,24 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
   uploadBtn.innerHTML = '⏳ Memproses data...';
   const pw = document.getElementById('progress-wrap');
   const pf = document.getElementById('progress-fill');
-  pw.classList.add('show'); pf.style.width='30%';
+  pw.classList.add('show'); pf.style.width = '30%';
 
   try {
-    const res = await fetch('/casemix/upload/klaim', { method:'POST', body:fd });
-    pf.style.width='80%';
+    const res  = await fetch('/casemix/upload/klaim', { method:'POST', body:fd });
+    pf.style.width = '80%';
     const data = await res.json().catch(()=>({}));
-    pf.style.width='100%';
-    setTimeout(()=>pw.classList.remove('show'),400);
+    pf.style.width = '100%';
+    setTimeout(()=>pw.classList.remove('show'), 400);
+
     if(res.ok && data.ok){
       showMsg('✅ Data klaim berhasil diproses!', 'success');
       clearFile();
       document.getElementById('title-input').value = '';
-      if(data.entry){ allKlaim.unshift(data.entry); renderKlaim(allKlaim); }
-      else { loadKlaim(); }
+      if(data.entry){ allKlaim.unshift(data.entry); }
+      else { await loadKlaim(); uploadBtn.disabled=false; uploadBtn.innerHTML='⚡ Proses Data Klaim'; return; }
+      renderAll();
+      selectFile(allKlaim[0].id);
+      setTimeout(closeUploadDrawer, 1200);
     } else {
       showMsg(`❌ ${data.error || 'Gagal memproses file'}`, 'error');
     }
@@ -512,121 +563,130 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
   }
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '⚡ Proses Data Klaim';
-});
+}
 
-// ── Load & Render ──────────────────────────────────────────────────────────────
+// ── Load from API ──────────────────────────────────────────────────────────────
 async function loadKlaim(){
   try {
     const res = await fetch('/casemix/api/files/klaim');
-    if (!res.ok) throw new Error('Server error: ' + res.status);
+    if(!res.ok) throw new Error('Server error: '+res.status);
     const data = await res.json().catch(()=>({files:[]}));
     allKlaim = data.files || [];
   } catch { allKlaim = []; }
-  renderKlaim(allKlaim);
+  renderAll();
+  if(allKlaim.length > 0) selectFile(allKlaim[0].id);
 }
 
-function numFmt(n){ return Number(n).toLocaleString('id-ID') }
-function fmtSize(b){ if(!b||b===0)return''; if(b<1048576)return(b/1024).toFixed(0)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+// ── Render stats + file list (kiri) ───────────────────────────────────────────
+function renderAll(){
+  const totalRows   = allKlaim.reduce((s,k) => s + (k.total_rows||0), 0);
+  const totalSheets = allKlaim.reduce((s,k) => s + (k.sheets?.length||0), 0);
+  const totalSize   = allKlaim.reduce((s,k) => s + (k.size||0), 0);
+  document.getElementById('stat-rows').textContent   = allKlaim.length ? numFmt(totalRows)   : '—';
+  document.getElementById('stat-sheets').textContent = allKlaim.length ? numFmt(totalSheets) : '—';
+  document.getElementById('stat-files').textContent  = allKlaim.length ? allKlaim.length     : '—';
+  document.getElementById('stat-size').textContent   = allKlaim.length ? fmtSize(totalSize)  : '—';
 
-function renderKlaim(files){
-  const empty = document.getElementById('klaim-empty');
-  const cards = document.getElementById('klaim-cards');
-  const count = document.getElementById('klaim-count');
-  count.textContent = files.length;
+  const fileListEl = document.getElementById('file-list');
+  const emptyEl    = document.getElementById('file-list-empty');
 
-  if(!files.length){
-    empty.style.display=''; cards.style.display='none'; cards.innerHTML=''; return;
+  if(!allKlaim.length){
+    fileListEl.innerHTML = '<div class="file-empty" id="file-list-empty">Belum ada file</div>';
+    document.getElementById('klaim-empty').style.display = '';
+    document.getElementById('sheet-tabs-bar').classList.remove('show');
+    document.getElementById('table-area').classList.remove('show');
+    activeFileId = null;
+    return;
   }
-  empty.style.display='none'; cards.style.display='flex';
 
-  cards.innerHTML = files.map((k,i) => {
-    const sheets = k.sheets || [];
-    const sheetTabs = sheets.map((s,si) =>
-      `<div class="sheet-tab${si===0?' active':''}" onclick="switchSheet('${escAttr(k.id)}',${si})">${escHtml(s.name)}</div>`
-    ).join('');
-
-    const sheetBodies = sheets.map((s,si) => {
-      const numColIdx = s.headers.map((h,hi)=> s.numeric_cols?.includes(h)?hi:-1).filter(x=>x>=0);
-      const statsHtml = Object.entries(s.col_stats||{}).slice(0,4).map(([col,stat])=>
-        `<div class="sstat"><strong>${numFmt(stat.sum)}</strong>Total ${escHtml(col)}</div>` +
-        `<div class="sstat"><strong>${numFmt(stat.count)}</strong>Count ${escHtml(col)}</div>`
-      ).join('');
-      const headerHtml = s.headers.map(h=>`<th>${escHtml(h)}</th>`).join('');
-      const rowsHtml   = s.rows.slice(0,200).map(row=>
-        `<tr>${row.map((cell,ci)=>`<td class="${numColIdx.includes(ci)?'numeric':''}" title="${escAttr(cell)}">${escHtml(cell)}</td>`).join('')}</tr>`
-      ).join('');
-      const hasMore = s.row_count > 200;
-      return `
-        <div class="sheet-content" id="sheet-${escAttr(k.id)}-${si}" style="display:${si===0?'block':'none'}">
-          ${statsHtml ? `<div class="sheet-stats">${statsHtml}</div>` : ''}
-          <div class="table-wrap">
-            <table><thead><tr>${headerHtml}</tr></thead><tbody>${rowsHtml}</tbody></table>
-          </div>
-          <div class="table-footer">${numFmt(s.row_count)} baris${hasMore?' · ditampilkan 200 pertama':''}</div>
-        </div>`;
-    }).join('');
-
+  fileListEl.innerHTML = allKlaim.map(k => {
     const date = k.uploaded_at_display || k.uploaded_at?.slice(0,10) || '—';
     return `
-      <div class="klaim-card" data-id="${escAttr(k.id)}" style="transition-delay:${i*60}ms">
-        <div class="klaim-card-header" onclick="toggleCard('${escAttr(k.id)}')">
-          <div class="klaim-excel-icon">📊</div>
-          <div class="klaim-card-info">
-            <div class="klaim-card-title">${escHtml(k.title || k.original_name)}</div>
-            <div class="klaim-card-meta">
-              <span>📅 ${date}</span>
-              <span style="color:#ccc">│</span>
-              <span>${numFmt(k.total_rows)} baris</span>
-              <span>·</span>
-              <span>${sheets.length} sheet</span>
-              ${k.size ? `<span>·</span><span>${fmtSize(k.size)}</span>` : ''}
-            </div>
-          </div>
-          <div class="klaim-card-actions">
-            <button class="btn-lihat" id="expand-${escAttr(k.id)}">Lihat Data ▼</button>
-            <button class="btn-lihat" style="background:#1a8fa0" onclick="event.stopPropagation();downloadExcel('${escAttr(k.id)}')" title="Unduh sebagai Excel">↓ Unduh</button>
-            <button class="btn-delete-klaim" onclick="event.stopPropagation();openDel('${escAttr(k.id)}','${escAttr(k.title||k.original_name)}')">🗑</button>
-          </div>
-        </div>
-        <div class="klaim-card-body" id="body-${escAttr(k.id)}">
-          <div class="sheet-tabs klaim-tabs" id="tabs-${escAttr(k.id)}">${sheetTabs}</div>
-          ${sheetBodies}
-        </div>
-      </div>`;
+    <div class="file-item${k.id===activeFileId?' active':''}" id="fitem-${escAttr(k.id)}" onclick="selectFile('${escAttr(k.id)}')">
+      <div class="fi-icon">📊</div>
+      <div class="fi-info">
+        <div class="fi-name" title="${escAttr(k.title||k.original_name)}">${escHtml(k.title||k.original_name)}</div>
+        <div class="fi-meta">${numFmt(k.total_rows)} baris · ${k.sheets?.length||0} sheet${k.size?` · ${fmtSize(k.size)}`:''}</div>
+      </div>
+      <button class="fi-del" title="Hapus" onclick="event.stopPropagation();openDel('${escAttr(k.id)}','${escAttr(k.title||k.original_name)}')">×</button>
+    </div>`;
   }).join('');
-
-  requestAnimationFrame(()=>{
-    cards.querySelectorAll('.klaim-card').forEach((c,i)=>{
-      setTimeout(()=>c.classList.add('revealed'), i*70);
-    });
-  });
 }
 
-// ── Toggle expand/collapse ─────────────────────────────────────────────────────
-function toggleCard(id){
-  var card = document.querySelector('[data-id="'+id+'"]');
-  var btn  = card.querySelector('.btn-lihat');
-  var body = document.getElementById('body-'+id);
-  var isOpen = card.classList.toggle('klaim-card-body-open');
-  body.classList.toggle('open', isOpen);
-  btn.textContent = isOpen ? 'Sembunyikan ▲' : 'Lihat Data ▼';
-  btn.classList.toggle('open', isOpen);
-  if(isOpen && card.querySelector('.klaim-tabs').children.length > 0 && !(id in openCards)){
-    openCards[id] = 0;
-  }
+// ── Select file item ───────────────────────────────────────────────────────────
+function selectFile(id){
+  activeFileId  = id;
+  activeSheetIdx = 0;
+  // update active state di file list
+  document.querySelectorAll('.file-item').forEach(c => c.classList.remove('active'));
+  const item = document.getElementById('fitem-'+id);
+  if(item) item.classList.add('active');
+  // sembunyikan empty state
+  document.getElementById('klaim-empty').style.display = 'none';
+
+  const k = allKlaim.find(x => x.id === id);
+  if(!k) return;
+  const sheets = k.sheets || [];
+
+  // render sheet tabs
+  const tabsBar = document.getElementById('sheet-tabs-bar');
+  tabsBar.innerHTML = sheets.map((s,si) =>
+    `<div class="sheet-tab${si===0?' active':''}" onclick="switchSheet(${si})">${escHtml(s.name)}</div>`
+  ).join('');
+  tabsBar.classList.toggle('show', sheets.length > 0);
+  document.getElementById('table-area').classList.toggle('show', sheets.length > 0);
+
+  if(sheets.length > 0) renderSheet(k, 0);
 }
 
 // ── Switch sheet tab ───────────────────────────────────────────────────────────
-function switchSheet(id, si){
-  var card  = document.querySelector('[data-id="'+id+'"]');
-  var tabs  = card.querySelectorAll('.ktab, .sheet-tab');
-  tabs.forEach((t,i) => t.classList.toggle('active', i === si));
-  var sheets = card.querySelectorAll('.sheet-content');
-  sheets.forEach((s,i) => s.style.display = i===si?'block':'none');
-  openCards[id] = si;
+function switchSheet(si){
+  activeSheetIdx = si;
+  document.querySelectorAll('#sheet-tabs-bar .sheet-tab').forEach((t,i) => t.classList.toggle('active', i===si));
+  const k = allKlaim.find(x => x.id === activeFileId);
+  if(k) renderSheet(k, si);
+}
+
+// ── Render sheet (stats + table) ───────────────────────────────────────────────
+function renderSheet(k, si){
+  const s = k.sheets?.[si];
+  if(!s){
+    document.getElementById('table-content').innerHTML =
+      '<p style="padding:20px;color:var(--gray)">Sheet tidak tersedia</p>';
+    return;
+  }
+  const date = k.uploaded_at_display || k.uploaded_at?.slice(0,10) || '—';
+  document.getElementById('table-meta-text').textContent =
+    `${s.name}  ·  ${numFmt(s.row_count)} baris  ·  ${(k.sheets||[]).length} sheet  ·  ${date}`;
+
+  // stats
+  const statsHtml = Object.entries(s.col_stats||{}).slice(0,4).map(([col,stat]) =>
+    `<div class="sstat"><strong>${numFmt(stat.sum)}</strong>Total ${escHtml(col)}</div>` +
+    `<div class="sstat"><strong>${numFmt(stat.count)}</strong>Count ${escHtml(col)}</div>`
+  ).join('');
+  document.getElementById('sheet-stats').innerHTML = statsHtml;
+
+  // table
+  const numColIdx = s.headers.map((h,hi) => s.numeric_cols?.includes(h) ? hi : -1).filter(x => x >= 0);
+  const headerHtml = s.headers.map(h => `<th>${escHtml(h)}</th>`).join('');
+  const rowsHtml   = s.rows.slice(0,200).map(row =>
+    `<tr>${row.map((cell,ci) =>
+      `<td class="${numColIdx.includes(ci)?'numeric':''}" title="${escAttr(cell)}">${escHtml(cell)}</td>`
+    ).join('')}</tr>`
+  ).join('');
+  document.getElementById('table-content').innerHTML =
+    `<table><thead><tr>${headerHtml}</tr></thead><tbody>${rowsHtml}</tbody></table>`;
+  const hasMore = s.row_count > 200;
+  document.getElementById('table-footer').textContent =
+    `${numFmt(s.row_count)} baris${hasMore ? ' · ditampilkan 200 pertama' : ''}`;
 }
 
 // ── Delete ─────────────────────────────────────────────────────────────────────
+function openDelCurrent(){
+  if(!activeFileId) return;
+  const k = allKlaim.find(x => x.id === activeFileId);
+  if(k) openDel(k.id, k.title||k.original_name);
+}
 function openDel(id, title){
   pendingDeleteId = id;
   document.getElementById('modal-desc').textContent = `"${title}" akan dihapus secara permanen.`;
@@ -638,43 +698,49 @@ function closeDel(){
 }
 function confirmDel(){
   if(!pendingDeleteId) return;
-  const id = pendingDeleteId;
-  closeDel();
-  fetch(`/casemix/delete/klaim/${id}`,{method:'DELETE'})
-    .then(res=>{
-      if(res.ok){ allKlaim=allKlaim.filter(k=>k.id!==id); renderKlaim(allKlaim); }
-      else return res.json().catch(()=>({})).then(data=>{ showMsg(`❌ Gagal menghapus: ${data.error || res.statusText}`, 'error'); });
+  const id = pendingDeleteId; closeDel();
+  fetch(`/casemix/delete/klaim/${id}`, { method:'DELETE' })
+    .then(res => {
+      if(res.ok){
+        allKlaim = allKlaim.filter(k => k.id !== id);
+        if(activeFileId === id){
+          activeFileId = null;
+          document.getElementById('sheet-tabs-bar').classList.remove('show');
+          document.getElementById('table-area').classList.remove('show');
+          document.getElementById('klaim-empty').style.display = '';
+        }
+        renderAll();
+        if(allKlaim.length > 0 && !activeFileId) selectFile(allKlaim[0].id);
+      } else {
+        res.json().catch(()=>({})).then(data =>
+          showMsg(`❌ Gagal menghapus: ${data.error||res.statusText}`, 'error'));
+      }
     })
-    .catch(e=>{ showMsg(`❌ Gagal menghapus: ${e.message}`, 'error'); });
+    .catch(e => showMsg(`❌ Gagal menghapus: ${e.message}`, 'error'));
 }
 
 document.getElementById('btn-cancel').addEventListener('click', closeDel);
 document.getElementById('btn-confirm-delete').addEventListener('click', confirmDel);
-document.getElementById('modal-overlay').addEventListener('click', e=>{
-  if(e.target===e.currentTarget) closeDel();
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeDel();
 });
 
 // ── Init ───────────────────────────────────────────────────────────────────────
 loadKlaim();
-
-// ── Mobile upload toggle ───────────────────────────────────────────────────────
-function toggleUpload(btn) {
-  btn.classList.toggle('collapsed');
-  document.getElementById('uploadCollapsible').classList.toggle('collapsed');
-}
 </script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-function downloadExcel(id) {
-  const k = allKlaim.find(x => x.id === id);
-  if (!k || !k.sheets || k.sheets.length === 0) return;
+function downloadCurrentFile(){
+  const k = allKlaim.find(x => x.id === activeFileId);
+  if(!k || !k.sheets || k.sheets.length === 0) return;
   const wb = XLSX.utils.book_new();
   k.sheets.forEach(s => {
     const aoa = [s.headers, ...s.rows];
     const ws  = XLSX.utils.aoa_to_sheet(aoa);
     XLSX.utils.book_append_sheet(wb, ws, s.name || 'Sheet1');
   });
-  const fname = (k.original_name || k.title || 'klaim').replace(/\.xlsx?$/i,'') + '.xlsx';
+  const fname = (k.original_name||k.title||'klaim').replace(/\.xlsx?$/i,'') + '.xlsx';
   XLSX.writeFile(wb, fname);
 }
 </script>
