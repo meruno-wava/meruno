@@ -329,8 +329,8 @@ def process_excel(file):
 
         for sn in wb.sheetnames:
             ws = wb[sn]
-            hdrs = [str(c.value) if c.value is not None else f"Kolom {c.column_letter}"
-                    for c in ws[1]]
+            hdr_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+            hdrs = [str(v) if v is not None else f"Kolom {i+1}" for i, v in enumerate(hdr_row)]
             rows = []
             for row in ws.iter_rows(min_row=2, values_only=True):
                 r = []
@@ -927,8 +927,8 @@ def casemix_process_klaim(file):
         sheets = []
         for sn in wb.sheetnames:
             ws = wb[sn]
-            hdrs = [str(c.value) if c.value is not None else f"Kolom {c.column_letter}"
-                    for c in ws[1]]
+            hdr_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+            hdrs = [str(v) if v is not None else f"Kolom {i+1}" for i, v in enumerate(hdr_row)]
             rows = []
             for row in ws.iter_rows(min_row=2, values_only=True):
                 r = []
