@@ -893,4 +893,82 @@ function saveRenameDD(){
   const v = inp.value.trim();
   if(v){
     document.getElementById('dd-title').textContent = v;
-    const d = allDocs.find(x => String(x.id) === String(activeDocId)
+    const d = allDocs.find(x => String(x.id) === String(activeDocId)    const d = allDocs.find(x => String(x.id) === String(activeDocId));
+    if(d) d.title = v;
+    try { document.querySelector(`#fitem-${CSS.escape(activeDocId)} .fi-name`).textContent = v; } catch(e){}
+  }
+  document.getElementById('dd-title').style.display = 'inline';
+  inp.style.display = 'none';
+}
+function cancelRenameDD(){
+  document.getElementById('dd-title').style.display = 'inline';
+  document.getElementById('dd-title-input').style.display = 'none';
+}
+function startDescDD(){
+  const sp = document.getElementById('dd-desc');
+  const inp = document.getElementById('dd-desc-input');
+  inp.value = sp.dataset.raw || '';
+  sp.style.display  = 'none';
+  inp.style.display = 'block';
+  inp.focus();
+}
+function saveDescDD(){
+  const sp  = document.getElementById('dd-desc');
+  const inp = document.getElementById('dd-desc-input');
+  if(inp.style.display === 'none') return;
+  const v = inp.value.trim();
+  sp.dataset.raw    = v;
+  sp.textContent    = v || 'Tambah keterangan...';
+  sp.style.color    = v ? 'var(--dark)' : 'var(--gray)';
+  sp.style.display  = 'inline';
+  inp.style.display = 'none';
+  const d = allDocs.find(x => String(x.id) === String(activeDocId));
+  if(d) d.desc = v;
+}
+function cancelDescDD(){
+  document.getElementById('dd-desc').style.display  = 'inline';
+  document.getElementById('dd-desc-input').style.display = 'none';
+}
+let pendingDeleteId = null;
+function openDelCurrent(){ if(!activeDocId) return; openDel(activeDocId); }
+function openDel(id){
+  pendingDeleteId = id;
+  const d = allDocs.find(x => String(x.id) === String(id));
+  const name = d ? (d.title || d.original_name || id) : id;
+  document.getElementById('del-filename').textContent = name;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function closeDel(){
+  document.getElementById('modal-overlay').classList.remove('show');
+  pendingDeleteId = null;
+}
+function confirmDel(){
+  if(!pendingDeleteId) return;
+  const id = pendingDeleteId; closeDel();
+  fetch(`/casemix/delete/${SECTION}/${id}`, { method:'DELETE' })
+    .then(res => {
+      if(res.ok){
+        allDocs = allDocs.filter(x => String(x.id) !== String(id));
+        if(String(activeDocId) === String(id)){
+          activeDocId = null;
+          document.getElementById('doc-viewer-wrap').style.display = 'none';
+          document.getElementById('doc-detail').style.display = 'none';
+          document.getElementById('doc-empty-state').style.display = 'flex';
+        }
+        renderDocs(); updateStats();
+      } else {
+        res.json().catch(()=>({})).then(data =>
+          showMsg(`❌ Gagal menghapus: ${data.error||res.statusText}`, 'error'));
+      }
+    })
+    .catch(e => showMsg(`❌ Gagal menghapus: ${e.message}`, 'error'));
+}
+document.getElementById('btn-cancel').addEventListener('click', closeDel);
+document.getElementById('btn-confirm-delete').addEventListener('click', confirmDel);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeDel();
+});
+loadDocs();
+</script>
+</body>
+</html>
