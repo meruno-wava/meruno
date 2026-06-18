@@ -720,7 +720,7 @@ function startDescDD() {
 function saveDescDD() {
   const sp = document.getElementById('dd-desc');
   const i  = document.getElementById('dd-desc-input');
-  if (i.style.display === 'n  if (i.style.display === 'none') return;
+  if (i.style.display === 'none') return;
   const v = i.value.trim();
   sp.dataset.raw   = v;
   sp.textContent   = v || 'Tambah keterangan...';

@@ -893,7 +893,7 @@ function saveRenameDD(){
   const v = inp.value.trim();
   if(v){
     document.getElementById('dd-title').textContent = v;
-    const d = allDocs.find(x => String(x.id) === String(activeDocId)    const d = allDocs.find(x => String(x.id) === String(activeDocId));
+    const d = allDocs.find(x => String(x.id) === String(activeDocId));
     if(d) d.title = v;
     try { document.querySelector(`#fitem-${CSS.escape(activeDocId)} .fi-name`).textContent = v; } catch(e){}
   }
