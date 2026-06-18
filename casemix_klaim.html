@@ -501,7 +501,8 @@ document.getElementById('upload-form').addEventListener('submit', async e => {
       showMsg('✅ Data klaim berhasil diproses!', 'success');
       clearFile();
       document.getElementById('title-input').value = '';
-      loadKlaim();
+      if(data.entry){ allKlaim.unshift(data.entry); renderKlaim(allKlaim); }
+      else { loadKlaim(); }
     } else {
       showMsg(`❌ ${data.error || 'Gagal memproses file'}`, 'error');
     }

@@ -992,7 +992,7 @@ def casemix_process_klaim(file):
         with open(meta_file, "w", encoding="utf-8") as fp:
             json.dump(meta, fp, ensure_ascii=False, indent=2)
         sb_write_json("casemix", "meta/klaim.json", meta)
-        return jsonify({"ok": True, "id": doc_id})
+        return jsonify({"ok": True, "id": doc_id, "entry": entry, "count": meta["count"], "original_size": original_size, "compressed_size": original_size})
     except Exception as e:
         import traceback
         return jsonify({"error": str(e), "detail": traceback.format_exc()}), 500
